@@ -16,12 +16,21 @@ function saveState() {
   }
 }
 
+function ensurePlayerDefaults() {
+  if (typeof state.player.fatigue !== 'number') state.player.fatigue = 0;
+  if (typeof state.player.level !== 'number') state.player.level = 1;
+  if (typeof state.player.xp !== 'number') state.player.xp = 0;
+}
+
 function loadStateFromStorage() {
   try {
     const txt = localStorage.getItem('studio_tycoon_state_v1');
     if (!txt) return false;
     const p = JSON.parse(txt);
-    if (p.player) state.player = p.player;
+    if (p.player) {
+      state.player = p.player;
+    }
+    ensurePlayerDefaults();
     if (p.time) state.time = p.time;
     if (typeof p.cash === 'number') state.cash = p.cash;
     if (Array.isArray(p.inventory)) {
@@ -53,7 +62,7 @@ function loadStateFromStorage() {
 function clearPersistenceAndReset() {
   try {
     localStorage.removeItem('studio_tycoon_state_v1');
-    state.player = { level: 1, xp: 0 };
+    state.player = { level: 1, xp: 0, fatigue: 0 };
     state.time = { day: 1, hour: 0, workHoursPerDay: state.time.workHoursPerDay || 8 };
     state.cash = 1000;
     state.inventory.clear();

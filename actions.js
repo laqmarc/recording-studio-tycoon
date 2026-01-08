@@ -10,6 +10,8 @@ function advanceTime(hours) {
     if (state.time.hour >= state.time.workHoursPerDay) {
       state.time.day += 1;
       state.time.hour = 0;
+      // Recover fatigue
+      state.player.fatigue = Math.max(0, state.player.fatigue - 8);
     }
   }
   log(`⏱️ Avançat ${hours}h — Dia ${state.time.day} · Hora ${state.time.hour}/${state.time.workHoursPerDay}`);
@@ -41,8 +43,11 @@ function workOnContract(contractId, hours) {
     c.worked_hours = 0;
     c.completed = false;
     c.completed_at = null;
+    c.start_day = state.time.day; // Reset start day
     log(`🔄 Reiniciant contracte: ${c.name}`);
   }
+  // Set start day if not set
+  if (c.start_day == null) c.start_day = state.time.day;
   const room = state.db.rooms[state.selected.roomIndex];
   const req = c.requirements || {};
   if (req.room_type && req.room_type !== room.type) {
@@ -78,6 +83,28 @@ function workOnContract(contractId, hours) {
     }
   }
 
+  if (req.mic_types && Array.isArray(req.mic_types)) {
+    const mics = installedIds(state.selected.roomIndex, "mic").map(id=>state.itemsById.get(id)).filter(Boolean);
+    const coveredTypes = new Set();
+    
+    for (const mic of mics) {
+      if (mic.type && Array.isArray(mic.type)) {
+        // Cada micròfon només cobreix un tipus (el primer requerit que pot fer)
+        const coveredType = mic.type.find(t => req.mic_types.includes(t) && !coveredTypes.has(t));
+        if (coveredType) {
+          coveredTypes.add(coveredType);
+        }
+      }
+    }
+    
+    for (const requiredType of req.mic_types) {
+      if (!coveredTypes.has(requiredType)) {
+        log(`❌ Falta micròfon per: ${requiredType}`);
+        return;
+      }
+    }
+  }
+
   const remaining = (c.duration_hours || 0) - (c.worked_hours || 0);
   const actual_hours = Math.min(Number(hours || 0), remaining);
   c.worked_hours = Number(c.worked_hours || 0) + actual_hours;
@@ -89,11 +116,15 @@ function workOnContract(contractId, hours) {
       c.completed = true;
       c.completed_at = { day: state.time.day, hour: state.time.hour };
       log(`📥 Contracte marcat com a complet (no s'elimina).`);
+      showNotification(`🎉 Contracte "${c.name}" completat!`);
       saveState();
     }
   } else {
     log(`🛠️ Treballat ${actual_hours}h sobre ${c.name} — ${c.worked_hours}/${c.duration_hours}h`);
   }
+
+  // Increase fatigue
+  state.player.fatigue += actual_hours;
 
   advanceTime(actual_hours);
   renderAll();
@@ -124,8 +155,7 @@ function buySelected() {
   invAdd(id, qty);
   renderAll();
   try { prepareInstallFromShop(); } catch (e) { }
-  log(`✅ Comprat: ${it.name} x${qty} per ${euro(cost)}.`);
-  saveState();
+  log(`✅ Comprat: ${it.name} x${qty} per ${euro(cost)}.`);  showNotification(`🛒 Comprat: ${it.name} x${qty}`);  saveState();
 }
 
 function prepareInstallFromShop() {
@@ -209,4 +239,5 @@ document.getElementById("fileInput").addEventListener("change", async (e) => {
 
 // boot demo by default
 loadFromObject(DEMO);
+ensurePlayerDefaults();
 try { loadStateFromStorage(); } catch(e) { }

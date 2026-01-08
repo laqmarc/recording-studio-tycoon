@@ -7,7 +7,7 @@ const state = {
   inventory: new Map(), // id -> qty
   selected: { roomIndex: 0, shopItemId: null },
   roomsInstalled: [], // per room: { category -> [itemId,...] }
-  player: { level: 1, xp: 0 }
+  player: { level: 1, xp: 0, fatigue: 0 }
 };
 // time state (days/hours)
 state.time = { day: 1, hour: 0, workHoursPerDay: 8 };

@@ -100,3 +100,16 @@ function checkContractRequirements(contract, roomIndex) {
 
   return true;
 }
+
+// Notifications
+function showNotification(message, duration = 3000) {
+  const container = document.getElementById('notifications');
+  const div = document.createElement('div');
+  div.className = 'notification';
+  div.textContent = message;
+  container.appendChild(div);
+  setTimeout(() => {
+    div.style.animation = 'slideOut 0.5s ease';
+    setTimeout(() => div.remove(), 500);
+  }, duration);
+}

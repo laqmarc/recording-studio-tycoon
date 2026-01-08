@@ -8771,6 +8771,105 @@ const DEMO = {
       },
       "io": {},
       "notes": "Sintetitzadors clàssics"
+    },
+    {
+      "id": "mic_condenser_vocal",
+      "name": "Micròfon Condensador Vocal",
+      "category": "mic",
+      "tier": "low",
+      "price": 100,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": ["Condensador", "Vocals"],
+      "stats": {
+        "mic_quality": 50
+      },
+      "type": ["vocals"],
+      "io": {},
+      "notes": "Micròfon condensador per vocals"
+    },
+    {
+      "id": "mic_dynamic_instrument",
+      "name": "Micròfon Dinàmic Instrumental",
+      "category": "mic",
+      "tier": "low",
+      "price": 80,
+      "maintenance_weekly": 0.16,
+      "reliability": 0.95,
+      "unlock_level": 1,
+      "tags": ["Dinàmic", "Instrumental"],
+      "stats": {
+        "mic_quality": 45
+      },
+      "type": ["guitarra", "baix", "bombo", "caixa"],
+      "io": {},
+      "notes": "Micròfon dinàmic versàtil per instruments"
+    },
+    {
+      "id": "mic_condenser_overhead",
+      "name": "Micròfon Condensador Overhead",
+      "category": "mic",
+      "tier": "mid",
+      "price": 150,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.9,
+      "unlock_level": 2,
+      "tags": ["Condensador", "Overhead"],
+      "stats": {
+        "mic_quality": 55
+      },
+      "type": ["tomb", "hh", "oh"],
+      "io": {},
+      "notes": "Micròfon condensador per overheads de bateria"
+    },
+    {
+      "id": "effect_reverb_plate",
+      "name": "Plate Reverb",
+      "category": "effects",
+      "tier": "mid",
+      "price": 200,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.9,
+      "unlock_level": 2,
+      "tags": ["Reverb"],
+      "stats": {
+        "reverb_quality": 75
+      },
+      "io": {},
+      "notes": "Reverb de placa clàssica"
+    },
+    {
+      "id": "instrument_guitar_electric",
+      "name": "Guitarra Elèctrica Fender",
+      "category": "instruments",
+      "tier": "mid",
+      "price": 500,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": ["Guitarra"],
+      "stats": {
+        "instrument_quality": 70
+      },
+      "io": {},
+      "notes": "Guitarra per sessions de gravació"
+    },
+    {
+      "id": "software_daw_protools",
+      "name": "Pro Tools DAW License",
+      "category": "software",
+      "tier": "pro",
+      "price": 800,
+      "maintenance_weekly": 0.0,
+      "reliability": 1.0,
+      "unlock_level": 5,
+      "tags": ["DAW"],
+      "stats": {
+        "daw_quality": 90
+      },
+      "io": {},
+      "notes": "Estació de treball digital professional"
     }
   ],
   "rooms": [
@@ -8799,7 +8898,10 @@ const DEMO = {
         "mic": 2,
         "preamp": 2,
         "mic_stand": 2,
-        "mic_accessory": 2
+        "mic_accessory": 2,
+        "effects": 2,
+        "instruments": 1,
+        "software": 1
       }
     },
     {
@@ -8870,7 +8972,10 @@ const DEMO = {
         "rack": 2,
         "acoustic_treatment": 10,
         "patchbay": 1,
-        "cable": 15
+        "cable": 15,
+        "effects": 4,
+        "instruments": 2,
+        "software": 2
       }
     },
     {
@@ -8895,6 +9000,51 @@ const DEMO = {
         "patchbay": 1,
         "cable": 30,
         "multicore": 1
+      }
+    },
+    {
+      "id": "room_mastering_1",
+      "name": "Mastering Suite",
+      "type": "mastering_suite",
+      "unlock_level": 7,
+      "size_m2": 12,
+      "max_people": 1,
+      "noise_floor_db": -75,
+      "isolation": 60,
+      "base_acoustic": 65,
+      "slots": {
+        "monitor": 4,
+        "interface": 1,
+        "headphones": 1,
+        "headphone_amp": 1,
+        "desk": 1,
+        "rack": 1,
+        "acoustic_treatment": 8,
+        "effects": 6,
+        "software": 3
+      }
+    },
+    {
+      "id": "room_streaming_1",
+      "name": "Live Streaming Room",
+      "type": "streaming_room",
+      "unlock_level": 4,
+      "size_m2": 18,
+      "max_people": 3,
+      "noise_floor_db": -50,
+      "isolation": 35,
+      "base_acoustic": 35,
+      "slots": {
+        "interface": 2,
+        "mic": 3,
+        "preamp": 2,
+        "headphones": 3,
+        "headphone_amp": 1,
+        "desk": 1,
+        "acoustic_treatment": 4,
+        "cable": 8,
+        "software": 2,
+        "instruments": 1
       }
     }
   ],
@@ -8931,6 +9081,8 @@ const DEMO = {
       "duration_hours": 2,
       "base_pay": 180,
       "target_quality": 50,
+      "deadline_days": 7,
+      "late_penalty": 0.8,
       "requirements": {
         "room_type": "control_room",
         "min_interface_inputs": 2,
@@ -8963,6 +9115,7 @@ const DEMO = {
           "headphones": 4
         },
         "mic_types": ["vocals", "guitarra", "baix", "bombo", "caixa", "tomb", "hh", "oh"]
+
       },
       "reputation_gain": {
         "success": 6,

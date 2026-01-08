@@ -21,17 +21,23 @@ function getRequirementsHTML(contract, roomIndex) {
   }
 
   // Mic types
-  if (req.mic_types) {
+  if (req.mic_types && Array.isArray(req.mic_types)) {
     const installedMicIds = installedIds(roomIndex, 'mic');
-    const installedMicTypes = new Set();
+    const coveredTypes = new Set();
+    
     for (const micId of installedMicIds) {
       const mic = state.itemsById.get(micId);
-      if (mic && mic.type) {
-        mic.type.forEach(t => installedMicTypes.add(t));
+      if (mic && mic.type && Array.isArray(mic.type)) {
+        // Cada micròfon només cobreix un tipus (el primer requerit que pot fer)
+        const coveredType = mic.type.find(t => req.mic_types.includes(t) && !coveredTypes.has(t));
+        if (coveredType) {
+          coveredTypes.add(coveredType);
+        }
       }
     }
+    
     for (const requiredType of req.mic_types) {
-      const hasType = installedMicTypes.has(requiredType);
+      const hasType = coveredTypes.has(requiredType);
       html += `<div style="color: ${hasType ? '#4CAF50' : '#f44336'}">Mic ${requiredType}</div>`;
     }
   }
@@ -42,6 +48,15 @@ function getRequirementsHTML(contract, roomIndex) {
     const maxIns = interfaces.reduce((m,it)=>Math.max(m, Number((it.io && it.io.inputs_total) || (it.stats && it.stats.inputs) || 0)), 0);
     const hasEnough = maxIns >= Number(req.min_interface_inputs);
     html += `<div style="color: ${hasEnough ? '#4CAF50' : '#f44336'}">Entrades interface: ${maxIns}/${req.min_interface_inputs}</div>`;
+  }
+
+  // Deadline
+  if (contract.deadline_days) {
+    const start = contract.start_day || state.time.day;
+    const deadline = start + contract.deadline_days;
+    const isLate = state.time.day > deadline;
+    const daysLeft = deadline - state.time.day;
+    html += `<div style="color: ${isLate ? '#f44336' : '#4CAF50'}">Deadline: ${daysLeft} dies restants</div>`;
   }
 
   return html ? `<div class="tiny" style="margin-top:6px; line-height:1.4">${html}</div>` : '';
@@ -271,5 +286,6 @@ function renderRight() {
     <div class="box"><div class="muted">Sala slots</div><div class="v">${Object.keys(slots).length}</div></div>
     <div class="box"><div class="muted">Temps</div><div class="v">Dia ${state.time.day} · Hora ${state.time.hour}/${state.time.workHoursPerDay}</div></div>
     <div class="box"><div class="muted">Nivell</div><div class="v">${state.player.level} · XP ${state.player.xp}/${xpNext}</div></div>
+    <div class="box"><div class="muted">Fatiga</div><div class="v">${state.player.fatigue.toFixed(1)}h</div></div>
   `;
 }

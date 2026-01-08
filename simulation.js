@@ -51,9 +51,16 @@ function simulateRecording(roomIndex, contract) {
       engineer * 0.25;
   }
 
+  // Synergy bonuses
+  let synergy_bonus = 0;
+  if (pre_q > 70 && if_q > 70) synergy_bonus += 5; // Good preamp + interface
+  if (mic_q > 70 && pre_q > 70) synergy_bonus += 3; // Good mic + preamp
+  quality += synergy_bonus;
+
   const noise_floor = Number(room.noise_floor_db || -60);
   const noise_penalty = clamp((noise_floor - (-70)) * 1.2, 0, 25);
-  const final_quality = clamp(quality - noise_penalty, 0, 100);
+  const fatigue_penalty = Math.max(0, state.player.fatigue - 10) * 2;
+  const final_quality = clamp(quality - noise_penalty - fatigue_penalty, 0, 100);
 
   const target = Number(contract.target_quality || 55);
   let happiness = 50 + (final_quality - target) * 0.8 - Math.max(0, latency_ms - 8) * 0.6;
@@ -62,7 +69,7 @@ function simulateRecording(roomIndex, contract) {
   const base_pay = Number(contract.base_pay || 100);
   const payout = Math.round(base_pay * (0.6 + happiness/100));
 
-  return { final_quality, latency_ms, happiness, payout, room_acoustic, noise_penalty, mic_q, pre_q, if_q, mon_q, hp_q };
+  return { final_quality, latency_ms, happiness, payout, room_acoustic, noise_penalty, fatigue_penalty, synergy_bonus, mic_q, pre_q, if_q, mon_q, hp_q };
 }
 
 function simulateContract(contractId) {
@@ -75,11 +82,16 @@ function simulateContract(contractId) {
   }
 
   const res = simulateRecording(state.selected.roomIndex, contract);
-  state.cash += res.payout;
-  const xpAward = Math.max(0, Math.round(res.payout/20 + res.final_quality/10));
+  let payout = res.payout;
+  if (contract.deadline_days && state.time.day > (contract.start_day || 0) + contract.deadline_days) {
+    payout = Math.round(payout * (contract.late_penalty || 0.5));
+    log(`⏰ Contracte entregat tard! Penalització aplicada. Payout reduït.`);
+  }
+  state.cash += payout;
+  const xpAward = Math.max(0, Math.round(payout/20 + res.final_quality/10));
   addXp(xpAward);
 
-  log(`🎬 Sessió: ${contract.name}\n- Qualitat: ${res.final_quality.toFixed(1)}\n- Latència: ${res.latency_ms.toFixed(1)} ms\n- Happiness: ${res.happiness.toFixed(1)}\n- Payout: ${euro(res.payout)}\n- XP: ${xpAward}\n`);
+  log(`🎬 Sessió: ${contract.name}\n- Qualitat: ${res.final_quality.toFixed(1)}\n- Latència: ${res.latency_ms.toFixed(1)} ms\n- Happiness: ${res.happiness.toFixed(1)}\n- Payout: ${euro(payout)}\n- XP: ${xpAward}\n- Penalitzacions: Soroll ${res.noise_penalty.toFixed(1)}, Fatiga ${res.fatigue_penalty.toFixed(1)}\n- Bonus: Sinergia ${res.synergy_bonus.toFixed(1)}\n`);
 
   renderAll();
   saveState();
