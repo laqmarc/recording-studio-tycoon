@@ -107,7 +107,9 @@ function renderRooms() {
     const wh = state.time.workHoursPerDay || 8;
     const applicable = state.db.contracts.filter(c => {
       const req = c.requirements || {};
-      return !req.room_type || req.room_type === (room && room.type);
+      const playerLevel = Number(state.player.level || 1);
+      const unlockLevel = Number(c.unlock_level || 1);
+      return unlockLevel <= playerLevel && (!req.room_type || req.room_type === (room && room.type));
     });
     if (!applicable.length) {
       leftContracts.innerHTML = `<div class="muted">No hi ha contractes compatibles per aquesta sala.</div>`;
@@ -142,7 +144,6 @@ function renderRooms() {
 }
 
 function renderShop() {
-  console.log('renderShop called, selected:', state.selected.shopItemId);
   const cats = Array.from(state.itemsByCategory.keys()).sort();
   const sel = document.getElementById("selCategory");
   if (!sel.options.length) {
@@ -162,7 +163,6 @@ function renderShop() {
     if (!micTypeListenerAdded) {
       const updateMicFilter = () => {
         const newValue = micTypeSelect.value;
-        console.log('selMicType changed/input to:', newValue);
         renderShop();
       };
       micTypeSelect.addEventListener("change", updateMicFilter);
@@ -175,7 +175,6 @@ function renderShop() {
   }
   
   const micTypeFilter = micTypeSelect.value;
-  console.log('cat:', cat, 'micTypeFilter:', micTypeFilter);
 
   let items = (state.itemsByCategory.get(cat) || []).filter(it => {
     const unlocked = Number(it.unlock_level || 1) <= Number(state.player.level || 1);
@@ -184,7 +183,6 @@ function renderShop() {
     const passes = unlocked && matchesSearch && matchesMicType;
     return passes;
   });
-  console.log('Filtered items:', items.length);
 
   // If selected item is not in current filtered list, select the first one
   if (!items.some(it => it.id === state.selected.shopItemId)) {
@@ -200,7 +198,6 @@ function renderShop() {
     div.className = "card" + (it.id === state.selected.shopItemId ? " active" : "");
     div.style.cursor = "pointer";
     div.addEventListener('click', () => { 
-      console.log('Clicked item:', it.id);
       state.selected.shopItemId = it.id; 
       renderShop(); 
       renderRight(); 

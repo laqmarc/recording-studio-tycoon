@@ -9084,6 +9084,7 @@ const DEMO = {
       "duration_hours": 2,
       "base_pay": 220,
       "target_quality": 55,
+      "unlock_level": 1,
       "requirements": {
         "room_type": "vocal_booth",
         "min_interface_inputs": 1,
@@ -9110,6 +9111,7 @@ const DEMO = {
       "target_quality": 50,
       "deadline_days": 7,
       "late_penalty": 0.8,
+      "unlock_level": 2,
       "requirements": {
         "room_type": "control_room",
         "min_interface_inputs": 2,
@@ -9133,13 +9135,16 @@ const DEMO = {
       "duration_hours": 6,
       "base_pay": 650,
       "target_quality": 65,
+      "unlock_level": 5,
       "requirements": {
         "room_type": "live_room",
         "min_interface_inputs": 8,
         "min_items": {
           "mic": 8,
           "preamp_multi": 1,
-          "headphones": 4
+          "headphones": 4,
+          "cable": 8,
+          "headphone_amp": 2,
         },
         "mic_types": ["vocals", "guitarra", "baix", "bombo", "caixa", "tomb", "hh", "oh"]
 
@@ -9155,12 +9160,38 @@ const DEMO = {
       "type": "mix",
       "genre": "any",
       "duration_hours": 4,
-      "base_pay": 300,
+      "base_pay": 150,
       "target_quality": 60,
+      "unlock_level": 1,
       "requirements": {
         "room_type": "control_room",
         "min_items": {
           "monitor": 2
+        }
+      },
+      "reputation_gain": {
+        "success": 3,
+        "fail": 1
+      }
+    },
+    {
+      "id": "contract_mix_single_instrument",
+      "name": "Grabar 1 instrument en 1 tema",
+      "type": "recording",
+      "genre": "any",
+      "duration_hours": 4,
+      "base_pay": 250,
+      "target_quality": 60,
+      "unlock_level": 1,
+      "requirements": {
+        "room_type": "control_room",
+        "min_items": {
+        "monitor": 2,
+        "interface": 1,
+        "mic": 1,
+        "preamp": 1,
+        "headphones": 1,
+        "cable": 4,
         }
       },
       "reputation_gain": {
@@ -9176,6 +9207,7 @@ const DEMO = {
       "duration_hours": 2,
       "base_pay": 200,
       "target_quality": 62,
+      "unlock_level": 4,
       "requirements": {
         "room_type": "control_room",
         "min_items": {
@@ -9196,6 +9228,7 @@ const DEMO = {
       "duration_hours": 5,
       "base_pay": 400,
       "target_quality": 65,
+      "unlock_level": 6,
       "requirements": {
         "room_type": "control_room",
         "min_items": {
@@ -9216,6 +9249,7 @@ const DEMO = {
       "duration_hours": 10,
       "base_pay": 900,
       "target_quality": 70,
+      "unlock_level": 7,
       "requirements": {
         "room_type": "control_room",
         "min_items": {
@@ -9236,6 +9270,7 @@ const DEMO = {
       "duration_hours": 30,
       "base_pay": 2500,
       "target_quality": 80,
+      "unlock_level": 8,
       "requirements": {
         "room_type": "control_room",
         "min_items": {
@@ -9256,6 +9291,7 @@ const DEMO = {
       "duration_hours": 40,
       "base_pay": 4000,
       "target_quality": 85,
+      "unlock_level": 9,
       "requirements": {
         "room_type": "control_room",
         "min_items": {
@@ -9276,6 +9312,7 @@ const DEMO = {
       "duration_hours": 20,
       "base_pay": 3000,
       "target_quality": 80,
+      "unlock_level": 7,
       "requirements": {
         "room_type": "live_room",
         "min_interface_inputs": 16,
@@ -9299,6 +9336,7 @@ const DEMO = {
       "duration_hours": 4,
       "base_pay": 350,
       "target_quality": 75,
+      "unlock_level": 6,
       "requirements": {
         "room_type": "mastering_suite",
         "min_items": {
@@ -9319,6 +9357,7 @@ const DEMO = {
       "duration_hours": 3,
       "base_pay": 400,
       "target_quality": 60,
+      "unlock_level": 4,
       "requirements": {
         "room_type": "streaming_room",
         "min_interface_inputs": 1,
