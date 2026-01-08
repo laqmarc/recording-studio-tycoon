@@ -8863,7 +8863,7 @@ const DEMO = {
       "price": 800,
       "maintenance_weekly": 0.0,
       "reliability": 1.0,
-      "unlock_level": 5,
+      "unlock_level": 1,
       "tags": ["DAW"],
       "stats": {
         "daw_quality": 90
@@ -9044,7 +9044,34 @@ const DEMO = {
         "acoustic_treatment": 4,
         "cable": 8,
         "software": 2,
-        "instruments": 1
+        "instruments": 1,
+        "mic_stand": 3
+      }
+    },
+    {
+      "id": "room_live_3",
+      "name": "Live Room (Molt Gran)",
+      "type": "live_room",
+      "unlock_level": 5,
+      "size_m2": 120,
+      "max_people": 18,
+      "noise_floor_db": -60,
+      "isolation": 45,
+      "base_acoustic": 50,
+      "slots": {
+        "mic": 32,
+        "preamp_multi": 8,
+        "interface": 4,
+        "headphones": 16,
+        "headphone_amp": 3,
+        "mic_stand": 32,
+        "mic_accessory": 16,
+        "acoustic_treatment": 24,
+        "patchbay": 2,
+        "cable": 40,
+        "multicore": 2,
+        "console_analog": 1,
+
       }
     }
   ],
@@ -9262,6 +9289,48 @@ const DEMO = {
       "reputation_gain": {
         "success": 10,
         "fail": 4
+      }
+    },
+    {
+      "id": "contract_mastering_session",
+      "name": "Sessió de Mastering",
+      "type": "master",
+      "genre": "any",
+      "duration_hours": 4,
+      "base_pay": 350,
+      "target_quality": 75,
+      "requirements": {
+        "room_type": "mastering_suite",
+        "min_items": {
+          "monitor": 2,
+          "effects": 2
+        }
+      },
+      "reputation_gain": {
+        "success": 5,
+        "fail": 2
+      }
+    },
+    {
+      "id": "contract_live_streaming",
+      "name": "Streaming en directe",
+      "type": "streaming",
+      "genre": "live",
+      "duration_hours": 3,
+      "base_pay": 400,
+      "target_quality": 60,
+      "requirements": {
+        "room_type": "streaming_room",
+        "min_interface_inputs": 1,
+        "min_items": {
+          "interface": 1,
+          "mic": 1,
+          "software": 1
+        }
+      },
+      "reputation_gain": {
+        "success": 4,
+        "fail": 1
       }
     }
 

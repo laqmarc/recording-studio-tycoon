@@ -44,6 +44,12 @@ function simulateRecording(roomIndex, contract) {
       room_acoustic * 0.20 +
       if_q * 0.10 +
       engineer * 0.30;
+  } else if (type === "streaming") {
+    quality =
+      if_q * 0.40 +
+      mic_q * 0.25 +
+      room_acoustic * 0.15 +
+      engineer * 0.20;
   } else { // master
     quality =
       mon_q * 0.45 +

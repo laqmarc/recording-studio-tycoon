@@ -220,6 +220,19 @@ document.getElementById("btnUninstall").addEventListener("click", uninstallLast)
 document.getElementById("btnSimPodcast").addEventListener("click", () => simulateContract("contract_podcast_duo"));
 document.getElementById("btnSimMix").addEventListener("click", () => simulateContract("contract_mix_single"));
 
+document.getElementById("btnNextDay").addEventListener("click", () => {
+  const remainingHours = state.time.workHoursPerDay - state.time.hour;
+  if (remainingHours > 0) {
+    advanceTime(remainingHours);
+    log(`⏭️ Saltat a demà. Fatiga reduïda a ${state.player.fatigue.toFixed(1)}h`);
+    showNotification(`🌅 Dia passat! Fatiga: ${state.player.fatigue.toFixed(1)}h`);
+    renderAll();
+    saveState();
+  } else {
+    log("Ja estàs al final del dia.");
+  }
+});
+
 document.getElementById("selCategory").addEventListener("change", renderShop);
 document.getElementById("txtSearch").addEventListener("input", renderShop);
 

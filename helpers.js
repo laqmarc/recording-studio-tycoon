@@ -101,6 +101,18 @@ function checkContractRequirements(contract, roomIndex) {
   return true;
 }
 
+// Time management
+function advanceTime(hours) {
+  state.time.hour += hours;
+  while (state.time.hour >= state.time.workHoursPerDay) {
+    state.time.hour -= state.time.workHoursPerDay;
+    state.time.day += 1;
+    // Recover fatigue when day changes
+    state.player.fatigue = Math.max(0, state.player.fatigue - 8);
+    log(`🌅 Nou dia! Fatiga reduïda a ${state.player.fatigue.toFixed(1)}h`);
+  }
+}
+
 // Notifications
 function showNotification(message, duration = 3000) {
   const container = document.getElementById('notifications');
