@@ -11,6 +11,8 @@ const state = {
   roomsInstalled: [], // per room: { category -> [itemId,...] }
   player: { level: 1, xp: 0 }
 };
+// time state (days/hours)
+state.time = { day: 1, hour: 0, workHoursPerDay: 8 };
 
 // Demo dataset (petit) si no carregues items_master.json
 const DEMO = {
@@ -126,6 +128,105 @@ function sumStat(items, key) {
     s += Number(stats[key] || 0);
   }
   return s;
+}
+
+// Time and work helpers
+function advanceTime(hours) {
+  let h = Math.max(0, Number(hours || 0));
+  if (!h) return;
+  while (h > 0) {
+    const remainingToday = state.time.workHoursPerDay - state.time.hour;
+    const take = Math.min(remainingToday || state.time.workHoursPerDay, h);
+    state.time.hour += take;
+    h -= take;
+    if (state.time.hour >= state.time.workHoursPerDay) {
+      state.time.day += 1;
+      state.time.hour = 0;
+    }
+  }
+  log(`⏱️ Avançat ${hours}h — Dia ${state.time.day} · Hora ${state.time.hour}/${state.time.workHoursPerDay}`);
+  renderAll();
+}
+
+function getContractETA(c) {
+  const worked = Number(c.worked_hours || 0);
+  const total = Number(c.duration_hours || 0);
+  const remaining = Math.max(0, total - worked);
+  if (remaining === 0) return { days:0, hours:0, finishDay: state.time.day, finishHour: state.time.hour };
+  const hoursLeftToday = state.time.workHoursPerDay - state.time.hour;
+  if (remaining <= hoursLeftToday) {
+    return { days:0, hours:remaining, finishDay: state.time.day, finishHour: state.time.hour + remaining };
+  }
+  let rem = remaining - hoursLeftToday;
+  const fullDays = Math.floor(rem / state.time.workHoursPerDay);
+  const finalHours = rem % state.time.workHoursPerDay;
+  const finishDay = state.time.day + 1 + fullDays;
+  const finishHour = finalHours === 0 ? 0 : finalHours;
+  return { days: fullDays + 1, hours: finalHours, finishDay, finishHour };
+}
+
+function workOnContract(contractId, hours) {
+  const c = state.db.contracts.find(x => x.id === contractId);
+  if (!c) return log('Contracte no trobat.');
+  // ensure selected room is compatible
+  const room = state.db.rooms[state.selected.roomIndex];
+  const req = c.requirements || {};
+  if (req.room_type && req.room_type !== room.type) {
+    log(`❌ Aquest contracte demana sala tipus "${req.room_type}". Ara estàs a "${room.type}".`);
+    return;
+  }
+
+  // requirements: min_items counts
+  if (req.min_items) {
+    for (const [cat, min] of Object.entries(req.min_items)) {
+      const used = installedIds(state.selected.roomIndex, cat).length;
+      if (used < Number(min)) {
+        log(`❌ Falta equip: ${cat} (${used}/${min})`);
+        return;
+      }
+    }
+  }
+
+  // mic_stand check
+  const micCount = installedIds(state.selected.roomIndex, 'mic').length;
+  if (micCount > 0) {
+    const standCount = installedIds(state.selected.roomIndex, 'mic_stand').length;
+    if (standCount < micCount) {
+      log(`❌ Falta equip: mic_stand (${standCount}/${micCount}) — cal un peu per cada micròfon.`);
+      return;
+    }
+  }
+
+  // min interface inputs if required
+  if (req.min_interface_inputs) {
+    const interfaces = installedIds(state.selected.roomIndex, "interface").map(id=>state.itemsById.get(id)).filter(Boolean);
+    const maxIns = interfaces.reduce((m,it)=>Math.max(m, Number((it.io && it.io.inputs_total) || (it.stats && it.stats.inputs) || 0)), 0);
+    if (maxIns < Number(req.min_interface_inputs)) {
+      log(`❌ Cal una interface amb mínim ${req.min_interface_inputs} entrades (ara max: ${maxIns}).`);
+      return;
+    }
+  }
+
+  // apply work
+  c.worked_hours = Number(c.worked_hours || 0) + Number(hours || 0);
+  // cap at total
+    if (c.worked_hours >= (c.duration_hours || 0)) {
+      c.worked_hours = c.duration_hours || c.worked_hours;
+      log(`✅ Contracte completat: ${c.name} (treballats ${c.worked_hours}h/${c.duration_hours}h)`);
+      // compute payout/xp via simulation (simulateContract returns boolean)
+      const ok = simulateContract(c.id);
+      if (ok) {
+        // mark as completed instead of removing
+        c.completed = true;
+        c.completed_at = { day: state.time.day, hour: state.time.hour };
+        log(`📥 Contracte marcat com a complet (no s'elimina).`);
+      }
+    } else {
+      log(`🛠️ Treballat ${hours}h sobre ${c.name} — ${c.worked_hours}/${c.duration_hours}h`);
+    }
+
+  advanceTime(hours);
+  renderAll();
 }
 function rebuildIndexes() {
   state.itemsById.clear();
@@ -293,17 +394,40 @@ function renderRooms() {
   const leftContracts = document.getElementById("leftContracts");
   if (leftContracts) {
     const room = state.db.rooms[state.selected.roomIndex];
-    leftContracts.innerHTML = state.db.contracts.map(c => {
+    const wh = state.time.workHoursPerDay || 8;
+    // only show contracts compatible with current room type
+    const applicable = state.db.contracts.filter(c => {
       const req = c.requirements || {};
-      const ok = !req.room_type || req.room_type === (room && room.type);
-      return `
-        <div class="card" style="${ok ? '' : 'opacity:.45'}">
-          <div class="row"><b>${c.name}</b><span class="pill">${c.type}</span></div>
-          <div class="muted" style="margin-top:6px">${c.duration_hours}h · ${euro(c.base_pay)}</div>
-          <div style="margin-top:8px"><button class="btn2" ${ok ? `onclick="simulateContract('${c.id}')"` : 'disabled'}>${ok ? 'Simular' : 'No compatible'}</button></div>
-        </div>
-      `;
-    }).join('');
+      return !req.room_type || req.room_type === (room && room.type);
+    });
+    if (!applicable.length) {
+      leftContracts.innerHTML = `<div class="muted">No hi ha contractes compatibles per aquesta sala.</div>`;
+    } else {
+      leftContracts.innerHTML = applicable.map(c => {
+        const worked = Number(c.worked_hours || 0);
+        const total = Number(c.duration_hours || 0);
+        const remaining = Math.max(0, total - worked);
+        const pct = total ? Math.round((worked/total)*100) : 0;
+        const eta = getContractETA(c);
+        const etaText = remaining === 0 ? 'Ready' : (eta.days ? `${eta.days}d ${eta.hours}h` : `${eta.hours}h`);
+        const isDone = Boolean(c.completed);
+        return `
+          <div class="card" style="${isDone ? 'opacity:.6; filter:grayscale(.4);' : ''}">
+            <div class="row"><b>${c.name}</b><span class="pill">${c.type}</span></div>
+            <div class="muted" style="margin-top:6px">${c.duration_hours}h · ${euro(c.base_pay)} ${isDone ? '<span class="pill">Complet</span>' : ''}</div>
+            <div style="margin-top:8px">
+              <div class="tiny">Progrés: ${worked}/${total}h <span style="float:right">ETA: ${etaText}</span></div>
+              <div class="progress" style="height:8px; background:#eee; border-radius:4px; overflow:hidden; margin-top:6px"><div style="width:${pct}%; height:8px; background:${isDone? '#999':'#6bb'}; border-radius:4px"></div></div>
+            </div>
+            <div style="margin-top:8px; display:flex; gap:6px">
+              <button class="btn2" ${isDone? 'disabled':''} onclick="workOnContract('${c.id}', 1)">Treballar 1h</button>
+              <button class="btn2" ${isDone? 'disabled':''} onclick="workOnContract('${c.id}', ${wh})">Treballar ${wh}h</button>
+              <button class="btn2 btnOk" ${isDone? 'disabled':''} onclick="workOnContract('${c.id}', 9999)">Finalitzar</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
   }
 }
 
@@ -414,6 +538,7 @@ function renderRight() {
     <div class="box"><div class="muted">Cash</div><div class="v">${Math.round(state.cash)}€</div></div>
     <div class="box"><div class="muted">Inventari</div><div class="v">${state.inventory.size}</div></div>
     <div class="box"><div class="muted">Sala slots</div><div class="v">${Object.keys(slots).length}</div></div>
+    <div class="box"><div class="muted">Temps</div><div class="v">Dia ${state.time.day} · Hora ${state.time.hour}/${state.time.workHoursPerDay}</div></div>
     <div class="box"><div class="muted">Nivell</div><div class="v">${state.player.level} · XP ${state.player.xp}/${xpNext}</div></div>
   `;
 
@@ -493,14 +618,14 @@ function uninstallLast() {
 
 function simulateContract(contractId) {
   const contract = state.db.contracts.find(c => c.id === contractId);
-  if (!contract) return log("Contracte no trobat.");
+  if (!contract) { log("Contracte no trobat."); return false; }
 
   const room = state.db.rooms[state.selected.roomIndex];
   // basic room type check
   const req = contract.requirements || {};
   if (req.room_type && req.room_type !== room.type) {
     log(`❌ Aquest contracte demana sala tipus "${req.room_type}". Ara estàs a "${room.type}".`);
-    return;
+    return false;
   }
 
   // requirements: min_items counts
@@ -509,7 +634,7 @@ function simulateContract(contractId) {
       const used = installedIds(state.selected.roomIndex, cat).length;
       if (used < Number(min)) {
         log(`❌ Falta equip: ${cat} (${used}/${min})`);
-        return;
+        return false;
       }
     }
   }
@@ -531,7 +656,7 @@ function simulateContract(contractId) {
     const maxIns = interfaces.reduce((m,it)=>Math.max(m, Number((it.io && it.io.inputs_total) || (it.stats && it.stats.inputs) || 0)), 0);
     if (maxIns < Number(req.min_interface_inputs)) {
       log(`❌ Cal una interface amb mínim ${req.min_interface_inputs} entrades (ara max: ${maxIns}).`);
-      return;
+      return false;
     }
   }
 
@@ -550,6 +675,7 @@ function simulateContract(contractId) {
 `);
 
   renderAll();
+  return true;
 }
 
 // contract creation helpers removed
@@ -564,7 +690,11 @@ function loadFromObject(obj) {
   const contracts = obj.contracts || [];
 
   state.db = { items, rooms, contracts };
-  rebuildIndexes();
+  // ensure contract progress tracked
+  for (const c of state.db.contracts) {
+    if (c.worked_hours == null) c.worked_hours = 0;
+    if (c.completed == null) c.completed = false; // Initialize completed flag
+  }
   ensureRoomsInstalled();
   state.selected.roomIndex = 0;
   state.selected.shopItemId = items.length ? items[0].id : null;
