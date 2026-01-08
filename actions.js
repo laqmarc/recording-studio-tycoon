@@ -100,8 +100,19 @@ function workOnContract(contractId, hours) {
 }
 
 function buySelected() {
-  const id = state.selected.shopItemId;
-  if (!id) return log("Selecciona un item del Shop.");
+  let id = state.selected.shopItemId;
+  if (!id) {
+    // Select the first item in current category
+    const cat = document.getElementById("selCategory").value;
+    const items = (state.itemsByCategory.get(cat) || []).filter(it => Number(it.unlock_level || 1) <= Number(state.player.level || 1));
+    if (items.length) {
+      id = items[0].id;
+      state.selected.shopItemId = id;
+      log("Seleccionat automàticament el primer item: " + state.itemsById.get(id).name);
+    } else {
+      return log("No hi ha items disponibles en aquesta categoria.");
+    }
+  }
   const it = state.itemsById.get(id);
   if (!it) return log("Item no trobat.");
 

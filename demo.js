@@ -6143,7 +6143,7 @@ const DEMO = {
       "price": 500.0,
       "maintenance_weekly": 1.0,
       "reliability": 0.95,
-      "unlock_level": 3,
+      "unlock_level": 1,
       "tags": [
         "Transistor"
       ],

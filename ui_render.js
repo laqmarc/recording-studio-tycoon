@@ -127,7 +127,7 @@ function renderRooms() {
 }
 
 function renderShop() {
-  console.log('renderShop called');
+  console.log('renderShop called, selected:', state.selected.shopItemId);
   const cats = Array.from(state.itemsByCategory.keys()).sort();
   const sel = document.getElementById("selCategory");
   if (!sel.options.length) {
@@ -179,14 +179,21 @@ function renderShop() {
   document.getElementById("shopMeta").textContent = `${items.length} items`;
 
   const list = document.getElementById("shopList");
-  list.innerHTML = items.slice(0, 80).map(it => {
+  list.innerHTML = "";
+  for (const it of items.slice(0, 200)) {
     const div = document.createElement("div");
-    div.className = "card" + (it.id === state.selected.shopItemId ? " active":"");
-    div.onclick = () => { state.selected.shopItemId = it.id; renderShop(); renderRight(); };
+    div.className = "card" + (it.id === state.selected.shopItemId ? " active" : "");
+    div.style.cursor = "pointer";
+    div.addEventListener('click', () => { 
+      console.log('Clicked item:', it.id);
+      state.selected.shopItemId = it.id; 
+      renderShop(); 
+      renderRight(); 
+    });
     const tier = it.tier || "mid";
     const tierPill = tier === "pro" ? "ok" : tier === "low" ? "bad" : "";
     const statsHtml = (it.stats && Object.keys(it.stats).length)
-      ? `<div style="margin-top:8px">${Object.entries(it.stats).map(([k,v])=>`<div class=\"tiny\">${k.replace(/_/g,' ')}: ${v}</div>`).join('')}</div>`
+      ? `<div style="margin-top:8px">${Object.entries(it.stats).map(([k,v])=>`<div class="tiny">${k.replace(/_/g,' ')}: ${v}</div>`).join('')}</div>`
       : '';
     const micTypesHtml = (it.category === 'mic' && it.type && it.type.length)
       ? `<div class="tiny" style="margin-top:4px; color:#666">Tipus: ${it.type.join(', ')}</div>`
@@ -204,8 +211,8 @@ function renderShop() {
       ${micTypesHtml}
       ${statsHtml}
     `;
-    return div.outerHTML;
-  }).join('');
+    list.appendChild(div);
+  }
 }
 
 function renderRight() {
