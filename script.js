@@ -8,27 +8,31 @@ const state = {
   itemsByCategory: new Map(),
   inventory: new Map(), // id -> qty
   selected: { roomIndex: 0, shopItemId: null },
-  roomsInstalled: [] // per room: { category -> [itemId,...] }
+  roomsInstalled: [], // per room: { category -> [itemId,...] }
+  player: { level: 1, xp: 0 }
 };
 
 // Demo dataset (petit) si no carregues items_master.json
 const DEMO = {
   items: [
-    {id:"mic_shure_sm58", name:"Shure SM58", category:"mic", tier:"mid", price:109, stats:{mic_quality:55}},
-    {id:"mic_shure_sm57", name:"Shure SM57", category:"mic", tier:"mid", price:109, stats:{mic_quality:55}},
-    {id:"preamp_focusrite_isa_one", name:"Focusrite ISA One", category:"preamp", tier:"pro", price:549, stats:{preamp_quality:78}},
-    {id:"interface_focusrite_8i6", name:"Focusrite Scarlett 8i6", category:"interface", tier:"mid", price:259, stats:{conversion_quality:62, latency_score:62}, io:{inputs_total:8}},
-    {id:"monitor_yamaha_hs7", name:"Yamaha HS7 (pair)", category:"monitor", tier:"mid", price:399, stats:{monitor_accuracy:70}},
-    {id:"headphones_beyerdynamic_dt770", name:"Beyerdynamic DT 770 Pro", category:"headphones", tier:"mid", price:149, stats:{hp_accuracy:70}},
-    {id:"headphone_amp_behringer_ha400", name:"Behringer HA400", category:"headphone_amp", tier:"low", price:29, stats:{hp_amp_quality:45}},
-    {id:"acoustic_panels_basic", name:"Panells acústics (pack)", category:"acoustic_treatment", tier:"low", price:99, stats:{room_acoustic_add:4}},
+    {id:"mic_shure_sm58", name:"Shure SM58", category:"mic", tier:"mid", price:109, stats:{mic_quality:55}, unlock_level:1},
+    {id:"mic_shure_sm57", name:"Shure SM57", category:"mic", tier:"mid", price:109, stats:{mic_quality:55}, unlock_level:1},
+    {id:"preamp_focusrite_isa_one", name:"Focusrite ISA One", category:"preamp", tier:"pro", price:549, stats:{preamp_quality:78}, unlock_level:4},
+    {id:"interface_focusrite_8i6", name:"Focusrite Scarlett 8i6", category:"interface", tier:"mid", price:259, stats:{conversion_quality:62, latency_score:62}, io:{inputs_total:8}, unlock_level:2},
+    {id:"monitor_yamaha_hs7", name:"Yamaha HS7 (pair)", category:"monitor", tier:"mid", price:399, stats:{monitor_accuracy:70}, unlock_level:2},
+    {id:"headphones_beyerdynamic_dt770", name:"Beyerdynamic DT 770 Pro", category:"headphones", tier:"mid", price:149, stats:{hp_accuracy:70}, unlock_level:1},
+    {id:"headphone_amp_behringer_ha400", name:"Behringer HA400", category:"headphone_amp", tier:"low", price:29, stats:{hp_amp_quality:45}, unlock_level:1},
+    {id:"acoustic_panels_basic", name:"Panells acústics (pack)", category:"acoustic_treatment", tier:"low", price:99, stats:{room_acoustic_add:4}, unlock_level:1},
   ],
   rooms: [
-    {id:"room_control_1", name:"Control Room (Petit)", type:"control_room", size_m2:14, max_people:2, noise_floor_db:-65, isolation:45, base_acoustic:45,
+    {id:"room_control_1", name:"Control Room (Petit)", type:"control_room", size_m2:14, max_people:2, noise_floor_db:-65, isolation:45, base_acoustic:45, unlock_level:1,
       slots:{monitor:2, interface:1, headphones:2, headphone_amp:1, mic:4, preamp:1, acoustic_treatment:6}
     },
-    {id:"room_vocal_1", name:"Cabina Vocal", type:"vocal_booth", size_m2:6, max_people:1, noise_floor_db:-60, isolation:55, base_acoustic:50,
+    {id:"room_vocal_1", name:"Cabina Vocal", type:"vocal_booth", size_m2:6, max_people:1, noise_floor_db:-60, isolation:55, base_acoustic:50, unlock_level:1,
       slots:{mic:1, preamp:1, interface:1, headphones:1, headphone_amp:1, acoustic_treatment:8}
+    },
+    {id:"room_live_1", name:"Live Room (Mitjà)", type:"live_room", size_m2:28, max_people:6, noise_floor_db:-55, isolation:40, base_acoustic:40, unlock_level:3,
+      slots:{acoustic_treatment:10, cable:20, headphone_amp:1, headphones:6, interface:1, mic:12, mic_accessory:6, mic_stand:10, multicore:1, patchbay:1, preamp_multi:1}
     }
   ],
   contracts: [
@@ -97,6 +101,23 @@ function avgStat(items, key) {
     if (stats[key] != null) { s += Number(stats[key]); n++; }
   }
   return n ? s/n : 0;
+}
+// Leveling helpers
+function xpToNext(level){
+  // tuned curve: larger requirements to slow progression
+  // formula: 200 * level^1.4
+  return Math.max(200, Math.round(200 * Math.pow(level, 1.4)));
+}
+function addXp(amount){
+  if(!amount || amount<=0) return;
+  state.player.xp += Number(amount);
+  log(`⭐ Guanyes ${amount} XP`);
+  // check level up
+  while(state.player.xp >= xpToNext(state.player.level)){
+    state.player.xp -= xpToNext(state.player.level);
+    state.player.level += 1;
+    log(`⬆️ Level up! Ara ets nivell ${state.player.level}`);
+  }
 }
 function sumStat(items, key) {
   let s=0;
@@ -237,9 +258,17 @@ function renderAll() {
 function renderRooms() {
   const el = document.getElementById("roomList");
   el.innerHTML = "";
-  document.getElementById("roomsMeta").textContent = `${state.db.rooms.length} sales`;
+  // determine visible rooms based on player level
+  const visibleRooms = state.db.rooms.map((r, idx) => ({ r, idx })).filter(({ r }) => Number(r.unlock_level || 1) <= Number(state.player.level || 1));
+  document.getElementById("roomsMeta").textContent = `${visibleRooms.length} sales`;
 
-  state.db.rooms.forEach((r, idx) => {
+  // ensure selected room is visible; if not, pick first visible
+  const visibleIndices = visibleRooms.map(v => v.idx);
+  if (visibleIndices.length > 0 && !visibleIndices.includes(state.selected.roomIndex)) {
+    state.selected.roomIndex = visibleIndices[0];
+  }
+
+  visibleRooms.forEach(({ r, idx }) => {
     const div = document.createElement("div");
     div.className = "card" + (idx===state.selected.roomIndex ? " active":"");
     div.onclick = () => { state.selected.roomIndex = idx; renderAll(); };
@@ -289,7 +318,11 @@ function renderShop() {
 
   const q = document.getElementById("txtSearch").value.trim().toLowerCase();
   const cat = sel.value;
-  const items = (state.itemsByCategory.get(cat) || []).filter(it => !q || String(it.name||"").toLowerCase().includes(q));
+  // hide items that require a higher level than the player
+  const items = (state.itemsByCategory.get(cat) || []).filter(it => {
+    const unlocked = Number(it.unlock_level || 1) <= Number(state.player.level || 1);
+    return unlocked && (!q || String(it.name||"").toLowerCase().includes(q));
+  });
 
   document.getElementById("shopMeta").textContent = `${items.length} items`;
 
@@ -376,10 +409,12 @@ function renderRight() {
 
   // KPIs
   const k = document.getElementById("kpis");
+  const xpNext = xpToNext(state.player.level || 1);
   k.innerHTML = `
     <div class="box"><div class="muted">Cash</div><div class="v">${Math.round(state.cash)}€</div></div>
     <div class="box"><div class="muted">Inventari</div><div class="v">${state.inventory.size}</div></div>
     <div class="box"><div class="muted">Sala slots</div><div class="v">${Object.keys(slots).length}</div></div>
+    <div class="box"><div class="muted">Nivell</div><div class="v">${state.player.level} · XP ${state.player.xp}/${xpNext}</div></div>
   `;
 
   // (contract form removed) no room-type select population
@@ -502,12 +537,16 @@ function simulateContract(contractId) {
 
   const res = simulateRecording(state.selected.roomIndex, contract);
   state.cash += res.payout;
+  // award XP based on payout and quality (reduced to slow progression)
+  const xpAward = Math.max(0, Math.round(res.payout/20 + res.final_quality/10));
+  addXp(xpAward);
 
   log(`🎬 Sessió: ${contract.name}
 - Qualitat: ${res.final_quality.toFixed(1)}
 - Latència: ${res.latency_ms.toFixed(1)} ms
 - Happiness: ${res.happiness.toFixed(1)}
 - Payout: ${euro(res.payout)}
+- XP: ${xpAward}
 `);
 
   renderAll();
