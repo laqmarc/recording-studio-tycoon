@@ -1,6 +1,6 @@
 // state.js - global state and data
 const state = {
-  cash: 10000000,
+  cash: 1000,
   db: { items: [], rooms: [], contracts: [] },
   itemsById: new Map(),
   itemsByCategory: new Map(),

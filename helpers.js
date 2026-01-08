@@ -47,3 +47,56 @@ function invRemove(id, qty=1){
   if (next<=0) state.inventory.delete(id); else state.inventory.set(id,next);
   return true;
 }
+
+// Contract requirement checker
+function checkContractRequirements(contract, roomIndex) {
+  const req = contract.requirements || {};
+  const room = state.db.rooms[roomIndex];
+  
+  if (req.room_type && req.room_type !== room.type) {
+    return false;
+  }
+
+  if (req.min_items) {
+    for (const [cat, min] of Object.entries(req.min_items)) {
+      const used = installedIds(roomIndex, cat).length;
+      if (used < Number(min)) {
+        return false;
+      }
+    }
+  }
+
+  if (req.mic_types) {
+    const installedMicIds = installedIds(roomIndex, 'mic');
+    const installedMicTypes = new Set();
+    for (const micId of installedMicIds) {
+      const mic = state.itemsById.get(micId);
+      if (mic && mic.type) {
+        mic.type.forEach(t => installedMicTypes.add(t));
+      }
+    }
+    for (const requiredType of req.mic_types) {
+      if (!installedMicTypes.has(requiredType)) {
+        return false;
+      }
+    }
+  }
+
+  if (req.min_interface_inputs) {
+    const interfaces = installedIds(roomIndex, "interface").map(id=>state.itemsById.get(id)).filter(Boolean);
+    const maxIns = interfaces.reduce((m,it)=>Math.max(m, Number((it.io && it.io.inputs_total) || (it.stats && it.stats.inputs) || 0)), 0);
+    if (maxIns < Number(req.min_interface_inputs)) {
+      return false;
+    }
+  }
+
+  const micCount = installedIds(roomIndex, 'mic').length;
+  if (micCount > 0) {
+    const standCount = installedIds(roomIndex, 'mic_stand').length;
+    if (standCount < micCount) {
+      return false;
+    }
+  }
+
+  return true;
+}

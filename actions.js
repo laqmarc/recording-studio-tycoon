@@ -78,7 +78,9 @@ function workOnContract(contractId, hours) {
     }
   }
 
-  c.worked_hours = Number(c.worked_hours || 0) + Number(hours || 0);
+  const remaining = (c.duration_hours || 0) - (c.worked_hours || 0);
+  const actual_hours = Math.min(Number(hours || 0), remaining);
+  c.worked_hours = Number(c.worked_hours || 0) + actual_hours;
   if (c.worked_hours >= (c.duration_hours || 0)) {
     c.worked_hours = c.duration_hours || c.worked_hours;
     log(`✅ Contracte completat: ${c.name} (treballats ${c.worked_hours}h/${c.duration_hours}h)`);
@@ -90,10 +92,10 @@ function workOnContract(contractId, hours) {
       saveState();
     }
   } else {
-    log(`🛠️ Treballat ${hours}h sobre ${c.name} — ${c.worked_hours}/${c.duration_hours}h`);
+    log(`🛠️ Treballat ${actual_hours}h sobre ${c.name} — ${c.worked_hours}/${c.duration_hours}h`);
   }
 
-  advanceTime(hours);
+  advanceTime(actual_hours);
   renderAll();
 }
 

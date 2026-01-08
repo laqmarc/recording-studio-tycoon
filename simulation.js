@@ -69,39 +69,9 @@ function simulateContract(contractId) {
   const contract = state.db.contracts.find(c => c.id === contractId);
   if (!contract) { log("Contracte no trobat."); return false; }
 
-  const room = state.db.rooms[state.selected.roomIndex];
-  const req = contract.requirements || {};
-  if (req.room_type && req.room_type !== room.type) {
-    log(`❌ Aquest contracte demana sala tipus "${req.room_type}". Ara estàs a "${room.type}".`);
+  if (!checkContractRequirements(contract, state.selected.roomIndex)) {
+    log("❌ No compleixes els requisits del contracte.");
     return false;
-  }
-
-  if (req.min_items) {
-    for (const [cat, min] of Object.entries(req.min_items)) {
-      const used = installedIds(state.selected.roomIndex, cat).length;
-      if (used < Number(min)) {
-        log(`❌ Falta equip: ${cat} (${used}/${min})`);
-        return false;
-      }
-    }
-  }
-
-  const micCount = installedIds(state.selected.roomIndex, 'mic').length;
-  if (micCount > 0) {
-    const standCount = installedIds(state.selected.roomIndex, 'mic_stand').length;
-    if (standCount < micCount) {
-      log(`❌ Falta equip: mic_stand (${standCount}/${micCount}) — cal un peu per cada micròfon.`);
-      return false;
-    }
-  }
-
-  if (req.min_interface_inputs) {
-    const interfaces = installedIds(state.selected.roomIndex, "interface").map(id=>state.itemsById.get(id)).filter(Boolean);
-    const maxIns = interfaces.reduce((m,it)=>Math.max(m, Number((it.io && it.io.inputs_total) || (it.stats && it.stats.inputs) || 0)), 0);
-    if (maxIns < Number(req.min_interface_inputs)) {
-      log(`❌ Cal una interface amb mínim ${req.min_interface_inputs} entrades (ara max: ${maxIns}).`);
-      return false;
-    }
   }
 
   const res = simulateRecording(state.selected.roomIndex, contract);

@@ -3142,6 +3142,7 @@ const DEMO = {
         "Percussió",
         "Bombo"
       ],
+      "type": ["bombo"],
       "stats": {
         "mic_quality": 43,
         "self_noise": 0
@@ -3162,6 +3163,7 @@ const DEMO = {
         "Percussió",
         "Caixa/Tom"
       ],
+      "type": ["caixa"],
       "stats": {
         "mic_quality": 40,
         "self_noise": 0
@@ -3182,6 +3184,7 @@ const DEMO = {
         "Percussió",
         "Bombo"
       ],
+      "type": ["bombo"],
       "stats": {
         "mic_quality": 43,
         "self_noise": 0
@@ -3202,6 +3205,7 @@ const DEMO = {
         "Condensador",
         "Petit"
       ],
+      "type": ["oh"],
       "stats": {
         "mic_quality": 45,
         "self_noise": 0
@@ -3222,6 +3226,7 @@ const DEMO = {
         "Condensador",
         "Gran"
       ],
+      "type": ["vocals"],
       "stats": {
         "mic_quality": 45,
         "self_noise": 0
@@ -3242,6 +3247,7 @@ const DEMO = {
         "Condensador",
         "Petit"
       ],
+      "type": ["guitarra", "baix"],
       "stats": {
         "mic_quality": 45,
         "self_noise": 0
@@ -3262,6 +3268,7 @@ const DEMO = {
         "Condensador",
         "Petit"
       ],
+      "type": ["oh"],
       "stats": {
         "mic_quality": 45,
         "self_noise": 0
@@ -3282,6 +3289,7 @@ const DEMO = {
         "Percussió",
         "Caixa/Tom"
       ],
+      "type": ["tomb"],
       "stats": {
         "mic_quality": 40,
         "self_noise": 0
@@ -3302,6 +3310,7 @@ const DEMO = {
         "Condensador",
         "Gran"
       ],
+      "type": ["vocals", "guitarra", "baix"],
       "stats": {
         "mic_quality": 60,
         "self_noise": 0
@@ -3322,6 +3331,7 @@ const DEMO = {
         "Percussió",
         "Bombo"
       ],
+      "type": ["bombo"],
       "stats": {
         "mic_quality": 58,
         "self_noise": 0
@@ -3342,6 +3352,7 @@ const DEMO = {
         "Graves",
         "Baix"
       ],
+      "type": ["bombo"],
       "stats": {
         "mic_quality": 58,
         "self_noise": 0
@@ -3362,6 +3373,7 @@ const DEMO = {
         "Condensador",
         "Petit"
       ],
+      "type": ["oh"],
       "stats": {
         "mic_quality": 60,
         "self_noise": 0
@@ -3382,6 +3394,7 @@ const DEMO = {
         "Percussió",
         "Caixa/Tom"
       ],
+      "type": ["caixa", "tomb"],
       "stats": {
         "mic_quality": 55,
         "self_noise": 0
@@ -3402,6 +3415,7 @@ const DEMO = {
         "Cordes",
         "Guitarra"
       ],
+      "type": ["guitarra"],
       "stats": {
         "mic_quality": 55,
         "self_noise": 0
@@ -3422,6 +3436,7 @@ const DEMO = {
         "Percussió",
         "Caixa/Tom"
       ],
+      "type": ["caixa", "tomb"],
       "stats": {
         "mic_quality": 55,
         "self_noise": 0
@@ -3442,6 +3457,7 @@ const DEMO = {
         "Percussió",
         "Caixa/Tom"
       ],
+      "type": ["tomb", "caixa"],
       "stats": {
         "mic_quality": 55,
         "self_noise": 0
@@ -3462,6 +3478,7 @@ const DEMO = {
         "Condensador",
         "Petit"
       ],
+      "type": ["oh"],
       "stats": {
         "mic_quality": 60,
         "self_noise": 0
@@ -3482,6 +3499,7 @@ const DEMO = {
         "Percussió",
         "Bombo"
       ],
+      "type": ["bombo"],
       "stats": {
         "mic_quality": 58,
         "self_noise": 0
@@ -3502,6 +3520,7 @@ const DEMO = {
         "Condensador",
         "Petit"
       ],
+      "type": ["oh"],
       "stats": {
         "mic_quality": 60,
         "self_noise": 0
@@ -3522,6 +3541,7 @@ const DEMO = {
         "Percussió",
         "Caixa/Tom"
       ],
+      "type": ["tomb"],
       "stats": {
         "mic_quality": 55,
         "self_noise": 0
@@ -3542,6 +3562,7 @@ const DEMO = {
         "Percussió",
         "Bombo"
       ],
+      "type": ["bombo", "baix"],
       "stats": {
         "mic_quality": 58,
         "self_noise": 0
@@ -3562,6 +3583,7 @@ const DEMO = {
         "Percussió",
         "Caixa/Tom"
       ],
+      "type": ["tomb"],
       "stats": {
         "mic_quality": 55,
         "self_noise": 0
@@ -3582,6 +3604,7 @@ const DEMO = {
         "Percussió",
         "Caixa/Tom"
       ],
+      "type": ["tomb"],
       "stats": {
         "mic_quality": 55,
         "self_noise": 0
@@ -3602,6 +3625,7 @@ const DEMO = {
         "Percussió",
         "Bombo"
       ],
+      "type": ["bombo", "baix"],
       "stats": {
         "mic_quality": 58,
         "self_noise": 0
@@ -3622,6 +3646,7 @@ const DEMO = {
         "Condensador",
         "Petit"
       ],
+      "type": ["hh", "guitarra"],
       "stats": {
         "mic_quality": 60,
         "self_noise": 0
@@ -3642,6 +3667,7 @@ const DEMO = {
         "Condensador",
         "Gran"
       ],
+      "type": ["vocals", "oh"],
       "stats": {
         "mic_quality": 60,
         "self_noise": 0
@@ -3662,6 +3688,7 @@ const DEMO = {
         "Condensador",
         "Gran"
       ],
+      "type": ["vocals", "guitarra", "baix"],
       "stats": {
         "mic_quality": 60,
         "self_noise": 0
@@ -3682,6 +3709,7 @@ const DEMO = {
         "Condensador",
         "Petit"
       ],
+      "type": ["oh"],
       "stats": {
         "mic_quality": 60,
         "self_noise": 0
@@ -3702,6 +3730,7 @@ const DEMO = {
         "Percussió",
         "Bombo"
       ],
+      "type": ["bombo"],
       "stats": {
         "mic_quality": 58,
         "self_noise": 0
@@ -3722,6 +3751,7 @@ const DEMO = {
         "Percussió",
         "Bombo"
       ],
+      "type": ["bombo"],
       "stats": {
         "mic_quality": 58,
         "self_noise": 0
@@ -3742,6 +3772,7 @@ const DEMO = {
         "Percussió",
         "Caixa/Tom"
       ],
+      "type": ["tomb", "guitarra"],
       "stats": {
         "mic_quality": 55,
         "self_noise": 0
@@ -3762,6 +3793,7 @@ const DEMO = {
         "Condensador",
         "Gran"
       ],
+      "type": ["vocals"],
       "stats": {
         "mic_quality": 60,
         "self_noise": 0
@@ -3782,6 +3814,7 @@ const DEMO = {
         "Condensador",
         "Gran"
       ],
+      "type": ["vocals"],
       "stats": {
         "mic_quality": 60,
         "self_noise": 0
@@ -3802,6 +3835,7 @@ const DEMO = {
         "Estèreo",
         "Parell"
       ],
+      "type": ["oh"],
       "stats": {
         "mic_quality": 55,
         "self_noise": 0
@@ -3822,6 +3856,7 @@ const DEMO = {
         "Condensador",
         "Gran"
       ],
+      "type": ["vocals", "guitarra", "baix"],
       "stats": {
         "mic_quality": 60,
         "self_noise": 0
@@ -3842,6 +3877,7 @@ const DEMO = {
         "Condensador",
         "Gran"
       ],
+      "type": ["vocals", "guitarra", "baix"],
       "stats": {
         "mic_quality": 75,
         "self_noise": 0
@@ -3862,6 +3898,7 @@ const DEMO = {
         "Graves",
         "Baix"
       ],
+      "type": ["vocals", "baix"],
       "stats": {
         "mic_quality": 73,
         "self_noise": 0
@@ -3882,6 +3919,7 @@ const DEMO = {
         "Estèreo",
         "Parell"
       ],
+      "type": ["guitarra"],
       "stats": {
         "mic_quality": 70,
         "self_noise": 0
@@ -3902,6 +3940,7 @@ const DEMO = {
         "Cordes",
         "Guitarra"
       ],
+      "type": ["guitarra"],
       "stats": {
         "mic_quality": 70,
         "self_noise": 0
@@ -3922,6 +3961,7 @@ const DEMO = {
         "Condensador",
         "Gran"
       ],
+      "type": ["vocals", "guitarra", "baix"],
       "stats": {
         "mic_quality": 75,
         "self_noise": 0
@@ -3942,6 +3982,7 @@ const DEMO = {
         "Estèreo",
         "Parell"
       ],
+      "type": ["oh"],
       "stats": {
         "mic_quality": 70,
         "self_noise": 0
@@ -3962,6 +4003,7 @@ const DEMO = {
         "Percussió",
         "Caixa/Tom"
       ],
+      "type": ["caixa"],
       "stats": {
         "mic_quality": 70,
         "self_noise": 0
@@ -3982,6 +4024,7 @@ const DEMO = {
         "Graves",
         "Baix"
       ],
+      "type": ["vocals", "baix"],
       "stats": {
         "mic_quality": 73,
         "self_noise": 0
@@ -4002,6 +4045,7 @@ const DEMO = {
         "Percussió",
         "Bombo"
       ],
+      "type": ["bombo"],
       "stats": {
         "mic_quality": 73,
         "self_noise": 0
@@ -4022,6 +4066,7 @@ const DEMO = {
         "Cordes",
         "Guitarra"
       ],
+      "type": ["guitarra"],
       "stats": {
         "mic_quality": 70,
         "self_noise": 0
@@ -4042,6 +4087,7 @@ const DEMO = {
         "Condensador",
         "Petit"
       ],
+      "type": ["guitarra"],
       "stats": {
         "mic_quality": 75,
         "self_noise": 0
@@ -4062,6 +4108,7 @@ const DEMO = {
         "Percussió",
         "Bombo"
       ],
+      "type": ["bombo"],
       "stats": {
         "mic_quality": 73,
         "self_noise": 0
@@ -4082,6 +4129,7 @@ const DEMO = {
         "Cordes",
         "Guitarra"
       ],
+      "type": ["guitarra"],
       "stats": {
         "mic_quality": 70,
         "self_noise": 0
@@ -4102,6 +4150,7 @@ const DEMO = {
         "Condensador",
         "Petit"
       ],
+      "type": ["guitarra"],
       "stats": {
         "mic_quality": 75,
         "self_noise": 0
@@ -4122,6 +4171,7 @@ const DEMO = {
         "Condensador",
         "Gran"
       ],
+      "type": ["vocals"],
       "stats": {
         "mic_quality": 75,
         "self_noise": 0
@@ -4142,6 +4192,7 @@ const DEMO = {
         "Estèreo",
         "Parell"
       ],
+      "type": ["guitarra"],
       "stats": {
         "mic_quality": 70,
         "self_noise": 0
@@ -4162,6 +4213,7 @@ const DEMO = {
         "Estèreo",
         "Parell"
       ],
+      "type": ["guitarra"],
       "stats": {
         "mic_quality": 70,
         "self_noise": 0
@@ -8861,8 +8913,10 @@ const DEMO = {
         "min_items": {
           "mic": 1,
           "preamp": 1,
-          "headphones": 1
-        }
+          "headphones": 1,
+          "cable": 1
+        },
+        "mic_types": ["vocals"]
       },
       "reputation_gain": {
         "success": 3,
@@ -8884,7 +8938,8 @@ const DEMO = {
           "mic": 2,
           "headphones": 2,
           "headphone_amp": 1
-        }
+        },
+        "mic_types": ["vocals"]
       },
       "reputation_gain": {
         "success": 2,
@@ -8906,7 +8961,8 @@ const DEMO = {
           "mic": 8,
           "preamp_multi": 1,
           "headphones": 4
-        }
+        },
+        "mic_types": ["vocals", "guitarra", "baix", "bombo", "caixa", "tomb", "hh", "oh"]
       },
       "reputation_gain": {
         "success": 6,
@@ -9047,7 +9103,8 @@ const DEMO = {
           "mic": 12,
           "preamp_multi": 1,
           "headphones": 6
-        }
+        },
+        "mic_types": ["vocals", "guitarra", "baix", "bombo", "caixa", "tomb", "hh", "oh"]
       },
       "reputation_gain": {
         "success": 10,

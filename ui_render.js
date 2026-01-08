@@ -1,4 +1,51 @@
 // ui_render.js - rendering functions
+function getRequirementsHTML(contract, roomIndex) {
+  const req = contract.requirements || {};
+  let html = '';
+
+  // Room type
+  if (req.room_type) {
+    const room = state.db.rooms[roomIndex];
+    const hasRoom = room && room.type === req.room_type;
+    html += `<div style="color: ${hasRoom ? '#4CAF50' : '#f44336'}">Sala: ${req.room_type}</div>`;
+  }
+
+  // Min items
+  if (req.min_items) {
+    for (const [cat, min] of Object.entries(req.min_items)) {
+      const installed = installedIds(roomIndex, cat).length;
+      const hasEnough = installed >= Number(min);
+      html += `<div style="color: ${hasEnough ? '#4CAF50' : '#f44336'}">${cat}: ${installed}/${min}</div>`;
+    }
+  }
+
+  // Mic types
+  if (req.mic_types) {
+    const installedMicIds = installedIds(roomIndex, 'mic');
+    const installedMicTypes = new Set();
+    for (const micId of installedMicIds) {
+      const mic = state.itemsById.get(micId);
+      if (mic && mic.type) {
+        mic.type.forEach(t => installedMicTypes.add(t));
+      }
+    }
+    for (const requiredType of req.mic_types) {
+      const hasType = installedMicTypes.has(requiredType);
+      html += `<div style="color: ${hasType ? '#4CAF50' : '#f44336'}">Mic ${requiredType}</div>`;
+    }
+  }
+
+  // Min interface inputs
+  if (req.min_interface_inputs) {
+    const interfaces = installedIds(roomIndex, "interface").map(id=>state.itemsById.get(id)).filter(Boolean);
+    const maxIns = interfaces.reduce((m,it)=>Math.max(m, Number((it.io && it.io.inputs_total) || (it.stats && it.stats.inputs) || 0)), 0);
+    const hasEnough = maxIns >= Number(req.min_interface_inputs);
+    html += `<div style="color: ${hasEnough ? '#4CAF50' : '#f44336'}">Entrades interface: ${maxIns}/${req.min_interface_inputs}</div>`;
+  }
+
+  return html ? `<div class="tiny" style="margin-top:6px; line-height:1.4">${html}</div>` : '';
+}
+
 function renderAll() {
   document.getElementById("money").textContent = `Cash: ${Math.round(state.cash)}€`;
   renderRooms();
@@ -61,6 +108,7 @@ function renderRooms() {
           <div class="card" style="${isDone ? 'opacity:.6; filter:grayscale(.4);' : ''}">
             <div class="row"><b>${c.name}</b><span class="pill">${c.type}</span></div>
             <div class="muted" style="margin-top:6px">${c.duration_hours}h · ${euro(c.base_pay)} ${isDone ? '<span class="pill">Complet</span>' : ''}</div>
+            ${getRequirementsHTML(c, state.selected.roomIndex)}
             <div style="margin-top:8px">
               <div class="tiny">Progrés: ${worked}/${total}h <span style="float:right">ETA: ${etaText}</span></div>
               <div class="progress" style="height:8px; background:#eee; border-radius:4px; overflow:hidden; margin-top:6px"><div style="width:${pct}%; height:8px; background:${isDone? '#999':'#6bb'}; border-radius:4px"></div></div>
