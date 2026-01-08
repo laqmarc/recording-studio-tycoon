@@ -8797,6 +8797,54 @@
         "cable": 20,
         "multicore": 1
       }
+    },
+    {
+      "id": "room_control_2",
+      "name": "Control Room (Gran)",
+      "type": "control_room",
+      "unlock_level": 5,
+      "size_m2": 25,
+      "max_people": 4,
+      "noise_floor_db": -70,
+      "isolation": 50,
+      "base_acoustic": 55,
+      "slots": {
+        "monitor": 4,
+        "interface": 2,
+        "console_analog": 1,
+        "console_digital": 1,
+        "headphones": 4,
+        "headphone_amp": 2,
+        "desk": 1,
+        "rack": 2,
+        "acoustic_treatment": 10,
+        "patchbay": 1,
+        "cable": 15
+      }
+    },
+    {
+      "id": "room_live_2",
+      "name": "Live Room (Gran)",
+      "type": "live_room",
+      "unlock_level": 6,
+      "size_m2": 40,
+      "max_people": 10,
+      "noise_floor_db": -60,
+      "isolation": 45,
+      "base_acoustic": 50,
+      "slots": {
+        "mic": 16,
+        "preamp_multi": 2,
+        "interface": 2,
+        "headphones": 8,
+        "headphone_amp": 2,
+        "mic_stand": 14,
+        "mic_accessory": 8,
+        "acoustic_treatment": 12,
+        "patchbay": 1,
+        "cable": 30,
+        "multicore": 1
+      }
     }
   ],
   "contracts": [
@@ -8904,6 +8952,110 @@
         "success": 3,
         "fail": 1
       }
+    },
+    {
+      "id": "contract_production_beat",
+      "name": "Producció Beat",
+      "type": "production",
+      "genre": "hiphop",
+      "duration_hours": 5,
+      "base_pay": 400,
+      "target_quality": 65,
+      "requirements": {
+        "room_type": "control_room",
+        "min_items": {
+          "monitor": 2,
+          "interface": 1
+        }
+      },
+      "reputation_gain": {
+        "success": 4,
+        "fail": 1
+      }
+    },
+    {
+      "id": "contract_production_full_track",
+      "name": "Producció Tema Complet",
+      "type": "production",
+      "genre": "pop",
+      "duration_hours": 10,
+      "base_pay": 900,
+      "target_quality": 70,
+      "requirements": {
+        "room_type": "control_room",
+        "min_items": {
+          "monitor": 2,
+          "interface": 1
+        }
+      },
+      "reputation_gain": {
+        "success": 5,
+        "fail": 2
+      }
+    },
+    {
+      "id": "contract_album_mix_master",
+      "name": "Mix i Master d’Àlbum",
+      "type": "mix_master",
+      "genre": "any",
+      "duration_hours": 30,
+      "base_pay": 2500,
+      "target_quality": 80,
+      "requirements": {
+        "room_type": "control_room",
+        "min_items": {
+          "monitor": 2,
+          "acoustic_treatment": 6
+        }
+      },
+      "reputation_gain": {
+        "success": 10,
+        "fail": 4
+      }
+    },
+    {
+      "id": "contract_film_score_production",
+      "name": "Producció Banda Sonora",
+      "type": "production",
+      "genre": "film_score",
+      "duration_hours": 40,
+      "base_pay": 4000,
+      "target_quality": 85,
+      "requirements": {
+        "room_type": "control_room",
+        "min_items": {
+          "monitor": 2,
+          "interface": 1
+        }
+      },
+      "reputation_gain": {
+        "success": 12,
+        "fail": 5
+      }
+    },
+    {
+      "id": "contract_live_recording_event",
+      "name": "Gravació en Directe d’Event",
+      "type": "recording",
+      "genre": "live",
+      "duration_hours": 20,
+      "base_pay": 3000,
+      "target_quality": 80,
+      "requirements": {
+        "room_type": "live_room",
+        "min_interface_inputs": 16,
+        "min_items": {
+          "mic": 12,
+          "preamp_multi": 1,
+          "headphones": 6
+        }
+      },
+      "reputation_gain": {
+        "success": 10,
+        "fail": 4
+      }
     }
+
+
   ]
 }
