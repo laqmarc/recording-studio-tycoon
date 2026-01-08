@@ -1,146 +1,146 @@
 <!doctype html>
 <html lang="ca">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Studio Tycoon (Prototype)</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Studio Tycoon (Prototype)</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<header>
-  <div class="left">
-    <h1>🎛️ Studio Tycoon — Prototype</h1>
-    <span class="pill">HTML + JS</span>
-  </div>
-  <div class="left">
-    <span class="money" id="money">Cash: 1000€</span>
-    <button class="btn" id="btnLoadDemo">Carrega demo</button>
-    <label class="btn" style="display:inline-flex; gap:8px; align-items:center; cursor:pointer;">
-      Carrega items_master.json
-      <input id="fileInput" type="file" accept=".json,application/json" style="display:none" />
-    </label>
-    <button class="btn" id="btnReset">Reset</button>
-    <button class="btn" id="btnClearSave">Reset persistència</button>
-  </div>
-</header>
-
-<main>
-  <!-- ROOMS -->
-  <section class="panel">
-    <h2>
-      🏠 Sales
-      <small id="roomsMeta"></small>
-    </h2>
-    <div class="content">
-      <div class="list" id="roomList"></div>
-      <div class="tiny" style="margin-top:10px">
-        Tip: selecciona una sala i instal·la equips des del panell de la dreta.
-      </div>
-      <div style="margin-top:10px">
-        <label>Contracts</label>
-        <div id="leftContracts" class="list"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SHOP -->
-  <section class="panel">
-    <h2>
-      🛒 Shop
-      <small id="shopMeta"></small>
-    </h2>
-    <div class="content">
-      <div class="grid3">
-        <div>
-          <label>Categoria</label>
-          <select id="selCategory"></select>
+    <header>
+        <div class="left">
+            <h1>🎛️ Studio Tycoon — Prototype</h1>
+            <span class="pill">HTML + JS</span>
         </div>
-        <div id="micTypeFilter" style="display:none">
-          <label>Tipus mic</label>
-          <select id="selMicType">
-            <option value="">Tots</option>
-            <option value="vocals">Vocals</option>
-            <option value="guitarra">Guitarra</option>
-            <option value="baix">Baix</option>
-            <option value="bombo">Bombo</option>
-            <option value="caixa">Caixa</option>
-            <option value="tomb">Tom</option>
-            <option value="hh">HH</option>
-            <option value="oh">OH</option>
-          </select>
+        <div class="left">
+            <span class="money" id="money">Cash: 1000€</span>
+            <button class="btn" id="btnLoadDemo">Carrega demo</button>
+            <label class="btn" style="display:inline-flex; gap:8px; align-items:center; cursor:pointer;">
+                Carrega items_master.json
+                <input id="fileInput" type="file" accept=".json,application/json" style="display:none" />
+            </label>
+            <button class="btn" id="btnReset">Reset</button>
+            <button class="btn" id="btnClearSave">Reset persistència</button>
         </div>
-        <div>
-          <label>Cerca</label>
-          <input id="txtSearch" placeholder="ex: shure, monitor, preamp..." />
-        </div>
-        <div>
-          <label>Quantitat</label>
-          <input id="qtyBuy" type="number" min="1" max="99" value="1"/>
-        </div>
-      </div>
+    </header>
 
-      <div style="margin-top:10px" class="grid2">
-        <button class="btn2 btnOk" id="btnBuy">Comprar</button>
-        <button class="btn2" id="btnAddToInstall">Preparar per instal·lar →</button>
-      </div>
+    <main>
+        <!-- ROOMS -->
+        <section class="panel">
+            <h2>
+                🏠 Sales
+                <small id="roomsMeta"></small>
+            </h2>
+            <div class="content">
+                <div class="list" id="roomList"></div>
+                <div class="tiny" style="margin-top:10px">
+                    Tip: selecciona una sala i instal·la equips des del panell de la dreta.
+                </div>
+                <div style="margin-top:10px">
+                    <label>Contracts</label>
+                    <div id="leftContracts" class="list"></div>
+                </div>
+            </div>
+        </section>
 
-      <div style="margin-top:12px" class="list" id="shopList"></div>
-    </div>
-  </section>
+        <!-- SHOP -->
+        <section class="panel">
+            <h2>
+                🛒 Shop
+                <small id="shopMeta"></small>
+            </h2>
+            <div class="content">
+                <div class="grid3">
+                    <div>
+                        <label>Categoria</label>
+                        <select id="selCategory"></select>
+                    </div>
+                    <div id="micTypeFilter" style="display:none">
+                        <label>Tipus mic</label>
+                        <select id="selMicType">
+                            <option value="">Tots</option>
+                            <option value="vocals">Vocals</option>
+                            <option value="guitarra">Guitarra</option>
+                            <option value="baix">Baix</option>
+                            <option value="bombo">Bombo</option>
+                            <option value="caixa">Caixa</option>
+                            <option value="tomb">Tom</option>
+                            <option value="hh">HH</option>
+                            <option value="oh">OH</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Cerca</label>
+                        <input id="txtSearch" placeholder="ex: shure, monitor, preamp..." />
+                    </div>
+                    <div>
+                        <label>Quantitat</label>
+                        <input id="qtyBuy" type="number" min="1" max="99" value="1" />
+                    </div>
+                </div>
 
-  <!-- ROOM DETAILS + INVENTORY -->
-  <section class="panel">
-    <h2>
-      🎚️ Sala + Inventari
-      <small id="rightMeta"></small>
-    </h2>
-    <div class="content">
-      <div id="roomDetails"></div>
+                <div style="margin-top:10px" class="grid2">
+                    <button class="btn2 btnOk" id="btnBuy">Comprar</button>
+                    <button class="btn2" id="btnAddToInstall">Preparar per instal·lar →</button>
+                </div>
 
-      <div style="margin-top:12px" class="grid2">
-        <div>
-          <label>Inventari (filtre categoria)</label>
-          <select id="selInvCategory"></select>
-        </div>
-        <div>
-          <label>Item a instal·lar</label>
-          <select id="selInvItem"></select>
-        </div>
-      </div>
+                <div style="margin-top:12px" class="list" id="shopList"></div>
+            </div>
+        </section>
 
-      <div style="margin-top:10px" class="grid2">
-        <button class="btn2 btnOk" id="btnInstall">Instal·lar a la sala</button>
-        <button class="btn2 btnBad" id="btnUninstall">Desinstal·lar (últim)</button>
-      </div>
+        <!-- ROOM DETAILS + INVENTORY -->
+        <section class="panel">
+            <h2>
+                🎚️ Sala + Inventari
+                <small id="rightMeta"></small>
+            </h2>
+            <div class="content">
+                <div id="roomDetails"></div>
 
-      <div style="margin-top:10px" class="grid2">
-        <button class="btn2" id="btnSimPodcast">Simular: Podcast 2 veus</button>
-        <button class="btn2" id="btnSimMix">Simular: Mescla 1 tema</button>
-      </div>
+                <div style="margin-top:12px" class="grid2">
+                    <div>
+                        <label>Inventari (filtre categoria)</label>
+                        <select id="selInvCategory"></select>
+                    </div>
+                    <div>
+                        <label>Item a instal·lar</label>
+                        <select id="selInvItem"></select>
+                    </div>
+                </div>
 
-      <div style="margin-top:10px">
-        <button class="btn2 btnSpecial" id="btnNextDay">🌅 Passar dia (recuperar fatiga)</button>
-      </div>
+                <div style="margin-top:10px" class="grid2">
+                    <button class="btn2 btnOk" id="btnInstall">Instal·lar a la sala</button>
+                    <button class="btn2 btnBad" id="btnUninstall">Desinstal·lar (últim)</button>
+                </div>
 
-      <div class="kpi" id="kpis"></div>
+                <div style="margin-top:10px" class="grid2">
+                    <button class="btn2" id="btnSimPodcast">Simular: Podcast 2 veus</button>
+                    <button class="btn2" id="btnSimMix">Simular: Mescla 1 tema</button>
+                </div>
 
-      <!-- Contract creation form removed (contracts are generated by script) -->
+                <div style="margin-top:10px">
+                    <button class="btn2 btnSpecial" id="btnNextDay">🌅 Passar dia (recuperar fatiga)</button>
+                </div>
 
-      <div style="margin-top:10px">
-        <label>Log</label>
-        <div class="log" id="log"></div>
-      </div>
-    </div>
-  </section>
-</main>
-<div id="notifications" class="notifications"></div>
-<script src="demo.js"></script>
-<script src="state.js"></script>
-<script src="helpers.js"></script>
-<script src="simulation.js"></script>
-<script src="persistence.js"></script>
-<script src="ui_render.js"></script>
-<script src="actions.js"></script>
+                <div class="kpi" id="kpis"></div>
+                <div style="margin-top:10px">
+                    <label>Log</label>
+                    <div class="log" id="log"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <div id="notifications" class="notifications"></div>
+    <script src="demo.js"></script>
+    <script src="state.js"></script>
+    <script src="helpers.js"></script>
+    <script src="simulation.js"></script>
+    <script src="persistence.js"></script>
+    <script src="ui_render.js"></script>
+    <script src="actions.js"></script>
 
 </body>
+
 </html>
