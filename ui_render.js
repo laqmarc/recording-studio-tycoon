@@ -1,4 +1,5 @@
 // ui_render.js - rendering functions
+let micTypeListenerAdded = false;
 function getRequirementsHTML(contract, roomIndex) {
   const req = contract.requirements || {};
   let html = '';
@@ -126,6 +127,7 @@ function renderRooms() {
 }
 
 function renderShop() {
+  console.log('renderShop called');
   const cats = Array.from(state.itemsByCategory.keys()).sort();
   const sel = document.getElementById("selCategory");
   if (!sel.options.length) {
@@ -135,17 +137,43 @@ function renderShop() {
 
   const q = document.getElementById("txtSearch").value.trim().toLowerCase();
   const cat = sel.value;
-  const items = (state.itemsByCategory.get(cat) || []).filter(it => {
+  const micTypeSelect = document.getElementById("selMicType");
+  
+  // Handle mic type filter
+  const micTypeDiv = document.getElementById("micTypeFilter");
+  if (cat === 'mic') {
+    micTypeDiv.style.display = 'block';
+    // Add event listener if not already added
+    if (!micTypeListenerAdded) {
+      const updateMicFilter = () => {
+        const newValue = micTypeSelect.value;
+        console.log('selMicType changed/input to:', newValue);
+        renderShop();
+      };
+      micTypeSelect.addEventListener("change", updateMicFilter);
+      micTypeSelect.addEventListener("input", updateMicFilter);
+      micTypeListenerAdded = true;
+    }
+  } else {
+    micTypeDiv.style.display = 'none';
+  }
+  
+  const micTypeFilter = micTypeSelect.value;
+  console.log('cat:', cat, 'micTypeFilter:', micTypeFilter);
+
+  let items = (state.itemsByCategory.get(cat) || []).filter(it => {
     const unlocked = Number(it.unlock_level || 1) <= Number(state.player.level || 1);
-    return unlocked && (!q || String(it.name||"").toLowerCase().includes(q));
+    const matchesSearch = !q || String(it.name||"").toLowerCase().includes(q);
+    const matchesMicType = !micTypeFilter || (Array.isArray(it.type) && it.type.includes(micTypeFilter));
+    const passes = unlocked && matchesSearch && matchesMicType;
+    return passes;
   });
+  console.log('Filtered items:', items.length);
 
   document.getElementById("shopMeta").textContent = `${items.length} items`;
 
   const list = document.getElementById("shopList");
-  list.innerHTML = "";
-
-  for (const it of items.slice(0, 80)) {
+  list.innerHTML = items.slice(0, 80).map(it => {
     const div = document.createElement("div");
     div.className = "card" + (it.id === state.selected.shopItemId ? " active":"");
     div.onclick = () => { state.selected.shopItemId = it.id; renderShop(); renderRight(); };
@@ -153,6 +181,9 @@ function renderShop() {
     const tierPill = tier === "pro" ? "ok" : tier === "low" ? "bad" : "";
     const statsHtml = (it.stats && Object.keys(it.stats).length)
       ? `<div style="margin-top:8px">${Object.entries(it.stats).map(([k,v])=>`<div class=\"tiny\">${k.replace(/_/g,' ')}: ${v}</div>`).join('')}</div>`
+      : '';
+    const micTypesHtml = (it.category === 'mic' && it.type && it.type.length)
+      ? `<div class="tiny" style="margin-top:4px; color:#666">Tipus: ${it.type.join(', ')}</div>`
       : '';
     div.innerHTML = `
       <div class="row">
@@ -164,10 +195,11 @@ function renderShop() {
         <span>${euro(it.price || 0)}</span>
       </div>
       <div class="tiny" style="margin-top:6px">${it.notes ? it.notes : ""}</div>
+      ${micTypesHtml}
       ${statsHtml}
     `;
-    list.appendChild(div);
-  }
+    return div.outerHTML;
+  }).join('');
 }
 
 function renderRight() {
