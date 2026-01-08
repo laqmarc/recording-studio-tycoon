@@ -220,6 +220,7 @@ function workOnContract(contractId, hours) {
         c.completed = true;
         c.completed_at = { day: state.time.day, hour: state.time.hour };
         log(`📥 Contracte marcat com a complet (no s'elimina).`);
+        saveState();
       }
     } else {
       log(`🛠️ Treballat ${hours}h sobre ${c.name} — ${c.worked_hours}/${c.duration_hours}h`);
@@ -227,6 +228,80 @@ function workOnContract(contractId, hours) {
 
   advanceTime(hours);
   renderAll();
+}
+
+// Persistence: save/load progress to localStorage
+function saveState() {
+  try {
+    const payload = {
+      player: state.player,
+      time: state.time,
+      cash: state.cash,
+      inventory: Array.from(state.inventory.entries()),
+      roomsInstalled: state.roomsInstalled,
+      contractsProgress: state.db.contracts.map(c => ({ id: c.id, worked_hours: c.worked_hours || 0, completed: !!c.completed, completed_at: c.completed_at || null }))
+    };
+    localStorage.setItem('studio_tycoon_state_v1', JSON.stringify(payload));
+    log('💾 Estat guardat');
+  } catch (e) {
+    log('❌ Error guardant estat: ' + e.message);
+  }
+}
+
+function loadStateFromStorage() {
+  try {
+    const txt = localStorage.getItem('studio_tycoon_state_v1');
+    if (!txt) return false;
+    const p = JSON.parse(txt);
+    if (p.player) state.player = p.player;
+    if (p.time) state.time = p.time;
+    if (typeof p.cash === 'number') state.cash = p.cash;
+    if (Array.isArray(p.inventory)) {
+      state.inventory.clear();
+      for (const [id, qty] of p.inventory) state.inventory.set(id, qty);
+    }
+    if (Array.isArray(p.roomsInstalled) && p.roomsInstalled.length === state.db.rooms.length) {
+      state.roomsInstalled = p.roomsInstalled;
+    }
+    if (Array.isArray(p.contractsProgress)) {
+      for (const cp of p.contractsProgress) {
+        const c = state.db.contracts.find(x => x.id === cp.id);
+        if (c) {
+          c.worked_hours = cp.worked_hours || 0;
+          c.completed = !!cp.completed;
+          c.completed_at = cp.completed_at || null;
+        }
+      }
+    }
+    renderAll();
+    log('📥 Estat carregat des de localStorage');
+    return true;
+  } catch (e) {
+    log('❌ Error carregant estat: ' + e.message);
+    return false;
+  }
+}
+
+function clearPersistenceAndReset() {
+  try {
+    localStorage.removeItem('studio_tycoon_state_v1');
+    // reset runtime progress but keep currently loaded DB (items/rooms/contracts)
+    state.player = { level: 1, xp: 0 };
+    state.time = { day: 1, hour: 0, workHoursPerDay: state.time.workHoursPerDay || 8 };
+    state.cash = 1000;
+    state.inventory.clear();
+    ensureRoomsInstalled();
+    // reset contract progress
+    for (const c of state.db.contracts) {
+      c.worked_hours = 0;
+      c.completed = false;
+      c.completed_at = null;
+    }
+    renderAll();
+    log('♻️ Persistència esborrada i progrés reiniciat.');
+  } catch (e) {
+    log('❌ Error esborrant persistència: ' + e.message);
+  }
 }
 function rebuildIndexes() {
   state.itemsById.clear();
@@ -565,6 +640,7 @@ function buySelected() {
   renderAll();
   try { prepareInstallFromShop(); } catch (e) { /* ignore */ }
   log(`✅ Comprat: ${it.name} x${qty} per ${euro(cost)}.`);
+  saveState();
 }
 
 function prepareInstallFromShop() {
@@ -599,6 +675,7 @@ function installSelected() {
   invRemove(itemId, 1);
   log(`🧩 Instal·lat a ${room.name}: ${it.name} (${category})`);
   renderAll();
+  saveState();
 }
 
 function uninstallLast() {
@@ -614,6 +691,7 @@ function uninstallLast() {
   invAdd(res.removed, 1);
   log(`↩️ Desinstal·lat de ${room.name}: ${it ? it.name : res.removed} (${cat})`);
   renderAll();
+  saveState();
 }
 
 function simulateContract(contractId) {
@@ -675,6 +753,7 @@ function simulateContract(contractId) {
 `);
 
   renderAll();
+  saveState();
   return true;
 }
 
@@ -690,6 +769,7 @@ function loadFromObject(obj) {
   const contracts = obj.contracts || [];
 
   state.db = { items, rooms, contracts };
+  rebuildIndexes();
   // ensure contract progress tracked
   for (const c of state.db.contracts) {
     if (c.worked_hours == null) c.worked_hours = 0;
@@ -711,6 +791,7 @@ function resetGame() {
   state.selected.shopItemId = state.db.items.length ? state.db.items[0].id : null;
   log("🔄 Reset: cash=1000, inventari buit, instal·lacions buides.");
   renderAll();
+  localStorage.removeItem('studio_tycoon_state_v1');
 }
 
 /** ---------------------------
@@ -718,6 +799,9 @@ function resetGame() {
  * --------------------------*/
 document.getElementById("btnLoadDemo").addEventListener("click", () => loadFromObject(DEMO));
 document.getElementById("btnReset").addEventListener("click", resetGame);
+document.getElementById("btnClearSave").addEventListener("click", () => {
+  if (confirm('Esborrar la persistència i reiniciar el progrés?')) clearPersistenceAndReset();
+});
 
 document.getElementById("btnBuy").addEventListener("click", buySelected);
 document.getElementById("btnAddToInstall").addEventListener("click", prepareInstallFromShop);
@@ -748,6 +832,8 @@ document.getElementById("fileInput").addEventListener("change", async (e) => {
 
 // boot demo by default
 loadFromObject(DEMO);
+// then try load persisted progress (overwrites progress fields)
+try { loadStateFromStorage(); } catch(e) { /* ignore */ }
 
 // contract form buttons
 // contract form event listeners removed
