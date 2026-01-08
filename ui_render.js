@@ -156,6 +156,7 @@ function renderShop() {
     }
   } else {
     micTypeDiv.style.display = 'none';
+    micTypeSelect.value = ""; // Reset filter when not in mic category
   }
   
   const micTypeFilter = micTypeSelect.value;
@@ -169,6 +170,11 @@ function renderShop() {
     return passes;
   });
   console.log('Filtered items:', items.length);
+
+  // If selected item is not in current filtered list, select the first one
+  if (!items.some(it => it.id === state.selected.shopItemId)) {
+    state.selected.shopItemId = items.length ? items[0].id : null;
+  }
 
   document.getElementById("shopMeta").textContent = `${items.length} items`;
 
