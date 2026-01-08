@@ -1,4 +1,5 @@
-{
+// demo.js - demo dataset
+const DEMO = {
   "items": [
     {
       "id": "accessory_cabling_neutrik_xlr_panel_connectors_set",
@@ -9056,4 +9057,4 @@
 
 
   ]
-}
+};
