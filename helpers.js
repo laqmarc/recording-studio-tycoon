@@ -114,10 +114,44 @@ export function advanceTime(hours) {
   while (state.time.hour >= state.time.workHoursPerDay) {
     state.time.hour -= state.time.workHoursPerDay;
     state.time.day += 1;
-    // Recover fatigue when day changes
-    if (state.player) state.player.fatigue = Math.max(0, state.player.fatigue - 8);
-    log(`🌅 Nou dia! Fatiga reduïda a ${state.player.fatigue.toFixed(1)}h`);
+    // Recover fatigue when day changes: reduce short-term fatigue by base + rest bonus,
+    // and decay chronic fatigue slowly.
+    if (state.player) {
+      // Percentage-based recovery: recover a fraction of short-term fatigue each night
+      const recoveryRate = 0.5; // recover 50% of short fatigue per day
+      const bonus = Number(state.player.restBonus || 0);
+      const prevShort = Number(state.player.fatigueShort || 0);
+      const recovered = prevShort * recoveryRate + bonus;
+      state.player.fatigueShort = Math.max(0, prevShort - recovered);
+      // chronic recovers very slowly
+      state.player.fatigueChronic = Math.max(0, (state.player.fatigueChronic || 0) - 0.5);
+      // reset one-day rest bonus
+      state.player.restBonus = 0;
+      if (typeof updateFatigueDerived === 'function') updateFatigueDerived();
+      log(`🌅 Nou dia! Fatiga curta: ${state.player.fatigueShort.toFixed(1)}h · Fatiga crònica: ${state.player.fatigueChronic.toFixed(2)}`);
+    }
   }
+}
+
+// Consumable items: immediate effects like coffee or improving sleep recovery
+export function useConsumable(itemId) {
+  if (typeof state === 'undefined' || !state.player) return false;
+  if (typeof invQty === 'function' && invQty(itemId) <= 0) return false;
+  // define simple consumable effects by id
+  if (itemId === 'coffee') {
+    // immediate short-term reduction
+    state.player.fatigueShort = Math.max(0, (state.player.fatigueShort || 0) - 2);
+    if (typeof invRemove === 'function') invRemove(itemId, 1);
+    if (typeof updateFatigueDerived === 'function') updateFatigueDerived();
+    return true;
+  }
+  if (itemId === 'good_bed') {
+    // increases next-day recovery
+    state.player.restBonus = (state.player.restBonus || 0) + 4;
+    if (typeof invRemove === 'function') invRemove(itemId, 1);
+    return true;
+  }
+  return false;
 }
 
 // Notifications
@@ -148,4 +182,8 @@ if (typeof window !== 'undefined') {
   window.invQty = invQty;
   window.invAdd = invAdd;
   window.invRemove = invRemove;
+  window.useConsumable = useConsumable;
+  // Expose advanceTime and requirement checker as direct globals for legacy callers
+  window.advanceTime = advanceTime;
+  window.checkContractRequirements = checkContractRequirements;
 }

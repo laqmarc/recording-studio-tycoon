@@ -33,22 +33,43 @@ if (typeof document !== 'undefined') {
   on('btnAddToInstall', 'click', () => call('prepareInstallFromShop'));
   on('btnInstall', 'click', () => call('installSelected'));
   on('btnUninstall', 'click', () => call('uninstallLast'));
+  on('btnUseConsumable', 'click', () => {
+    try {
+      const itemId = document.getElementById('selInvItem').value;
+      if (itemId) {
+        // try to call useConsumable via available implementations
+        const fn = getImpl('useConsumable') || window.useConsumable;
+        if (fn) fn(itemId);
+        if (typeof window.renderAll === 'function') window.renderAll();
+      }
+    } catch(e) { if (typeof window.log === 'function') window.log('Error al usar item: '+e.message); }
+  });
 
   on('btnSimPodcast', 'click', () => { if (typeof window !== 'undefined' && window.simulateContract) window.simulateContract('contract_podcast_duo'); });
   on('btnSimMix', 'click', () => { if (typeof window !== 'undefined' && window.simulateContract) window.simulateContract('contract_mix_single'); });
 
   on('btnNextDay', 'click', () => {
-    if (typeof window !== 'undefined' && window.advanceTime && window.state) {
-      const remainingHours = window.state.time.workHoursPerDay - window.state.time.hour;
-      if (remainingHours > 0) {
-        window.advanceTime(remainingHours);
-        if (typeof window.log === 'function') window.log(`⏭️ Saltat a demà. Fatiga reduïda a ${window.state.player.fatigue.toFixed(1)}h`);
-        if (typeof window.showNotification === 'function') window.showNotification(`🌅 Dia passat! Fatiga: ${window.state.player.fatigue.toFixed(1)}h`);
-        if (typeof window.renderAll === 'function') window.renderAll();
-        if (typeof window.saveState === 'function') window.saveState();
-      } else {
-        if (typeof window.log === 'function') window.log('Ja estàs al final del dia.');
-      }
+    try {
+      if (typeof window === 'undefined' || !window.advanceTime || !window.state) return;
+      const wh = Number(window.state.time.workHoursPerDay || 8);
+      const curHour = Number(window.state.time.hour || 0);
+      // compute hours to advance to reach the next day's start (ensure >0)
+      const remainingHours = wh - curHour;
+      const hoursToNextDay = (remainingHours % wh) || wh;
+      // if player hasn't used the day much, give at least the remaining free hours as rest bonus
+      try {
+        if (window.state && window.state.player) {
+          window.state.player.restBonus = (window.state.player.restBonus || 0) + remainingHours;
+        }
+      } catch (e) { /* ignore */ }
+      window.advanceTime(hoursToNextDay);
+      if (typeof window.updateFatigueDerived === 'function') window.updateFatigueDerived();
+      if (typeof window.log === 'function') window.log(`⏭️ Saltat a demà. Fatiga curta: ${window.state.player.fatigueShort.toFixed(1)}h · crònica: ${window.state.player.fatigueChronic.toFixed(2)}`);
+      if (typeof window.showNotification === 'function') window.showNotification(`🌅 Dia passat! Fatiga: ${window.state.player.fatigue.toFixed(1)}h`);
+      if (typeof window.renderAll === 'function') window.renderAll();
+      if (typeof window.saveState === 'function') window.saveState();
+    } catch (e) {
+      if (typeof window !== 'undefined' && typeof window.log === 'function') window.log('Error al passar dia: '+e.message);
     }
   });
 

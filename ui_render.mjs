@@ -355,6 +355,18 @@ export function renderRight() {
   k.appendChild(makeBox('Temps', `Dia ${state.time.day} · Hora ${state.time.hour}/${state.time.workHoursPerDay}`));
   k.appendChild(makeBox('Nivell', `${state.player.level} · XP ${state.player.xp}/${xpNext}`));
   k.appendChild(makeBox('Fatiga', `${state.player.fatigue.toFixed(1)}h`));
+  // Show fatigue warning if short-term fatigue exceeds threshold
+  const fatThreshold = 8;
+  const fatMultiplier = 1.2;
+  const fatCap = 30;
+  const short = Number(state.player.fatigueShort || 0);
+  const chronic = Number(state.player.fatigueChronic || 0);
+  const estPenalty = Math.min(fatCap, Math.max(0, short - fatThreshold) * fatMultiplier + 0.5 * chronic);
+  if (short > fatThreshold) {
+    const warn = document.createElement('div'); warn.className = 'muted'; warn.style.color = '#b71c1c'; warn.style.marginTop = '6px';
+    warn.textContent = `⚠️ Fatiga alta: pèrdua estimada de qualitat ~${estPenalty.toFixed(1)} pts`;
+    k.appendChild(warn);
+  }
 }
 
 // Attach to window for legacy code

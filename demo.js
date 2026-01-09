@@ -18,6 +18,34 @@ const DEMO = {
       "notes": "Per caixes i racks personalitzats"
     },
     {
+      "id": "coffee",
+      "name": "Tassa de Cafè",
+      "category": "consumable",
+      "tier": "low",
+      "price": 2.0,
+      "maintenance_weekly": 0,
+      "reliability": 1.0,
+      "unlock_level": 1,
+      "tags": ["consumable","boost"],
+      "stats": {},
+      "io": {},
+      "notes": "Redueix la fatiga curta immediatament (-2h)"
+    },
+    {
+      "id": "good_bed",
+      "name": "Matalàs confortable",
+      "category": "consumable",
+      "tier": "mid",
+      "price": 120.0,
+      "maintenance_weekly": 0.1,
+      "reliability": 0.98,
+      "unlock_level": 2,
+      "tags": ["rest","sleep"],
+      "stats": {},
+      "io": {},
+      "notes": "Millora la recuperació del següent dia (+4h restBonus)"
+    },
+    {
       "id": "accessory_cabling_patch_cables_tt_bantam_mogami_set",
       "name": "Patch Cables TT Bantam Mogami Set",
       "category": "cable",

@@ -53,7 +53,11 @@ export function simulateRecording(state, roomIndex, contract) {
 
   const noise_floor = Number(room.noise_floor_db || -60);
   const noise_penalty = clamp((noise_floor - (-70)) * 1.2, 0, 25);
-  const fatigue_penalty = Math.max(0, (state.player && state.player.fatigue || 0) - 10) * 2;
+  const fatigueValue = (state.player && state.player.fatigue) || 0;
+  const fatigueThreshold = 8;
+  const fatigueMultiplier = 1.2;
+  const fatigueCap = 30;
+  const fatigue_penalty = Math.min(fatigueCap, Math.max(0, fatigueValue - fatigueThreshold) * fatigueMultiplier);
   const final_quality = clamp(quality - noise_penalty - fatigue_penalty, 0, 100);
 
   const target = Number(contract.target_quality || 55);

@@ -106,7 +106,10 @@ export function workOnContract(contractId, hours) {
     log(`🛠️ Treballat ${actual_hours}h sobre ${c.name} — ${c.worked_hours}/${c.duration_hours}h`);
   }
 
-  state.player.fatigue += actual_hours;
+  // Accumulate fatigue: short-term increases by hours, chronic accumulates slowly
+  state.player.fatigueShort = (state.player.fatigueShort || 0) + actual_hours;
+  state.player.fatigueChronic = (state.player.fatigueChronic || 0) + actual_hours * 0.05; // 5% of hours become chronic
+  if (typeof window !== 'undefined' && typeof window.updateFatigueDerived === 'function') window.updateFatigueDerived();
   if (advanceTime) advanceTime(actual_hours);
   if (renderAll) renderAll();
 }

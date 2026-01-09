@@ -7,7 +7,8 @@ export const state = {
   inventory: new Map(), // id -> qty
   selected: { roomIndex: 0, shopItemId: null },
   roomsInstalled: [], // per room: { category -> [itemId,...] }
-  player: { level: 1, xp: 0, fatigue: 0 }
+  // Player state: track short-term and chronic fatigue separately.
+  player: { level: 1, xp: 0, fatigue: 0, fatigueShort: 0, fatigueChronic: 0, restBonus: 0 }
 };
 // time state (days/hours)
 state.time = { day: 1, hour: 0, workHoursPerDay: 8 };
@@ -49,6 +50,13 @@ export function uninstallFromRoom(roomIndex, category) {
   return { ok:true, removed };
 }
 
+// Recalculate the compatible `player.fatigue` field from short/chronic components.
+export function updateFatigueDerived() {
+  if (!state.player) return;
+  const chronicWeight = 0.5; // chronic contributes partially to immediate fatigue
+  state.player.fatigue = (Number(state.player.fatigueShort || 0) + chronicWeight * Number(state.player.fatigueChronic || 0));
+}
+
 // Expose for legacy scripts that rely on globals
 if (typeof window !== 'undefined') {
   window.state = state;
@@ -57,4 +65,5 @@ if (typeof window !== 'undefined') {
   window.installedIds = installedIds;
   window.installToRoom = installToRoom;
   window.uninstallFromRoom = uninstallFromRoom;
+  window.updateFatigueDerived = updateFatigueDerived;
 }
