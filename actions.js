@@ -22,277 +22,89 @@
   const renderAll = (typeof window !== 'undefined' && window.renderAll) ? window.renderAll : undefined;
   const renderShop = (typeof window !== 'undefined' && window.renderShop) ? window.renderShop : undefined;
   const renderRight = (typeof window !== 'undefined' && window.renderRight) ? window.renderRight : undefined;
-  const log = (typeof window !== 'undefined' && window.log) ? window.log : console && console.log ? (m)=>console.log(m) : ()=>{};
-  const euro = (typeof window !== 'undefined' && window.euro) ? window.euro : (n)=>`${n}€`;
-  const saveState = (typeof window !== 'undefined' && window.saveState) ? window.saveState : ()=>{};
-  const showNotification = (typeof window !== 'undefined' && window.showNotification) ? window.showNotification : ()=>{};
-  const resetGame = (typeof window !== 'undefined' && window.resetGame) ? window.resetGame : undefined;
+  // actions.js — tiny legacy shim delegating to the ES module implementation
+  // This file keeps the legacy bindings and event wiring, but the
+  // real logic lives in `esm/actions.mjs` (loaded as a module).
 
-function getContractETA(c) {
-  const worked = Number(c.worked_hours || 0);
-  const total = Number(c.duration_hours || 0);
-  const remaining = Math.max(0, total - worked);
-  if (remaining === 0) return { days:0, hours:0, finishDay: state.time.day, finishHour: state.time.hour };
-  const hoursLeftToday = state.time.workHoursPerDay - state.time.hour;
-  if (remaining <= hoursLeftToday) {
-    return { days:0, hours:remaining, finishDay: state.time.day, finishHour: state.time.hour + remaining };
-  }
-  let rem = remaining - hoursLeftToday;
-  const fullDays = Math.floor(rem / state.time.workHoursPerDay);
-  const finalHours = rem % state.time.workHoursPerDay;
-  const finishDay = state.time.day + 1 + fullDays;
-  const finishHour = finalHours === 0 ? 0 : finalHours;
-  return { days: fullDays + 1, hours: finalHours, finishDay, finishHour };
-}
-
-  // Make getContractETA available as a global early so legacy code
-  // that calls `getContractETA(...)` during initialization works.
-  if (typeof window !== 'undefined') window.getContractETA = getContractETA;
-
-// (No ES exports here — keep legacy script-compatible)
-
-function workOnContract(contractId, hours) {
-  const c = state.db.contracts.find(x => x.id === contractId);
-  if (!c) return log('Contracte no trobat.');
-  // If completed, reset to allow repeating
-  if (c.completed) {
-    c.worked_hours = 0;
-    c.completed = false;
-    c.completed_at = null;
-    c.start_day = state.time.day; // Reset start day
-    log(`🔄 Reiniciant contracte: ${c.name}`);
-  }
-  // Set start day if not set
-  if (c.start_day == null) c.start_day = state.time.day;
-  const room = state.db.rooms[state.selected.roomIndex];
-  const req = c.requirements || {};
-  if (req.room_type && req.room_type !== room.type) {
-    log(`❌ Aquest contracte demana sala tipus "${req.room_type}". Ara estàs a "${room.type}".`);
-    return;
-  }
-
-  if (req.min_items) {
-    for (const [cat, min] of Object.entries(req.min_items)) {
-      const used = installedIds(state.selected.roomIndex, cat).length;
-      if (used < Number(min)) {
-        log(`❌ Falta equip: ${cat} (${used}/${min})`);
-        return;
-      }
+  (function(){
+    function getImpl(name) {
+      return (typeof window !== 'undefined' && window.ESActions && typeof window.ESActions[name] === 'function')
+        ? window.ESActions[name]
+        : (typeof window !== 'undefined' && typeof window[name] === 'function') ? window[name] : null;
     }
-  }
 
-  const micCount = installedIds(state.selected.roomIndex, 'mic').length;
-  if (micCount > 0) {
-    const standCount = installedIds(state.selected.roomIndex, 'mic_stand').length;
-    if (standCount < micCount) {
-      log(`❌ Falta equip: mic_stand (${standCount}/${micCount}) — cal un peu per cada micròfon.`);
-      return;
+    function call(name, ...args) {
+      const fn = getImpl(name);
+      if (!fn) return undefined;
+      return fn(...args);
     }
-  }
 
-  if (req.min_interface_inputs) {
-    const interfaces = installedIds(state.selected.roomIndex, "interface").map(id=>state.itemsById.get(id)).filter(Boolean);
-    const maxIns = interfaces.reduce((m,it)=>Math.max(m, Number((it.io && it.io.inputs_total) || (it.stats && it.stats.inputs) || 0)), 0);
-    if (maxIns < Number(req.min_interface_inputs)) {
-      log(`❌ Cal una interface amb mínim ${req.min_interface_inputs} entrades (ara max: ${maxIns}).`);
-      return;
+    // Expose direct globals for legacy code if not already present
+    if (typeof window !== 'undefined') {
+      window.workOnContract = window.workOnContract || ((id,h)=>call('workOnContract', id, h));
+      window.buySelected = window.buySelected || (()=>call('buySelected'));
+      window.prepareInstallFromShop = window.prepareInstallFromShop || (()=>call('prepareInstallFromShop'));
+      window.installSelected = window.installSelected || (()=>call('installSelected'));
+      window.uninstallLast = window.uninstallLast || (()=>call('uninstallLast'));
+      // ensure getContractETA also points to module impl if available
+      window.getContractETA = window.getContractETA || ((c)=>{
+        const fn = getImpl('getContractETA');
+        return fn ? fn(c) : undefined;
+      });
     }
-  }
 
-  if (req.mic_types && Array.isArray(req.mic_types)) {
-    const mics = installedIds(state.selected.roomIndex, "mic").map(id=>state.itemsById.get(id)).filter(Boolean);
-    const coveredTypes = new Set();
-    
-    for (const mic of mics) {
-      if (mic.type && Array.isArray(mic.type)) {
-        // Cada micròfon només cobreix un tipus (el primer requerit que pot fer)
-        const coveredType = mic.type.find(t => req.mic_types.includes(t) && !coveredTypes.has(t));
-        if (coveredType) {
-          coveredTypes.add(coveredType);
+    // Wire DOM events (deferred execution expected: this file is loaded with `defer`)
+    if (typeof document !== 'undefined') {
+      const on = (id, ev, cb) => { const el = document.getElementById(id); if (el) el.addEventListener(ev, cb); };
+
+      on('btnLoadDemo', 'click', () => { if (typeof loadFromObject === 'function' && typeof DEMO !== 'undefined') loadFromObject(DEMO); });
+      on('btnReset', 'click', () => { if (typeof resetGame === 'function') resetGame(); });
+      on('btnClearSave', 'click', () => { if (confirm('Esborrar la persistència i reiniciar el progrés?')) clearPersistenceAndReset(); });
+
+      on('btnBuy', 'click', () => call('buySelected'));
+      on('btnAddToInstall', 'click', () => call('prepareInstallFromShop'));
+      on('btnInstall', 'click', () => call('installSelected'));
+      on('btnUninstall', 'click', () => call('uninstallLast'));
+
+      on('btnSimPodcast', 'click', () => { if (typeof window !== 'undefined' && window.simulateContract) window.simulateContract('contract_podcast_duo'); });
+      on('btnSimMix', 'click', () => { if (typeof window !== 'undefined' && window.simulateContract) window.simulateContract('contract_mix_single'); });
+
+      on('btnNextDay', 'click', () => {
+        if (typeof window !== 'undefined' && window.advanceTime && window.state) {
+          const remainingHours = window.state.time.workHoursPerDay - window.state.time.hour;
+          if (remainingHours > 0) {
+            window.advanceTime(remainingHours);
+            if (typeof window.log === 'function') window.log(`⏭️ Saltat a demà. Fatiga reduïda a ${window.state.player.fatigue.toFixed(1)}h`);
+            if (typeof window.showNotification === 'function') window.showNotification(`🌅 Dia passat! Fatiga: ${window.state.player.fatigue.toFixed(1)}h`);
+            if (typeof window.renderAll === 'function') window.renderAll();
+            if (typeof window.saveState === 'function') window.saveState();
+          } else {
+            if (typeof window.log === 'function') window.log('Ja estàs al final del dia.');
+          }
         }
-      }
+      });
+
+      const bindSimple = (id, fnName) => on(id, 'change', () => { if (typeof window[fnName] === 'function') window[fnName](); });
+      // These will call renderShop/renderRight when applicable
+      on('selCategory', 'change', () => { if (typeof window.renderShop === 'function') window.renderShop(); });
+      on('txtSearch', 'input', () => { if (typeof window.renderShop === 'function') window.renderShop(); });
+      on('selInvCategory', 'change', () => { if (typeof window.renderRight === 'function') window.renderRight(); });
+
+      const fileInput = document.getElementById('fileInput');
+      if (fileInput) fileInput.addEventListener('change', async (e)=>{
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const txt = await file.text();
+        try { const obj = JSON.parse(txt); if (typeof loadFromObject === 'function') loadFromObject(obj); }
+        catch(err){ if (typeof window.log === 'function') window.log('❌ JSON invàlid: ' + err.message); }
+      });
+
+      // Boot actions that rely on persistence/helpers being available (loaded earlier with defer)
+      if (typeof loadFromObject === 'function' && typeof DEMO !== 'undefined') loadFromObject(DEMO);
+      if (typeof ensurePlayerDefaults === 'function') ensurePlayerDefaults();
+      try { if (typeof loadStateFromStorage === 'function') loadStateFromStorage(); } catch(e) {}
     }
-    
-    for (const requiredType of req.mic_types) {
-      if (!coveredTypes.has(requiredType)) {
-        log(`❌ Falta micròfon per: ${requiredType}`);
-        return;
-      }
-    }
-  }
 
-  const remaining = (c.duration_hours || 0) - (c.worked_hours || 0);
-  const actual_hours = Math.min(Number(hours || 0), remaining);
-  c.worked_hours = Number(c.worked_hours || 0) + actual_hours;
-  if (c.worked_hours >= (c.duration_hours || 0)) {
-    c.worked_hours = c.duration_hours || c.worked_hours;
-    log(`✅ Contracte completat: ${c.name} (treballats ${c.worked_hours}h/${c.duration_hours}h)`);
-    const ok = simulateContract(c.id);
-    if (ok) {
-      c.completed = true;
-      c.completed_at = { day: state.time.day, hour: state.time.hour };
-      log(`📥 Contracte marcat com a complet (no s'elimina).`);
-      showNotification(`🎉 Contracte "${c.name}" completat!`);
-      saveState();
-    }
-  } else {
-    log(`🛠️ Treballat ${actual_hours}h sobre ${c.name} — ${c.worked_hours}/${c.duration_hours}h`);
-  }
-
-  // Increase fatigue
-  state.player.fatigue += actual_hours;
-
-  advanceTime(actual_hours);
-  renderAll();
-}
-// (No ES exports here — keep legacy script-compatible)
-
-function buySelected() {
-  let id = state.selected.shopItemId;
-  if (!id) {
-    // Select the first item in current category
-    const cat = document.getElementById("selCategory").value;
-    const items = (state.itemsByCategory.get(cat) || []).filter(it => Number(it.unlock_level || 1) <= Number(state.player.level || 1));
-    if (items.length) {
-      id = items[0].id;
-      state.selected.shopItemId = id;
-      log("Seleccionat automàticament el primer item: " + state.itemsById.get(id).name);
-    } else {
-      return log("No hi ha items disponibles en aquesta categoria.");
-    }
-  }
-  const it = state.itemsById.get(id);
-  if (!it) return log("Item no trobat.");
-
-  const qty = clamp(Number(document.getElementById("qtyBuy").value || 1), 1, 99);
-  const cost = Number(it.price || 0) * qty;
-
-  if (state.cash < cost) return log(`No tens prou diners. Necessites ${euro(cost)}.`);
-  state.cash -= cost;
-  invAdd(id, qty);
-  renderAll();
-  try { prepareInstallFromShop(); } catch (e) { }
-  log(`✅ Comprat: ${it.name} x${qty} per ${euro(cost)}.`);  showNotification(`🛒 Comprat: ${it.name} x${qty}`);  saveState();
-}
-// (No ES exports here — keep legacy script-compatible)
-
-function prepareInstallFromShop() {
-  const id = state.selected.shopItemId;
-  if (!id) return log("Selecciona un item del Shop.");
-  const it = state.itemsById.get(id);
-  const selInvCat = document.getElementById("selInvCategory");
-  const selInvItem = document.getElementById("selInvItem");
-  selInvCat.value = it.category;
-  renderRight();
-  if (invQty(id) > 0) selInvItem.value = id;
-  log("→ Preparat per instal·lar (si el tens a inventari).");
-}
-// (No ES exports here — keep legacy script-compatible)
-
-function installSelected() {
-  const roomIndex = state.selected.roomIndex;
-  const room = state.db.rooms[roomIndex];
-
-  const itemId = document.getElementById("selInvItem").value;
-  if (!itemId) return log("No tens cap item a inventari en aquesta categoria.");
-  if (invQty(itemId) <= 0) return log("No en tens a inventari.");
-
-  const it = state.itemsById.get(itemId);
-  if (!it) return log("Item no trobat.");
-
-  const category = it.category || "misc";
-  const res = installToRoom(roomIndex, category, itemId);
-  if (!res.ok) return log(`❌ No es pot instal·lar: ${res.reason}`);
-
-  invRemove(itemId, 1);
-  log(`🧩 Instal·lat a ${room.name}: ${it.name} (${category})`);
-  renderAll();
-  saveState();
-}
-// (No ES exports here — keep legacy script-compatible)
-
-function uninstallLast() {
-  const roomIndex = state.selected.roomIndex;
-  const room = state.db.rooms[roomIndex];
-  const cat = document.getElementById("selInvCategory").value;
-  const res = uninstallFromRoom(roomIndex, cat);
-  if (!res.ok) return log(`❌ ${res.reason} (${cat})`);
-
-  const it = state.itemsById.get(res.removed);
-  invAdd(res.removed, 1);
-  log(`↩️ Desinstal·lat de ${room.name}: ${it ? it.name : res.removed} (${cat})`);
-  renderAll();
-  saveState();
-}
-// (No ES exports here — keep legacy script-compatible)
-
-// wire events
-// wire events
-if (typeof document !== 'undefined') {
-  document.getElementById("btnLoadDemo").addEventListener("click", () => loadFromObject(DEMO));
-  document.getElementById("btnReset").addEventListener("click", () => { if (typeof resetGame === 'function') resetGame(); });
-  document.getElementById("btnClearSave").addEventListener("click", () => {
-    if (confirm('Esborrar la persistència i reiniciar el progrés?')) clearPersistenceAndReset();
-  });
-
-  document.getElementById("btnBuy").addEventListener("click", buySelected);
-  document.getElementById("btnAddToInstall").addEventListener("click", prepareInstallFromShop);
-  document.getElementById("btnInstall").addEventListener("click", installSelected);
-  document.getElementById("btnUninstall").addEventListener("click", uninstallLast);
-
-  document.getElementById("btnSimPodcast").addEventListener("click", () => simulateContract("contract_podcast_duo"));
-  document.getElementById("btnSimMix").addEventListener("click", () => simulateContract("contract_mix_single"));
-
-  document.getElementById("btnNextDay").addEventListener("click", () => {
-    const remainingHours = state.time.workHoursPerDay - state.time.hour;
-    if (remainingHours > 0) {
-      advanceTime(remainingHours);
-      log(`⏭️ Saltat a demà. Fatiga reduïda a ${state.player.fatigue.toFixed(1)}h`);
-      showNotification(`🌅 Dia passat! Fatiga: ${state.player.fatigue.toFixed(1)}h`);
-      renderAll();
-      saveState();
-    } else {
-      log("Ja estàs al final del dia.");
-    }
-  });
-
-  document.getElementById("selCategory").addEventListener("change", renderShop);
-  document.getElementById("txtSearch").addEventListener("input", renderShop);
-
-  document.getElementById("selInvCategory").addEventListener("change", renderRight);
-
-  document.getElementById("fileInput").addEventListener("change", async (e) => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    const txt = await file.text();
-    try {
-      const obj = JSON.parse(txt);
-      loadFromObject(obj);
-    } catch (err) {
-      log("❌ JSON invàlid: " + err.message);
-    }
-  });
-
-  // boot demo by default — if DEMO and helpers available
-  if (typeof loadFromObject === 'function' && typeof DEMO !== 'undefined') {
-    loadFromObject(DEMO);
-  }
-  if (typeof ensurePlayerDefaults === 'function') ensurePlayerDefaults();
-  try { if (typeof loadStateFromStorage === 'function') loadStateFromStorage(); } catch(e) { }
-}
-
-  // Ensure UI helpers are available on `window` early
-  if (typeof window !== 'undefined') {
-    window.getContractETA = getContractETA;
-  }
-
-  // Expose to legacy global scope for backward compatibility
-  if (typeof window !== 'undefined') {
-    window.workOnContract = workOnContract;
-    window.buySelected = buySelected;
-    window.prepareInstallFromShop = prepareInstallFromShop;
-    window.installSelected = installSelected;
-    window.uninstallLast = uninstallLast;
-  }
-
+  })();
 })();
+
