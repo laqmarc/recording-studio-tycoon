@@ -1,33 +1,37 @@
-// helpers.js - utility functions
-function log(msg) {
+// helpers.js - browser-friendly ES module wrapper
+// Export useful helpers and keep backwards compatibility by attaching
+// them to `window` so non-module scripts continue to work.
+export function log(msg) {
   const el = document.getElementById("log");
+  if (!el) return;
   el.textContent = (msg + "\n" + el.textContent).slice(0, 6000);
 }
-function euro(n) { return `${Math.round(n)}€`; }
-function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
-function avgStat(items, key) {
-  if (!items.length) return 0;
+export function euro(n) { return `${Math.round(n)}€`; }
+export function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+export function avgStat(items, key) {
+  if (!Array.isArray(items) || items.length === 0) return 0;
   let s=0, n=0;
   for (const it of items) {
-    const stats = it.stats || {};
+    const stats = it && it.stats ? it.stats : {};
     if (stats[key] != null) { s += Number(stats[key]); n++; }
   }
   return n ? s/n : 0;
 }
-function sumStat(items, key) {
+export function sumStat(items, key) {
   let s=0;
-  for (const it of items) {
-    const stats = it.stats || {};
+  for (const it of (items || [])) {
+    const stats = it && it.stats ? it.stats : {};
     s += Number(stats[key] || 0);
   }
   return s;
 }
 // Leveling helpers
-function xpToNext(level){
+export function xpToNext(level){
   return Math.max(200, Math.round(200 * Math.pow(level, 1.4)));
 }
-function addXp(amount){
+export function addXp(amount){
   if(!amount || amount<=0) return;
+  if (typeof state === 'undefined' || !state.player) return;
   state.player.xp += Number(amount);
   log(`⭐ Guanyes ${amount} XP`);
   while(state.player.xp >= xpToNext(state.player.level)){
@@ -38,9 +42,10 @@ function addXp(amount){
 }
 
 // Inventory helpers
-function invQty(id) { return Number(state.inventory.get(id) || 0); }
-function invAdd(id, qty=1){ state.inventory.set(id, invQty(id)+qty); }
-function invRemove(id, qty=1){
+export function invQty(id) { return (typeof state !== 'undefined' && state.inventory) ? Number(state.inventory.get(id) || 0) : 0; }
+export function invAdd(id, qty=1){ if (typeof state !== 'undefined' && state.inventory) state.inventory.set(id, invQty(id)+qty); }
+export function invRemove(id, qty=1){
+  if (typeof state === 'undefined' || !state.inventory) return false;
   const cur = invQty(id);
   if (cur < qty) return false;
   const next = cur-qty;
@@ -49,9 +54,10 @@ function invRemove(id, qty=1){
 }
 
 // Contract requirement checker
-function checkContractRequirements(contract, roomIndex) {
+export function checkContractRequirements(contract, roomIndex) {
   const req = contract.requirements || {};
-  const room = state.db.rooms[roomIndex];
+  const room = state && state.db && state.db.rooms ? state.db.rooms[roomIndex] : undefined;
+  if (!room) return false;
   
   if (req.room_type && req.room_type !== room.type) {
     return false;
@@ -59,7 +65,7 @@ function checkContractRequirements(contract, roomIndex) {
 
   if (req.min_items) {
     for (const [cat, min] of Object.entries(req.min_items)) {
-      const used = installedIds(roomIndex, cat).length;
+      const used = (typeof installedIds === 'function') ? installedIds(roomIndex, cat).length : 0;
       if (used < Number(min)) {
         return false;
       }
@@ -67,10 +73,10 @@ function checkContractRequirements(contract, roomIndex) {
   }
 
   if (req.mic_types) {
-    const installedMicIds = installedIds(roomIndex, 'mic');
+    const installedMicIds = (typeof installedIds === 'function') ? installedIds(roomIndex, 'mic') : [];
     const installedMicTypes = new Set();
     for (const micId of installedMicIds) {
-      const mic = state.itemsById.get(micId);
+      const mic = state && state.itemsById ? state.itemsById.get(micId) : null;
       if (mic && mic.type) {
         mic.type.forEach(t => installedMicTypes.add(t));
       }
@@ -83,16 +89,16 @@ function checkContractRequirements(contract, roomIndex) {
   }
 
   if (req.min_interface_inputs) {
-    const interfaces = installedIds(roomIndex, "interface").map(id=>state.itemsById.get(id)).filter(Boolean);
+    const interfaces = (typeof installedIds === 'function') ? installedIds(roomIndex, "interface").map(id=>state.itemsById.get(id)).filter(Boolean) : [];
     const maxIns = interfaces.reduce((m,it)=>Math.max(m, Number((it.io && it.io.inputs_total) || (it.stats && it.stats.inputs) || 0)), 0);
     if (maxIns < Number(req.min_interface_inputs)) {
       return false;
     }
   }
 
-  const micCount = installedIds(roomIndex, 'mic').length;
+  const micCount = (typeof installedIds === 'function') ? installedIds(roomIndex, 'mic').length : 0;
   if (micCount > 0) {
-    const standCount = installedIds(roomIndex, 'mic_stand').length;
+    const standCount = (typeof installedIds === 'function') ? installedIds(roomIndex, 'mic_stand').length : 0;
     if (standCount < micCount) {
       return false;
     }
@@ -102,20 +108,22 @@ function checkContractRequirements(contract, roomIndex) {
 }
 
 // Time management
-function advanceTime(hours) {
+export function advanceTime(hours) {
+  if (typeof state === 'undefined' || !state.time) return;
   state.time.hour += hours;
   while (state.time.hour >= state.time.workHoursPerDay) {
     state.time.hour -= state.time.workHoursPerDay;
     state.time.day += 1;
     // Recover fatigue when day changes
-    state.player.fatigue = Math.max(0, state.player.fatigue - 8);
+    if (state.player) state.player.fatigue = Math.max(0, state.player.fatigue - 8);
     log(`🌅 Nou dia! Fatiga reduïda a ${state.player.fatigue.toFixed(1)}h`);
   }
 }
 
 // Notifications
-function showNotification(message, duration = 3000) {
+export function showNotification(message, duration = 3000) {
   const container = document.getElementById('notifications');
+  if (!container) return;
   const div = document.createElement('div');
   div.className = 'notification';
   div.textContent = message;
@@ -124,4 +132,20 @@ function showNotification(message, duration = 3000) {
     div.style.animation = 'slideOut 0.5s ease';
     setTimeout(() => div.remove(), 500);
   }, duration);
+}
+
+// Attach to window for backward compatibility with non-module scripts
+if (typeof window !== 'undefined') {
+  window.Helpers = Object.assign(window.Helpers || {}, { log, euro, clamp, avgStat, sumStat, xpToNext, addXp, invQty, invAdd, invRemove, checkContractRequirements, advanceTime, showNotification });
+  // Overwrite any temporary shim wrappers so the real implementations are used
+  window.log = log;
+  window.euro = euro;
+  window.clamp = clamp;
+  window.avgStat = avgStat;
+  window.sumStat = sumStat;
+  window.xpToNext = xpToNext;
+  window.addXp = addXp;
+  window.invQty = invQty;
+  window.invAdd = invAdd;
+  window.invRemove = invRemove;
 }

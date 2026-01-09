@@ -1,5 +1,8 @@
-// persistence.js - save/load functions
-function saveState() {
+// persistence.js - save/load functions (ES module)
+import { state, rebuildIndexes, ensureRoomsInstalled } from './state.js';
+import { log } from './helpers.js';
+
+export function saveState() {
   try {
     const payload = {
       player: state.player,
@@ -17,12 +20,13 @@ function saveState() {
 }
 
 function ensurePlayerDefaults() {
+  if (!state.player) state.player = { level:1, xp:0, fatigue:0 };
   if (typeof state.player.fatigue !== 'number') state.player.fatigue = 0;
   if (typeof state.player.level !== 'number') state.player.level = 1;
   if (typeof state.player.xp !== 'number') state.player.xp = 0;
 }
 
-function loadStateFromStorage() {
+export function loadStateFromStorage() {
   try {
     const txt = localStorage.getItem('studio_tycoon_state_v1');
     if (!txt) return false;
@@ -50,7 +54,7 @@ function loadStateFromStorage() {
         }
       }
     }
-    renderAll();
+    if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
     log('📥 Estat carregat des de localStorage');
     return true;
   } catch (e) {
@@ -59,7 +63,7 @@ function loadStateFromStorage() {
   }
 }
 
-function clearPersistenceAndReset() {
+export function clearPersistenceAndReset() {
   try {
     localStorage.removeItem('studio_tycoon_state_v1');
     state.player = { level: 1, xp: 0, fatigue: 0 };
@@ -72,14 +76,14 @@ function clearPersistenceAndReset() {
       c.completed = false;
       c.completed_at = null;
     }
-    renderAll();
+    if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
     log('♻️ Persistència esborrada i progrés reiniciat.');
   } catch (e) {
     log('❌ Error esborrant persistència: ' + e.message);
   }
 }
 
-function loadFromObject(obj) {
+export function loadFromObject(obj) {
   const items = obj.items || [];
   const rooms = obj.rooms || [];
   const contracts = obj.contracts || [];
@@ -96,15 +100,24 @@ function loadFromObject(obj) {
   log(`📦 Dades carregades: items=${items.length}, rooms=${rooms.length}, contracts=${contracts.length}`);
   const selCat = document.getElementById("selCategory");
   if (selCat) selCat.options.length = 0;
-  renderAll();
+  if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
 }
 
-function resetGame() {
+export function resetGame() {
   state.cash = 1000;
   state.inventory.clear();
   ensureRoomsInstalled();
   state.selected.shopItemId = state.db.items.length ? state.db.items[0].id : null;
   log("🔄 Reset: cash=1000, inventari buit, instal·lacions buides.");
-  renderAll();
+  if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
   localStorage.removeItem('studio_tycoon_state_v1');
+}
+
+// Expose for legacy scripts
+if (typeof window !== 'undefined') {
+  window.saveState = saveState;
+  window.loadStateFromStorage = loadStateFromStorage;
+  window.clearPersistenceAndReset = clearPersistenceAndReset;
+  window.loadFromObject = loadFromObject;
+  window.resetGame = resetGame;
 }

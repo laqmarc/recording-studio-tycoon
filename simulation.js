@@ -1,5 +1,8 @@
-// simulation.js - contract/recording simulation
-function simulateRecording(roomIndex, contract) {
+// simulation.js - contract/recording simulation (ES module + legacy window shim)
+import { clamp, avgStat, sumStat, addXp, euro, log, checkContractRequirements } from './helpers.js';
+import { state, installedIds } from './state.js';
+
+export function simulateRecording(roomIndex, contract) {
   const room = state.db.rooms[roomIndex];
 
   const mics = installedIds(roomIndex, "mic").map(id=>state.itemsById.get(id)).filter(Boolean);
@@ -78,7 +81,7 @@ function simulateRecording(roomIndex, contract) {
   return { final_quality, latency_ms, happiness, payout, room_acoustic, noise_penalty, fatigue_penalty, synergy_bonus, mic_q, pre_q, if_q, mon_q, hp_q };
 }
 
-function simulateContract(contractId) {
+export function simulateContract(contractId) {
   const contract = state.db.contracts.find(c => c.id === contractId);
   if (!contract) { log("Contracte no trobat."); return false; }
 
@@ -99,7 +102,13 @@ function simulateContract(contractId) {
 
   log(`🎬 Sessió: ${contract.name}\n- Qualitat: ${res.final_quality.toFixed(1)}\n- Latència: ${res.latency_ms.toFixed(1)} ms\n- Happiness: ${res.happiness.toFixed(1)}\n- Payout: ${euro(payout)}\n- XP: ${xpAward}\n- Penalitzacions: Soroll ${res.noise_penalty.toFixed(1)}, Fatiga ${res.fatigue_penalty.toFixed(1)}\n- Bonus: Sinergia ${res.synergy_bonus.toFixed(1)}\n`);
 
-  renderAll();
-  saveState();
+  if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
+  if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
   return true;
+}
+
+// Expose for legacy scripts
+if (typeof window !== 'undefined') {
+  window.simulateRecording = window.simulateRecording || simulateRecording;
+  window.simulateContract = window.simulateContract || simulateContract;
 }

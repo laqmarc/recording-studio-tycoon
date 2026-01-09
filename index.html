@@ -136,12 +136,25 @@
     <script type="module" src="state.js"></script>
     <script type="module" src="esm/bootstrap.mjs"></script>
     <script type="module" src="esm/actions.mjs"></script>
-    <script src="helpers.js" defer></script>
-    <script src="simulation.js" defer></script>
-    <script src="persistence.js" defer></script>
+        <script type="module" src="helpers.js"></script>
+        <script>
+            // Legacy shim: ensure global helper functions exist before deferred legacy scripts run.
+            (function(){
+                const shimNames = ['log','euro','clamp','avgStat','sumStat','xpToNext','addXp','invQty','invAdd','invRemove','advanceTime','showNotification'];
+                for (const n of shimNames) {
+                    if (typeof window[n] !== 'function') {
+                        window[n] = function(...args){
+                            import('./helpers.js').then(mod=>{ if (typeof mod[n] === 'function') mod[n](...args); }).catch(()=>{});
+                        };
+                    }
+                }
+            })();
+        </script>
+        <script type="module" src="simulation.js"></script>
+    <script type="module" src="persistence.js"></script>
     <script src="ui_render.js" defer></script>
     <script src="demo.js" defer></script>
-    <script src="actions.js" defer></script>
+    <script type="module" src="actions.js"></script>
 
 </body>
 
