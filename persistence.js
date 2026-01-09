@@ -94,7 +94,8 @@ function loadFromObject(obj) {
   state.selected.roomIndex = 0;
   state.selected.shopItemId = items.length ? items[0].id : null;
   log(`📦 Dades carregades: items=${items.length}, rooms=${rooms.length}, contracts=${contracts.length}`);
-  document.getElementById("selCategory").innerHTML = "";
+  const selCat = document.getElementById("selCategory");
+  if (selCat) selCat.options.length = 0;
   renderAll();
 }
 

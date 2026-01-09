@@ -1,22 +1,6 @@
 // actions.js - user actions and boot
-function advanceTime(hours) {
-  let h = Math.max(0, Number(hours || 0));
-  if (!h) return;
-  while (h > 0) {
-    const remainingToday = state.time.workHoursPerDay - state.time.hour;
-    const take = Math.min(remainingToday || state.time.workHoursPerDay, h);
-    state.time.hour += take;
-    h -= take;
-    if (state.time.hour >= state.time.workHoursPerDay) {
-      state.time.day += 1;
-      state.time.hour = 0;
-      // Recover fatigue
-      state.player.fatigue = Math.max(0, state.player.fatigue - 8);
-    }
-  }
-  log(`⏱️ Avançat ${hours}h — Dia ${state.time.day} · Hora ${state.time.hour}/${state.time.workHoursPerDay}`);
-  renderAll();
-}
+// NOTE: `advanceTime` is implemented in `helpers.js` to keep time logic
+// centralized. Do not redefine it here to avoid duplicate definitions.
 
 function getContractETA(c) {
   const worked = Number(c.worked_hours || 0);
