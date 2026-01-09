@@ -6,7 +6,7 @@ export function log(msg) {
   if (!el) return;
   el.textContent = (msg + "\n" + el.textContent).slice(0, 6000);
 }
-export function euro(n) { return `${Math.round(n)}€`; }
+export function euro(n) { return `${Math.round(n)} EUR`; }
 export function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
 export function avgStat(items, key) {
   if (!Array.isArray(items) || items.length === 0) return 0;

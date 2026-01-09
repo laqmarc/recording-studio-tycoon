@@ -435,7 +435,9 @@ export function renderRight() {
   else if (!selItem.value && owned.length) selItem.value = owned[0].id;
 
   const k = document.getElementById("kpis");
-  clearChildren(k);
+  const mobileKpis = document.getElementById("mobileKpis");
+  if (k) clearChildren(k);
+  if (mobileKpis) clearChildren(mobileKpis);
   const xpNext = xpToNext(state.player.level || 1);
   const makeBox = (label, value) => {
     const box = document.createElement('div'); box.className = 'box';
@@ -443,26 +445,36 @@ export function renderRight() {
     const v = document.createElement('div'); v.className = 'v'; v.textContent = value;
     box.appendChild(m); box.appendChild(v); return box;
   };
-  k.appendChild(makeBox('Cash', `${Math.round(state.cash)}€`));
-  k.appendChild(makeBox('Inventari', `${state.inventory.size}`));
-  k.appendChild(makeBox('Sala slots', `${Object.keys(slots).length}`));
-  k.appendChild(makeBox('Temps', `Dia ${state.time.day} · Hora ${state.time.hour}/${state.time.workHoursPerDay}`));
-  k.appendChild(makeBox('Nivell', `${state.player.level} · XP ${state.player.xp}/${xpNext}`));
-  k.appendChild(makeBox('Fatiga', `${state.player.fatigue.toFixed(1)}h`));
-    // Weekly expenses: show accumulated weekly charges (billed per week when rooms are active)
-    // current recurring weekly cost (sum of price_per_week for active rooms)
-    let currentRecurring = 0;
-    if (state.db && Array.isArray(state.db.rooms) && Array.isArray(state.roomsInstalled)) {
-      for (let i = 0; i < state.db.rooms.length; i++) {
-        const r = state.db.rooms[i];
-        const bag = state.roomsInstalled[i] || {};
-        const hasInstalled = Object.values(bag).some(arr => Array.isArray(arr) && arr.length > 0);
-        if (hasInstalled) currentRecurring += Number(r.price_per_week || 0);
-      }
+  // Weekly expenses: current recurring weekly cost (sum of price_per_week for active rooms)
+  let currentRecurring = 0;
+  if (state.db && Array.isArray(state.db.rooms) && Array.isArray(state.roomsInstalled)) {
+    for (let i = 0; i < state.db.rooms.length; i++) {
+      const r = state.db.rooms[i];
+      const bag = state.roomsInstalled[i] || {};
+      const hasInstalled = Object.values(bag).some(arr => Array.isArray(arr) && arr.length > 0);
+      if (hasInstalled) currentRecurring += Number(r.price_per_week || 0);
     }
-    const weeklyAccum = (state.finance && state.finance.weeklyExpenses) ? Math.round(state.finance.weeklyExpenses) : 0;
-    k.appendChild(makeBox('Despesa setmanal', `${currentRecurring}€`));
-    k.appendChild(makeBox('Total facturat', `${weeklyAccum}€`));
+  }
+  const weeklyAccum = (state.finance && state.finance.weeklyExpenses) ? Math.round(state.finance.weeklyExpenses) : 0;
+  const kpiData = [
+    { label: 'Cash', value: euro(Math.round(state.cash)) },
+    { label: 'Inventari', value: `${state.inventory.size}` },
+    { label: 'Sala slots', value: `${Object.keys(slots).length}` },
+    { label: 'Temps', value: `Dia ${state.time.day} - Hora ${state.time.hour}/${state.time.workHoursPerDay}` },
+    { label: 'Nivell', value: `${state.player.level} - XP ${state.player.xp}/${xpNext}` },
+    { label: 'Fatiga', value: `${state.player.fatigue.toFixed(1)}h` },
+    { label: 'Despesa setmanal', value: euro(currentRecurring) },
+    { label: 'Total facturat', value: euro(weeklyAccum) }
+  ];
+  if (k) {
+    for (const item of kpiData) k.appendChild(makeBox(item.label, item.value));
+  }
+  if (mobileKpis) {
+    const allowed = new Set(['Cash', 'Temps', 'Nivell', 'Fatiga', 'Despeses']);
+    for (const item of kpiData) {
+      if (allowed.has(item.label)) mobileKpis.appendChild(makeBox(item.label, item.value));
+    }
+  }
   // Show fatigue warning if short-term fatigue exceeds threshold
   const fatThreshold = 8;
   const fatMultiplier = 1.2;
@@ -470,9 +482,9 @@ export function renderRight() {
   const short = Number(state.player.fatigueShort || 0);
   const chronic = Number(state.player.fatigueChronic || 0);
   const estPenalty = Math.min(fatCap, Math.max(0, short - fatThreshold) * fatMultiplier + 0.5 * chronic);
-  if (short > fatThreshold) {
+  if (short > fatThreshold && k) {
     const warn = document.createElement('div'); warn.className = 'muted fatigamessage'; warn.style.color = '#b71c1c'; warn.style.marginTop = '6px';
-    warn.textContent = `⚠️ Fatiga alta: pèrdua estimada de qualitat ~${estPenalty.toFixed(1)} pts`;
+    warn.textContent = `?s???? Fatiga alta: p??rdua estimada de qualitat ~${estPenalty.toFixed(1)} pts`;
     k.appendChild(warn);
   }
 }
