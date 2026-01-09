@@ -1,13 +1,12 @@
-// ui_render.js - rendering functions
+// ui_render.js - ES module renderer
+import { state, installedIds } from './state.js';
+import { euro, xpToNext, invQty } from './helpers.js';
+import { getContractETA as getContractETA_impl, workOnContract as workOnContract_impl } from './actions.js';
+
 let micTypeListenerAdded = false;
 
 function clearChildren(el) {
   while (el && el.firstChild) el.removeChild(el.firstChild);
-}
-
-// Export for Node/Jest tests
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { renderAll, renderRooms, renderShop, renderRight, getRequirementsElement, clearChildren };
 }
 
 function createTextDiv(text, color) {
@@ -17,7 +16,7 @@ function createTextDiv(text, color) {
   return d;
 }
 
-function getRequirementsElement(contract, roomIndex) {
+export function getRequirementsElement(contract, roomIndex) {
   const req = contract.requirements || {};
   const container = document.createElement('div');
   container.className = 'tiny';
@@ -78,18 +77,19 @@ function getRequirementsElement(contract, roomIndex) {
   return has ? container : null;
 }
 
-function renderAll() {
-  document.getElementById("money").textContent = `Cash: ${Math.round(state.cash)}€`;
+export function renderAll() {
+  const moneyEl = document.getElementById('money');
+  if (moneyEl) moneyEl.textContent = `Cash: ${Math.round(state.cash)}€`;
   renderRooms();
   renderShop();
   renderRight();
 }
 
-function renderRooms() {
+export function renderRooms() {
   const el = document.getElementById("roomList");
   clearChildren(el);
   const visibleRooms = state.db.rooms.map((r, idx) => ({ r, idx })).filter(({ r }) => Number(r.unlock_level || 1) <= Number(state.player.level || 1));
-  document.getElementById("roomsMeta").textContent = `${visibleRooms.length} sales`;
+  const roomsMeta = document.getElementById('roomsMeta'); if (roomsMeta) roomsMeta.textContent = `${visibleRooms.length} sales`;
 
   const visibleIndices = visibleRooms.map(v => v.idx);
   if (visibleIndices.length > 0 && !visibleIndices.includes(state.selected.roomIndex)) {
@@ -142,7 +142,7 @@ function renderRooms() {
         const total = Number(c.duration_hours || 0);
         const remaining = Math.max(0, total - worked);
         const pct = total ? Math.round((worked/total)*100) : 0;
-        const eta = getContractETA(c);
+        const eta = getContractETA_impl(c);
         const etaText = remaining === 0 ? 'Ready' : (eta.days ? `${eta.days}d ${eta.hours}h` : `${eta.hours}h`);
         const isDone = Boolean(c.completed);
 
@@ -178,9 +178,9 @@ function renderRooms() {
         card.appendChild(progWrap);
 
         const actionsDiv = document.createElement('div'); actionsDiv.style.marginTop = '8px'; actionsDiv.style.display = 'flex'; actionsDiv.style.gap = '6px';
-        const btn1 = document.createElement('button'); btn1.className = 'btn2'; btn1.textContent = isDone ? 'Reiniciar' : 'Treballar 1h'; btn1.addEventListener('click', () => workOnContract(c.id, 1));
-        const btn2 = document.createElement('button'); btn2.className = 'btn2'; btn2.textContent = isDone ? 'Reiniciar dia' : `Treballar ${wh}h`; btn2.addEventListener('click', () => workOnContract(c.id, wh));
-        const btn3 = document.createElement('button'); btn3.className = 'btn2 btnOk'; btn3.textContent = isDone ? 'Reiniciar i finalitzar' : 'Finalitzar'; btn3.addEventListener('click', () => workOnContract(c.id, 9999));
+        const btn1 = document.createElement('button'); btn1.className = 'btn2'; btn1.textContent = isDone ? 'Reiniciar' : 'Treballar 1h'; btn1.addEventListener('click', () => workOnContract_impl(c.id, 1));
+        const btn2 = document.createElement('button'); btn2.className = 'btn2'; btn2.textContent = isDone ? 'Reiniciar dia' : `Treballar ${wh}h`; btn2.addEventListener('click', () => workOnContract_impl(c.id, wh));
+        const btn3 = document.createElement('button'); btn3.className = 'btn2 btnOk'; btn3.textContent = isDone ? 'Reiniciar i finalitzar' : 'Finalitzar'; btn3.addEventListener('click', () => workOnContract_impl(c.id, 9999));
         actionsDiv.appendChild(btn1); actionsDiv.appendChild(btn2); actionsDiv.appendChild(btn3);
         card.appendChild(actionsDiv);
 
@@ -190,7 +190,7 @@ function renderRooms() {
   }
 }
 
-function renderShop() {
+export function renderShop() {
   const cats = Array.from(state.itemsByCategory.keys()).sort();
   const sel = document.getElementById("selCategory");
   if (!sel.options.length) {
@@ -237,7 +237,7 @@ function renderShop() {
     state.selected.shopItemId = items.length ? items[0].id : null;
   }
 
-  document.getElementById("shopMeta").textContent = `${items.length} items`;
+  const shopMeta = document.getElementById('shopMeta'); if (shopMeta) shopMeta.textContent = `${items.length} items`;
 
   const list = document.getElementById("shopList");
   clearChildren(list);
@@ -285,9 +285,9 @@ function renderShop() {
   }
 }
 
-function renderRight() {
+export function renderRight() {
   const room = state.db.rooms[state.selected.roomIndex];
-  document.getElementById("rightMeta").textContent = room ? room.name : "";
+  const rightMeta = document.getElementById('rightMeta'); if (rightMeta) rightMeta.textContent = room ? room.name : "";
 
   const details = document.getElementById("roomDetails");
   clearChildren(details);
@@ -350,4 +350,22 @@ function renderRight() {
   k.appendChild(makeBox('Temps', `Dia ${state.time.day} · Hora ${state.time.hour}/${state.time.workHoursPerDay}`));
   k.appendChild(makeBox('Nivell', `${state.player.level} · XP ${state.player.xp}/${xpNext}`));
   k.appendChild(makeBox('Fatiga', `${state.player.fatigue.toFixed(1)}h`));
+}
+
+// Attach to window for legacy code
+if (typeof window !== 'undefined') {
+  window.renderAll = window.renderAll || renderAll;
+  window.renderRooms = window.renderRooms || renderRooms;
+  window.renderShop = window.renderShop || renderShop;
+  window.renderRight = window.renderRight || renderRight;
+  window.getRequirementsElement = window.getRequirementsElement || getRequirementsElement;
+  window.clearChildren = window.clearChildren || clearChildren;
+  // ensure action bindings point to module impl when available
+  window.getContractETA = window.getContractETA || getContractETA_impl;
+  window.workOnContract = window.workOnContract || workOnContract_impl;
+}
+
+// If data was loaded before this module initialized (DEMO loaded and persistence.loadFromObject ran), render now
+if (typeof window !== 'undefined' && typeof window.renderAll === 'function' && window.state && window.state.db && ((window.state.db.items && window.state.db.items.length) || (window.state.db.contracts && window.state.db.contracts.length))) {
+  try { window.renderAll(); } catch (e) { /* ignore render errors at load time */ }
 }

@@ -1,8 +1,8 @@
 /** @jest-environment jsdom */
-const ui = require('../ui_render');
 
 describe('UI interaction flows', () => {
-  beforeEach(() => {
+  let ui;
+  beforeEach(async () => {
     document.body.innerHTML = `
       <select id="selCategory"></select>
       <input id="txtSearch" />
@@ -31,6 +31,7 @@ describe('UI interaction flows', () => {
       cash: 1000,
       time: { day: 1, hour: 0, workHoursPerDay: 8 }
     };
+    ui = require('../ui_render.cjs');
   });
 
   test('clicking an item card updates selection and re-renders', () => {

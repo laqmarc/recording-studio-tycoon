@@ -71,3 +71,29 @@ if (typeof document !== 'undefined') {
   try { if (typeof loadStateFromStorage === 'function') loadStateFromStorage(); } catch(e) {}
 }
 
+// Export named implementations for ESM consumers (ui_render imports these)
+export function getContractETA(...args) {
+  const fn = getImpl('getContractETA');
+  return fn ? fn(...args) : undefined;
+}
+
+export function workOnContract(...args) {
+  return call('workOnContract', ...args);
+}
+
+export function buySelected(...args) {
+  return call('buySelected', ...args);
+}
+
+export function prepareInstallFromShop(...args) {
+  return call('prepareInstallFromShop', ...args);
+}
+
+export function installSelected(...args) {
+  return call('installSelected', ...args);
+}
+
+export function uninstallLast(...args) {
+  return call('uninstallLast', ...args);
+}
+

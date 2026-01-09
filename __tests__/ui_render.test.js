@@ -1,12 +1,8 @@
 /** @jest-environment jsdom */
-const fs = require('fs');
-const path = require('path');
-
-// Load the ui_render file into Node (it exports functions when module.exports is present)
-const ui = require('../ui_render');
 
 describe('ui_render basic DOM behaviour', () => {
-  beforeEach(() => {
+  let ui;
+  beforeEach(async () => {
     document.body.innerHTML = `
       <select id="selCategory"></select>
       <input id="txtSearch" />
@@ -22,6 +18,7 @@ describe('ui_render basic DOM behaviour', () => {
       selected: { shopItemId: null }
     };
     global.euro = (n) => `${n}€`;
+    ui = require('../ui_render.cjs');
   });
 
   test('renderShop populates category and items', () => {
