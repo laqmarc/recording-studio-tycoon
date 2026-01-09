@@ -25,16 +25,18 @@ function nextMode(mode) {
 
 function readMode() {
   const stored = localStorage.getItem(storageKey);
-  if (stored === "dark" || stored === "light" || stored === "forest") return stored;
-  return "auto";
+  if (stored === "dark" || stored === "light" || stored === "forest" || stored === "auto") return stored;
+  const attr = root.getAttribute("data-theme");
+  if (attr === "dark" || attr === "light" || attr === "forest") return attr;
+  return "dark";
 }
 
 function writeMode(mode) {
-  if (mode === "dark" || mode === "light" || mode === "forest") {
+  if (mode === "dark" || mode === "light" || mode === "forest" || mode === "auto") {
     localStorage.setItem(storageKey, mode);
-  } else {
-    localStorage.removeItem(storageKey);
+    return;
   }
+  localStorage.removeItem(storageKey);
 }
 
 function initThemeToggle() {
