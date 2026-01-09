@@ -16,12 +16,7 @@
         </div>
         <div class="left">
             <span class="money" id="money">Cash: 1000€</span>
-            <button class="btn" id="btnLoadDemo">Carrega demo</button>
-            <label class="btn" style="display:inline-flex; gap:8px; align-items:center; cursor:pointer;">
-                Carrega items_master.json
-                <input id="fileInput" type="file" accept=".json,application/json" style="display:none" />
-            </label>
-            <button class="btn" id="btnReset">Reset</button>
+
             <button class="btn" id="btnClearSave">Reset persistència</button>
         </div>
     </header>
@@ -115,10 +110,6 @@
                     <button class="btn2 btnBad" id="btnUninstall">Desinstal·lar (últim)</button>
                 </div>
 
-                <div style="margin-top:10px" class="grid2">
-                    <button class="btn2" id="btnSimPodcast">Simular: Podcast 2 veus</button>
-                    <button class="btn2" id="btnSimMix">Simular: Mescla 1 tema</button>
-                </div>
 
                 <div style="margin-top:10px">
                     <button class="btn2 btnSpecial" id="btnNextDay">🌅 Passar dia (recuperar fatiga)</button>
@@ -139,7 +130,7 @@
     <script type="module" src="simulation.js"></script>
     <script src="demo.js" defer></script>
     <script type="module" src="actions.js"></script>
-    <script type="module" src="ui_render.js"></script>
+    <script type="module" src="ui_render.mjs"></script>
 
 </body>
 

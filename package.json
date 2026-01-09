@@ -2,9 +2,14 @@
   "name": "studio-tycoon",
   "version": "0.1.0",
   "private": true,
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testMatch": ["**/__tests__/**/*.mjs"],
+    "setupFiles": ["<rootDir>/__tests__/setup-textencoder.cjs"]
   },
   "devDependencies": {
     "jest": "^29.6.1",

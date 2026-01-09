@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { clamp, avgStat, sumStat, xpToNext } = require('../lib/helpers');
+import { clamp, avgStat, sumStat, xpToNext } from '../lib/helpers.js';
 
 describe('helpers', () => {
   test('clamp bounds', () => {

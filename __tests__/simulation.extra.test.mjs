@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { simulateRecording } = require('../lib/simulation');
+import { simulateRecording } from '../lib/simulation.js';
 
 describe('simulateRecording edge cases', () => {
   const baseState = () => ({

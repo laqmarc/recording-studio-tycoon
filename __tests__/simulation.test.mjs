@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { simulateRecording } = require('../lib/simulation');
+import { simulateRecording } from '../lib/simulation.js';
 
 test('simulateRecording basic recording scenario', () => {
   const state = {
