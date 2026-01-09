@@ -1,6 +1,32 @@
-// actions.js - user actions and boot
+// actions.js - user actions and boot (now a module with legacy fallbacks)
 // NOTE: `advanceTime` is implemented in `helpers.js` to keep time logic
 // centralized. Do not redefine it here to avoid duplicate definitions.
+
+// Wrap in an IIFE to avoid polluting global scope and to prevent
+// duplicate top-level declarations when the legacy scripts and
+// migration shims are both loaded.
+(function(){
+  // Bind globals from window for gradual migration (legacy functions remain available on window)
+  const state = (typeof window !== 'undefined' && window.state) ? window.state : undefined;
+  const rebuildIndexes = (typeof window !== 'undefined' && window.rebuildIndexes) ? window.rebuildIndexes : undefined;
+  const ensurePlayerDefaults = (typeof window !== 'undefined' && window.ensurePlayerDefaults) ? window.ensurePlayerDefaults : undefined;
+  const loadStateFromStorage = (typeof window !== 'undefined' && window.loadStateFromStorage) ? window.loadStateFromStorage : undefined;
+  const installedIds = (typeof window !== 'undefined' && window.installedIds) ? window.installedIds : undefined;
+  const installToRoom = (typeof window !== 'undefined' && window.installToRoom) ? window.installToRoom : undefined;
+  const uninstallFromRoom = (typeof window !== 'undefined' && window.uninstallFromRoom) ? window.uninstallFromRoom : undefined;
+  const invAdd = (typeof window !== 'undefined' && window.invAdd) ? window.invAdd : undefined;
+  const invRemove = (typeof window !== 'undefined' && window.invRemove) ? window.invRemove : undefined;
+  const invQty = (typeof window !== 'undefined' && window.invQty) ? window.invQty : undefined;
+  const advanceTime = (typeof window !== 'undefined' && window.advanceTime) ? window.advanceTime : undefined;
+  const simulateContract = (typeof window !== 'undefined' && window.simulateContract) ? window.simulateContract : undefined;
+  const renderAll = (typeof window !== 'undefined' && window.renderAll) ? window.renderAll : undefined;
+  const renderShop = (typeof window !== 'undefined' && window.renderShop) ? window.renderShop : undefined;
+  const renderRight = (typeof window !== 'undefined' && window.renderRight) ? window.renderRight : undefined;
+  const log = (typeof window !== 'undefined' && window.log) ? window.log : console && console.log ? (m)=>console.log(m) : ()=>{};
+  const euro = (typeof window !== 'undefined' && window.euro) ? window.euro : (n)=>`${n}€`;
+  const saveState = (typeof window !== 'undefined' && window.saveState) ? window.saveState : ()=>{};
+  const showNotification = (typeof window !== 'undefined' && window.showNotification) ? window.showNotification : ()=>{};
+  const resetGame = (typeof window !== 'undefined' && window.resetGame) ? window.resetGame : undefined;
 
 function getContractETA(c) {
   const worked = Number(c.worked_hours || 0);
@@ -18,6 +44,12 @@ function getContractETA(c) {
   const finishHour = finalHours === 0 ? 0 : finalHours;
   return { days: fullDays + 1, hours: finalHours, finishDay, finishHour };
 }
+
+  // Make getContractETA available as a global early so legacy code
+  // that calls `getContractETA(...)` during initialization works.
+  if (typeof window !== 'undefined') window.getContractETA = getContractETA;
+
+// (No ES exports here — keep legacy script-compatible)
 
 function workOnContract(contractId, hours) {
   const c = state.db.contracts.find(x => x.id === contractId);
@@ -113,6 +145,7 @@ function workOnContract(contractId, hours) {
   advanceTime(actual_hours);
   renderAll();
 }
+// (No ES exports here — keep legacy script-compatible)
 
 function buySelected() {
   let id = state.selected.shopItemId;
@@ -141,6 +174,7 @@ function buySelected() {
   try { prepareInstallFromShop(); } catch (e) { }
   log(`✅ Comprat: ${it.name} x${qty} per ${euro(cost)}.`);  showNotification(`🛒 Comprat: ${it.name} x${qty}`);  saveState();
 }
+// (No ES exports here — keep legacy script-compatible)
 
 function prepareInstallFromShop() {
   const id = state.selected.shopItemId;
@@ -153,6 +187,7 @@ function prepareInstallFromShop() {
   if (invQty(id) > 0) selInvItem.value = id;
   log("→ Preparat per instal·lar (si el tens a inventari).");
 }
+// (No ES exports here — keep legacy script-compatible)
 
 function installSelected() {
   const roomIndex = state.selected.roomIndex;
@@ -174,6 +209,7 @@ function installSelected() {
   renderAll();
   saveState();
 }
+// (No ES exports here — keep legacy script-compatible)
 
 function uninstallLast() {
   const roomIndex = state.selected.roomIndex;
@@ -188,53 +224,75 @@ function uninstallLast() {
   renderAll();
   saveState();
 }
+// (No ES exports here — keep legacy script-compatible)
 
 // wire events
-document.getElementById("btnLoadDemo").addEventListener("click", () => loadFromObject(DEMO));
-document.getElementById("btnReset").addEventListener("click", resetGame);
-document.getElementById("btnClearSave").addEventListener("click", () => {
-  if (confirm('Esborrar la persistència i reiniciar el progrés?')) clearPersistenceAndReset();
-});
+// wire events
+if (typeof document !== 'undefined') {
+  document.getElementById("btnLoadDemo").addEventListener("click", () => loadFromObject(DEMO));
+  document.getElementById("btnReset").addEventListener("click", () => { if (typeof resetGame === 'function') resetGame(); });
+  document.getElementById("btnClearSave").addEventListener("click", () => {
+    if (confirm('Esborrar la persistència i reiniciar el progrés?')) clearPersistenceAndReset();
+  });
 
-document.getElementById("btnBuy").addEventListener("click", buySelected);
-document.getElementById("btnAddToInstall").addEventListener("click", prepareInstallFromShop);
-document.getElementById("btnInstall").addEventListener("click", installSelected);
-document.getElementById("btnUninstall").addEventListener("click", uninstallLast);
+  document.getElementById("btnBuy").addEventListener("click", buySelected);
+  document.getElementById("btnAddToInstall").addEventListener("click", prepareInstallFromShop);
+  document.getElementById("btnInstall").addEventListener("click", installSelected);
+  document.getElementById("btnUninstall").addEventListener("click", uninstallLast);
 
-document.getElementById("btnSimPodcast").addEventListener("click", () => simulateContract("contract_podcast_duo"));
-document.getElementById("btnSimMix").addEventListener("click", () => simulateContract("contract_mix_single"));
+  document.getElementById("btnSimPodcast").addEventListener("click", () => simulateContract("contract_podcast_duo"));
+  document.getElementById("btnSimMix").addEventListener("click", () => simulateContract("contract_mix_single"));
 
-document.getElementById("btnNextDay").addEventListener("click", () => {
-  const remainingHours = state.time.workHoursPerDay - state.time.hour;
-  if (remainingHours > 0) {
-    advanceTime(remainingHours);
-    log(`⏭️ Saltat a demà. Fatiga reduïda a ${state.player.fatigue.toFixed(1)}h`);
-    showNotification(`🌅 Dia passat! Fatiga: ${state.player.fatigue.toFixed(1)}h`);
-    renderAll();
-    saveState();
-  } else {
-    log("Ja estàs al final del dia.");
+  document.getElementById("btnNextDay").addEventListener("click", () => {
+    const remainingHours = state.time.workHoursPerDay - state.time.hour;
+    if (remainingHours > 0) {
+      advanceTime(remainingHours);
+      log(`⏭️ Saltat a demà. Fatiga reduïda a ${state.player.fatigue.toFixed(1)}h`);
+      showNotification(`🌅 Dia passat! Fatiga: ${state.player.fatigue.toFixed(1)}h`);
+      renderAll();
+      saveState();
+    } else {
+      log("Ja estàs al final del dia.");
+    }
+  });
+
+  document.getElementById("selCategory").addEventListener("change", renderShop);
+  document.getElementById("txtSearch").addEventListener("input", renderShop);
+
+  document.getElementById("selInvCategory").addEventListener("change", renderRight);
+
+  document.getElementById("fileInput").addEventListener("change", async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const txt = await file.text();
+    try {
+      const obj = JSON.parse(txt);
+      loadFromObject(obj);
+    } catch (err) {
+      log("❌ JSON invàlid: " + err.message);
+    }
+  });
+
+  // boot demo by default — if DEMO and helpers available
+  if (typeof loadFromObject === 'function' && typeof DEMO !== 'undefined') {
+    loadFromObject(DEMO);
   }
-});
+  if (typeof ensurePlayerDefaults === 'function') ensurePlayerDefaults();
+  try { if (typeof loadStateFromStorage === 'function') loadStateFromStorage(); } catch(e) { }
+}
 
-document.getElementById("selCategory").addEventListener("change", renderShop);
-document.getElementById("txtSearch").addEventListener("input", renderShop);
-
-document.getElementById("selInvCategory").addEventListener("change", renderRight);
-
-document.getElementById("fileInput").addEventListener("change", async (e) => {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-  const txt = await file.text();
-  try {
-    const obj = JSON.parse(txt);
-    loadFromObject(obj);
-  } catch (err) {
-    log("❌ JSON invàlid: " + err.message);
+  // Ensure UI helpers are available on `window` early
+  if (typeof window !== 'undefined') {
+    window.getContractETA = getContractETA;
   }
-});
 
-// boot demo by default
-loadFromObject(DEMO);
-ensurePlayerDefaults();
-try { loadStateFromStorage(); } catch(e) { }
+  // Expose to legacy global scope for backward compatibility
+  if (typeof window !== 'undefined') {
+    window.workOnContract = workOnContract;
+    window.buySelected = buySelected;
+    window.prepareInstallFromShop = prepareInstallFromShop;
+    window.installSelected = installSelected;
+    window.uninstallLast = uninstallLast;
+  }
+
+})();
