@@ -321,14 +321,7 @@ export function renderRight() {
 
   details.appendChild(row); details.appendChild(meta); details.appendChild(slotline);
 
-  // Billing history for this room
-  const billingInfo = (state.roomBilling && state.roomBilling[state.selected.roomIndex]) || { weeksBilled: 0, totalCharged: 0 };
-  const billingWrap = document.createElement('div'); billingWrap.style.marginTop = '8px';
-  const bw1 = document.createElement('div'); bw1.className = 'tiny'; bw1.textContent = `Setmanes facturades: ${billingInfo.weeksBilled || 0}`;
-  const bw2 = document.createElement('div'); bw2.className = 'tiny'; bw2.textContent = `Total cobrat sala: ${euro(billingInfo.totalCharged || 0)}`;
-  details.appendChild(billingWrap);
-  billingWrap.appendChild(bw1);
-  billingWrap.appendChild(bw2);
+  // (Per-room billing history removed from room details)
 
   const invCats = Array.from(state.itemsByCategory.keys()).sort();
   const selCat = document.getElementById("selInvCategory");
@@ -386,7 +379,7 @@ export function renderRight() {
   const chronic = Number(state.player.fatigueChronic || 0);
   const estPenalty = Math.min(fatCap, Math.max(0, short - fatThreshold) * fatMultiplier + 0.5 * chronic);
   if (short > fatThreshold) {
-    const warn = document.createElement('div'); warn.className = 'muted'; warn.style.color = '#b71c1c'; warn.style.marginTop = '6px';
+    const warn = document.createElement('div'); warn.className = 'muted fatigamessage'; warn.style.color = '#b71c1c'; warn.style.marginTop = '6px';
     warn.textContent = `⚠️ Fatiga alta: pèrdua estimada de qualitat ~${estPenalty.toFixed(1)} pts`;
     k.appendChild(warn);
   }

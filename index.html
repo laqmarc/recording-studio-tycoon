@@ -10,14 +10,17 @@
 
 <body>
     <header>
+        <div>
         <div class="left">
             <h1>🎛️ Studio Tycoon — Prototype</h1>
             <span class="pill">HTML + JS</span>
         </div>
         <div class="left">
-            <span class="money" id="money">Cash: 1000€</span>
-
             <button class="btn" id="btnClearSave">Reset persistència</button>
+        </div>
+        </div>
+        <div class="header-kpis">
+            <div class="kpi" id="kpis"></div>
         </div>
     </header>
 
@@ -94,7 +97,7 @@
             <div class="content">
                 <div id="roomDetails"></div>
 
-                <div style="margin-top:12px" class="grid2">
+                <div id="inventoryControls">
                     <div>
                         <label>Inventari (filtre categoria)</label>
                         <select id="selInvCategory"></select>
@@ -103,20 +106,18 @@
                         <label>Item a instal·lar</label>
                         <select id="selInvItem"></select>
                     </div>
-                </div>
 
-                <div style="margin-top:10px" class="grid2">
                     <button class="btn2 btnOk" id="btnInstall">Instal·lar a la sala</button>
                     <button class="btn2 btnBad" id="btnUninstall">Desinstal·lar (últim)</button>
                     <button class="btn2" id="btnUseConsumable">Usar</button>
-                </div>
 
 
                 <div style="margin-top:10px">
-                    <button class="btn2 btnSpecial" id="btnNextDay">🌅 Passar dia (recuperar fatiga)</button>
+                    <button class="btn2 btnSpecial" id="btnNextDay">Passar dia (recuperar fatiga)</button>
+                </div>
                 </div>
 
-                <div class="kpi" id="kpis"></div>
+                <!-- KPIs moved to header -->
                 <div style="margin-top:10px">
                     <label>Log</label>
                     <div class="log" id="log"></div>
