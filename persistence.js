@@ -97,6 +97,15 @@ export function loadFromObject(obj) {
   ensureRoomsInstalled();
   state.selected.roomIndex = 0;
   state.selected.shopItemId = items.length ? items[0].id : null;
+  // Ensure finance tracking exists after loading demo data
+  state.finance = state.finance || { monthlyExpenses: 0 };
+  // Start with zero accumulated weekly expenses by default; rooms only incur
+  // costs once something is installed in them (billing starts later via daily updater).
+  if (!obj.finance || typeof obj.finance.weeklyExpenses !== 'number') {
+    state.finance.weeklyExpenses = 0;
+  }
+  // Initialize roomBilling array alongside rooms
+  state.roomBilling = state.roomBilling || state.db.rooms.map(()=> ({ lastBilledDay: null, weeksBilled: 0, totalCharged: 0, justInstalled: false }));
   log(`📦 Dades carregades: items=${items.length}, rooms=${rooms.length}, contracts=${contracts.length}`);
   const selCat = document.getElementById("selCategory");
   if (selCat) selCat.options.length = 0;

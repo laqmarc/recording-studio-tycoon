@@ -128,9 +128,74 @@ export function advanceTime(hours) {
       // reset one-day rest bonus
       state.player.restBonus = 0;
       if (typeof updateFatigueDerived === 'function') updateFatigueDerived();
+      // Monthly reset: if this is the first day of a new 30-day month (and not initial day 1), reset monthlyExpenses
+      try {
+        if (state.finance && state.time && state.time.day !== 1 && state.time.day % 30 === 1) {
+          state.finance.monthlyExpenses = 0;
+        }
+      } catch (e) {}
+      // apply daily room running costs and log them
+      try {
+        const daily = applyDailyRoomCosts();
+        if (daily && typeof log === 'function') log(`💸 Costos diaris sales: ${euro(daily)} · Despesa setmanal acumulada: ${Math.round((state.finance && state.finance.weeklyExpenses) || 0)}€`);
+      } catch (e) {}
       log(`🌅 Nou dia! Fatiga curta: ${state.player.fatigueShort.toFixed(1)}h · Fatiga crònica: ${state.player.fatigueChronic.toFixed(2)}`);
     }
   }
+}
+
+// Apply daily room running costs: called indirectly from advanceTime loop
+export function applyDailyRoomCosts() {
+  if (!state || !state.db || !Array.isArray(state.db.rooms)) return 0;
+  let charged = 0;
+  // Ensure roomBilling array exists
+  state.roomBilling = state.roomBilling || state.db.rooms.map(()=>({ lastBilledDay: null }));
+  for (let i = 0; i < state.db.rooms.length; i++) {
+    const r = state.db.rooms[i];
+    const perWeek = Number(r.price_per_week || 0);
+    const bag = (Array.isArray(state.roomsInstalled) && state.roomsInstalled[i]) ? state.roomsInstalled[i] : {};
+    const hasInstalled = Object.values(bag).some(arr => Array.isArray(arr) && arr.length > 0);
+    if (!hasInstalled) continue;
+
+    const billing = state.roomBilling[i] = state.roomBilling[i] || { lastBilledDay: null };
+    // If room was just installed, bill full week immediately and set lastBilledDay
+    if (billing.justInstalled) {
+      state.cash = Number(state.cash || 0) - perWeek;
+      state.finance = state.finance || {};
+      state.finance.weeklyExpenses = (state.finance.weeklyExpenses || 0) + perWeek;
+      charged += perWeek;
+      billing.lastBilledDay = (state.time && state.time.day) ? state.time.day : 1;
+      billing.weeksBilled = (billing.weeksBilled || 0) + 1;
+      billing.totalCharged = (billing.totalCharged || 0) + perWeek;
+      billing.justInstalled = false;
+      try {
+        if (typeof showNotification === 'function') showNotification(`💳 Cobrat ${euro(perWeek)} per "${r.name}" (instal·lació)`);
+      } catch (e) {}
+      continue;
+    }
+
+    // Regular weekly billing: if >=7 days since last billed, bill full week for each 7-day period
+    if (billing.lastBilledDay == null) {
+      // If no last billed day recorded, set it to today (avoid retroactive billing)
+      billing.lastBilledDay = (state.time && state.time.day) ? state.time.day : 1;
+      continue;
+    }
+    let daysSince = (state.time && state.time.day ? state.time.day : 1) - billing.lastBilledDay;
+    while (daysSince >= 7) {
+      state.cash = Number(state.cash || 0) - perWeek;
+      state.finance = state.finance || {};
+      state.finance.weeklyExpenses = (state.finance.weeklyExpenses || 0) + perWeek;
+      charged += perWeek;
+      billing.weeksBilled = (billing.weeksBilled || 0) + 1;
+      billing.totalCharged = (billing.totalCharged || 0) + perWeek;
+      billing.lastBilledDay += 7;
+      daysSince -= 7;
+      try {
+        if (typeof showNotification === 'function') showNotification(`💳 Cobrat ${euro(perWeek)} per "${r.name}" (setmana ${billing.weeksBilled})`);
+      } catch (e) {}
+    }
+  }
+  return charged;
 }
 
 // Consumable items: immediate effects like coffee or improving sleep recovery

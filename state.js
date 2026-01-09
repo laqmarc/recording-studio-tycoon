@@ -2,11 +2,14 @@
 export const state = {
   cash: 1000,
   db: { items: [], rooms: [], contracts: [] },
+  finance: { weeklyExpenses: 0 },
   itemsById: new Map(),
   itemsByCategory: new Map(),
   inventory: new Map(), // id -> qty
   selected: { roomIndex: 0, shopItemId: null },
   roomsInstalled: [], // per room: { category -> [itemId,...] }
+  // billing info per room: { lastBilledDay: number|null }
+  roomBilling: [],
   // Player state: track short-term and chronic fatigue separately.
   player: { level: 1, xp: 0, fatigue: 0, fatigueShort: 0, fatigueChronic: 0, restBonus: 0 }
 };
@@ -28,6 +31,8 @@ export function rebuildIndexes() {
 }
 export function ensureRoomsInstalled() {
   state.roomsInstalled = state.db.rooms.map(()=> ({}));
+  // initialize billing info array in parallel with roomsInstalled
+  state.roomBilling = state.db.rooms.map(()=> ({ lastBilledDay: null, weeksBilled: 0, totalCharged: 0, justInstalled: false }));
 }
 export function installedIds(roomIndex, category) {
   const bag = state.roomsInstalled[roomIndex] || {};
@@ -40,13 +45,32 @@ export function installToRoom(roomIndex, category, itemId) {
   const bag = state.roomsInstalled[roomIndex];
   bag[category] = bag[category] || [];
   if (bag[category].length >= max) return { ok:false, reason:`No hi ha slots de ${category} (max ${max})` };
+  const wasEmpty = Object.values(bag).every(arr => !Array.isArray(arr) || arr.length === 0);
   bag[category].push(itemId);
+  // If this was the first installation in the room, mark for immediate weekly billing
+  try {
+    if (wasEmpty) {
+      // ensure billing array exists
+      state.roomBilling = state.roomBilling || state.db.rooms.map(()=>({ lastBilledDay: null }));
+      // set last billed day to current day so helpers can bill now if desired
+      state.roomBilling[roomIndex] = state.roomBilling[roomIndex] || { lastBilledDay: null };
+      // indicate that room has been newly installed; actual cash change handled by helpers to avoid circular imports
+      state.roomBilling[roomIndex].justInstalled = true;
+    }
+  } catch (e) {}
   return { ok:true };
 }
 export function uninstallFromRoom(roomIndex, category) {
   const bag = state.roomsInstalled[roomIndex];
   if (!bag[category] || !bag[category].length) return { ok:false, reason:"No hi ha res instal·lat" };
   const removed = bag[category].pop();
+  // If room becomes empty, clear billing marker (future charges stop)
+  try {
+    const stillHas = Object.values(bag).some(arr => Array.isArray(arr) && arr.length > 0);
+    if (!stillHas && state.roomBilling && state.roomBilling[roomIndex]) {
+      state.roomBilling[roomIndex].lastBilledDay = state.roomBilling[roomIndex].lastBilledDay || null;
+    }
+  } catch (e) {}
   return { ok:true, removed };
 }
 

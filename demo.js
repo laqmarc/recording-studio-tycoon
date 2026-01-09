@@ -8930,7 +8930,8 @@ const DEMO = {
         "effects": 2,
         "instruments": 1,
         "software": 1
-      }
+      },
+      "price_per_week": 150.0
     },
     {
       "id": "room_vocal_1",
@@ -8953,7 +8954,8 @@ const DEMO = {
         "mic_stand": 1,
         "acoustic_treatment": 8,
         "cable": 6
-      }
+      },
+      "price_per_week": 100.0
     },
     {
       "id": "room_live_1",
@@ -8977,7 +8979,8 @@ const DEMO = {
         "patchbay": 1,
         "cable": 20,
         "multicore": 1
-      }
+      },
+      "price_per_week": 300.0
     },
     {
       "id": "room_control_2",
@@ -9004,7 +9007,8 @@ const DEMO = {
         "effects": 4,
         "instruments": 2,
         "software": 2
-      }
+      },
+      "price_per_week": 400.0
     },
     {
       "id": "room_live_2",
@@ -9028,7 +9032,8 @@ const DEMO = {
         "patchbay": 1,
         "cable": 30,
         "multicore": 1
-      }
+      },
+      "price_per_week": 600.0
     },
     {
       "id": "room_mastering_1",
@@ -9050,7 +9055,8 @@ const DEMO = {
         "acoustic_treatment": 8,
         "effects": 6,
         "software": 3
-      }
+      },
+      "price_per_week": 500.0
     },
     {
       "id": "room_streaming_1",
@@ -9074,7 +9080,8 @@ const DEMO = {
         "software": 2,
         "instruments": 1,
         "mic_stand": 3
-      }
+      },
+      "price_per_week": 250.0
     },
     {
       "id": "room_live_3",
@@ -9100,7 +9107,8 @@ const DEMO = {
         "multicore": 2,
         "console_analog": 1,
 
-      }
+      },
+      "price_per_week": 1000.0
     }
   ],
   "contracts": [

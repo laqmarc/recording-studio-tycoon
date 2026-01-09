@@ -321,6 +321,15 @@ export function renderRight() {
 
   details.appendChild(row); details.appendChild(meta); details.appendChild(slotline);
 
+  // Billing history for this room
+  const billingInfo = (state.roomBilling && state.roomBilling[state.selected.roomIndex]) || { weeksBilled: 0, totalCharged: 0 };
+  const billingWrap = document.createElement('div'); billingWrap.style.marginTop = '8px';
+  const bw1 = document.createElement('div'); bw1.className = 'tiny'; bw1.textContent = `Setmanes facturades: ${billingInfo.weeksBilled || 0}`;
+  const bw2 = document.createElement('div'); bw2.className = 'tiny'; bw2.textContent = `Total cobrat sala: ${euro(billingInfo.totalCharged || 0)}`;
+  details.appendChild(billingWrap);
+  billingWrap.appendChild(bw1);
+  billingWrap.appendChild(bw2);
+
   const invCats = Array.from(state.itemsByCategory.keys()).sort();
   const selCat = document.getElementById("selInvCategory");
   const prevSelCat = selCat.value;
@@ -355,6 +364,20 @@ export function renderRight() {
   k.appendChild(makeBox('Temps', `Dia ${state.time.day} · Hora ${state.time.hour}/${state.time.workHoursPerDay}`));
   k.appendChild(makeBox('Nivell', `${state.player.level} · XP ${state.player.xp}/${xpNext}`));
   k.appendChild(makeBox('Fatiga', `${state.player.fatigue.toFixed(1)}h`));
+    // Weekly expenses: show accumulated weekly charges (billed per week when rooms are active)
+    // current recurring weekly cost (sum of price_per_week for active rooms)
+    let currentRecurring = 0;
+    if (state.db && Array.isArray(state.db.rooms) && Array.isArray(state.roomsInstalled)) {
+      for (let i = 0; i < state.db.rooms.length; i++) {
+        const r = state.db.rooms[i];
+        const bag = state.roomsInstalled[i] || {};
+        const hasInstalled = Object.values(bag).some(arr => Array.isArray(arr) && arr.length > 0);
+        if (hasInstalled) currentRecurring += Number(r.price_per_week || 0);
+      }
+    }
+    const weeklyAccum = (state.finance && state.finance.weeklyExpenses) ? Math.round(state.finance.weeklyExpenses) : 0;
+    k.appendChild(makeBox('Despesa setmanal', `${currentRecurring}€`));
+    k.appendChild(makeBox('Total facturat', `${weeklyAccum}€`));
   // Show fatigue warning if short-term fatigue exceeds threshold
   const fatThreshold = 8;
   const fatMultiplier = 1.2;
