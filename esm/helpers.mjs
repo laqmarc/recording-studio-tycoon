@@ -18,8 +18,10 @@ export function sumStat(items, key) {
   return s;
 }
 export function xpToNext(level){ return Math.max(200, Math.round(200 * Math.pow(level, 1.4))); }
+export function euro(n) { return `${Math.round(n)}€`; }
+export function invQty(id) { const s = (typeof globalThis !== 'undefined' && (globalThis.state || (globalThis.window && globalThis.window.state))) ? (globalThis.state || globalThis.window.state) : null; return (s && s.inventory) ? Number(s.inventory.get(id) || 0) : 0; }
 
 // Expose to window for progressive migration (keeps backward compatibility)
 if (typeof window !== 'undefined') {
-  window.ESHelpers = { clamp, avgStat, sumStat, xpToNext };
+  window.ESHelpers = { clamp, avgStat, sumStat, xpToNext, euro, invQty };
 }
