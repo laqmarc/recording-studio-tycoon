@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 90" role="img" aria-label="Streaming room">
+  <rect x="10" y="12" width="100" height="66" rx="12" fill="#f9f2e1" stroke="#2f2a26" stroke-width="2"/>
+  <rect x="20" y="20" width="52" height="34" rx="6" fill="#e7d9b7" stroke="#2f2a26" stroke-width="2"/>
+  <rect x="26" y="26" width="40" height="22" rx="4" fill="#2f6b6b" stroke="#2f2a26" stroke-width="2"/>
+  <circle cx="88" cy="40" r="8" fill="#c6a15a" stroke="#2f2a26" stroke-width="2"/>
+  <rect x="84" y="50" width="8" height="18" rx="3" fill="#2f2a26"/>
+  <rect x="26" y="62" width="68" height="10" rx="4" fill="#2f2a26"/>
+  <defs>
+    <pattern id="boardgame-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(18)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#2f2a26" stroke-opacity="0.12" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="100%" height="100%" fill="url(#boardgame-hatch)" opacity="0.18"/>
+  <g id="boardgame-shade">
+    <path d="M10 12h100l-10 10H20z" fill="#ffffff" opacity="0.18"/>
+    <path d="M16 78h88l-8 8H24z" fill="#2f2a26" opacity="0.12"/>
+  </g>
+</svg>

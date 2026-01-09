@@ -4,6 +4,48 @@ import { euro, xpToNext, invQty } from './helpers.js';
 import { getContractETA as getContractETA_impl, workOnContract as workOnContract_impl } from './actions.js';
 
 let micTypeListenerAdded = false;
+const ROOM_ART = {
+  control_room: 'assets/rooms/control_room.svg',
+  live_room: 'assets/rooms/live_room.svg',
+  vocal_booth: 'assets/rooms/vocal_booth.svg',
+  mastering_suite: 'assets/rooms/mastering_suite.svg',
+  streaming_room: 'assets/rooms/streaming_room.svg'
+};
+const ITEM_ART = {
+  mic: 'assets/items/mic.svg',
+  preamp: 'assets/items/preamp.svg',
+  preamp_multi: 'assets/items/preamp.svg',
+  console_analog: 'assets/items/console.svg',
+  console_digital: 'assets/items/console.svg',
+  monitor: 'assets/items/monitor.svg',
+  headphones: 'assets/items/headphones.svg',
+  headphone_amp: 'assets/items/headphone_amp.svg',
+  cable: 'assets/items/cable.svg',
+  multicore: 'assets/items/multicore.svg',
+  mic_stand: 'assets/items/mic_stand.svg',
+  mic_accessory: 'assets/items/mic_accessory.svg',
+  pop_filter: 'assets/items/pop_filter.svg',
+  shock_mount: 'assets/items/shock_mount.svg',
+  interface: 'assets/items/interface.svg',
+  acoustic_treatment: 'assets/items/acoustic_treatment.svg',
+  desk: 'assets/items/desk.svg',
+  rack: 'assets/items/rack.svg',
+  patchbay: 'assets/items/patchbay.svg',
+  effects: 'assets/items/effects.svg',
+  instruments: 'assets/items/instrument.svg',
+  chair: 'assets/items/chair.svg',
+  consumable: 'assets/items/consumable.svg',
+  midi_controller: 'assets/items/midi_controller.svg',
+  software_daw: 'assets/items/software_daw.svg',
+  software_fx: 'assets/items/software_fx.svg',
+  monitor_stand: 'assets/items/monitor_stand.svg',
+  accessory_cabling: 'assets/items/accessory_cabling.svg',
+  software: 'assets/items/software.svg',
+  software_vst: 'assets/items/software.svg',
+  software_mix_master: 'assets/items/software.svg'
+};
+const DEFAULT_ROOM_ART = 'assets/rooms/control_room.svg';
+const DEFAULT_ITEM_ART = 'assets/items/console.svg';
 
 function clearChildren(el) {
   while (el && el.firstChild) el.removeChild(el.firstChild);
@@ -14,6 +56,27 @@ function createTextDiv(text, color) {
   if (color) d.style.color = color;
   d.textContent = text;
   return d;
+}
+
+function getRoomArt(room) {
+  if (!room) return DEFAULT_ROOM_ART;
+  return ROOM_ART[room.type] || DEFAULT_ROOM_ART;
+}
+
+function getItemArt(item) {
+  if (!item) return DEFAULT_ITEM_ART;
+  const cat = item.category || 'misc';
+  return ITEM_ART[cat] || DEFAULT_ITEM_ART;
+}
+
+function createArt(src, alt) {
+  const wrap = document.createElement('div');
+  wrap.className = 'card-art';
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = alt || '';
+  wrap.appendChild(img);
+  return wrap;
 }
 
 export function getRequirementsElement(contract, roomIndex) {
@@ -108,6 +171,11 @@ export function renderRooms() {
     const div = document.createElement("div");
     div.className = "card" + (idx===state.selected.roomIndex ? " active":"");
     div.onclick = () => { state.selected.roomIndex = idx; renderAll(); };
+    const layout = document.createElement('div');
+    layout.className = 'card-grid';
+    const art = createArt(getRoomArt(r), `${r.name} art`);
+    const body = document.createElement('div');
+    body.className = 'card-body';
 
     const slots = r.slots || {};
     const types = Object.keys(slots).slice(0,4).join(", ");
@@ -126,7 +194,9 @@ export function renderRooms() {
     const tiny = document.createElement('div'); tiny.className = 'tiny'; tiny.style.marginTop = '6px';
     tiny.textContent = `Slots: ${types}${Object.keys(slots).length>4?"…":""}`;
 
-    div.appendChild(row1); div.appendChild(row2); div.appendChild(tiny);
+    body.appendChild(row1); body.appendChild(row2); body.appendChild(tiny);
+    layout.appendChild(art); layout.appendChild(body);
+    div.appendChild(layout);
     el.appendChild(div);
   });
 
@@ -157,6 +227,10 @@ export function renderRooms() {
         const card = document.createElement('div');
         card.className = 'card';
         if (isDone) card.style.opacity = '.6', card.style.filter = 'grayscale(.4)';
+        if (isDone) {
+          card.classList.add('is-complete');
+          card.setAttribute('data-stamp', 'DONE');
+        }
 
         const row = document.createElement('div'); row.className = 'row';
         const bt = document.createElement('b'); bt.textContent = c.name;
@@ -258,6 +332,11 @@ export function renderShop() {
       renderShop(); 
       renderRight(); 
     });
+    const layout = document.createElement('div');
+    layout.className = 'card-grid';
+    const art = createArt(getItemArt(it), `${it.name} art`);
+    const body = document.createElement('div');
+    body.className = 'card-body';
     const tier = it.tier || "mid";
     const tierPill = tier === "pro" ? "ok" : tier === "low" ? "bad" : "";
 
@@ -273,7 +352,9 @@ export function renderShop() {
 
     const notes = document.createElement('div'); notes.className = 'tiny'; notes.style.marginTop = '6px'; notes.textContent = it.notes ? it.notes : '';
 
-    div.appendChild(row); div.appendChild(row2); div.appendChild(notes);
+    body.appendChild(row); body.appendChild(row2); body.appendChild(notes);
+    layout.appendChild(art); layout.appendChild(body);
+    div.appendChild(layout);
 
     if (it.category === 'mic' && it.type && it.type.length) {
       const micTypes = document.createElement('div'); micTypes.className = 'tiny'; micTypes.style.marginTop = '4px'; micTypes.style.color = '#666'; micTypes.textContent = `Tipus: ${it.type.join(', ')}`;
@@ -304,6 +385,9 @@ export function renderRight() {
   const slots = room.slots || {};
   const bag = state.roomsInstalled[state.selected.roomIndex] || {};
   // Build details content safely
+  const hero = document.createElement('div'); hero.className = 'room-hero';
+  const heroImg = document.createElement('img'); heroImg.src = getRoomArt(room); heroImg.alt = `${room.name} art`;
+  hero.appendChild(heroImg);
   const row = document.createElement('div'); row.className = 'row';
   const title = document.createElement('b'); title.style.fontSize = '16px'; title.textContent = room.name;
   const p = document.createElement('span'); p.className = 'pill'; p.textContent = room.type;
@@ -322,7 +406,7 @@ export function renderRight() {
     s.appendChild(sb); s.appendChild(sm); slotline.appendChild(s);
   });
 
-  details.appendChild(row); details.appendChild(meta); details.appendChild(slotline);
+  details.appendChild(hero); details.appendChild(row); details.appendChild(meta); details.appendChild(slotline);
 
   const invCats = Array.from(state.itemsByCategory.keys()).sort();
   const selCat = document.getElementById("selInvCategory");

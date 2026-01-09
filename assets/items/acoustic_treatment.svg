@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Acoustic treatment">
+  <rect x="14" y="14" width="72" height="72" rx="10" fill="#f9f2e1" stroke="#2f2a26" stroke-width="3"/>
+  <path d="M24 30h52M24 42h52M24 54h52M24 66h52" stroke="#2f6b6b" stroke-width="4" stroke-linecap="round"/>
+  <rect x="24" y="74" width="52" height="6" rx="3" fill="#c6a15a"/>
+  <defs>
+    <pattern id="boardgame-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(18)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#2f2a26" stroke-opacity="0.12" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="100%" height="100%" fill="url(#boardgame-hatch)" opacity="0.18"/>
+  <g id="boardgame-shade">
+    <path d="M8 14h84l-8 10H16z" fill="#ffffff" opacity="0.18"/>
+    <path d="M12 84h76l-8 8H20z" fill="#2f2a26" opacity="0.12"/>
+  </g>
+</svg>
