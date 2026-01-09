@@ -8,8 +8,13 @@ export function saveState() {
       player: state.player,
       time: state.time,
       cash: state.cash,
+      finance: {
+        weeklyExpenses: Number((state.finance && state.finance.weeklyExpenses) || 0),
+        monthlyExpenses: Number((state.finance && state.finance.monthlyExpenses) || 0)
+      },
       inventory: Array.from(state.inventory.entries()),
       roomsInstalled: state.roomsInstalled,
+      roomBilling: state.roomBilling,
       contractsProgress: state.db.contracts.map(c => ({ id: c.id, worked_hours: c.worked_hours || 0, completed: !!c.completed, completed_at: c.completed_at || null }))
     };
     localStorage.setItem('studio_tycoon_state_v1', JSON.stringify(payload));
@@ -44,6 +49,23 @@ export function loadStateFromStorage() {
     if (Array.isArray(p.roomsInstalled) && p.roomsInstalled.length === state.db.rooms.length) {
       state.roomsInstalled = p.roomsInstalled;
     }
+    state.finance = state.finance || {};
+    if (p.finance && typeof p.finance === 'object') {
+      if (typeof p.finance.weeklyExpenses === 'number') state.finance.weeklyExpenses = p.finance.weeklyExpenses;
+      if (typeof p.finance.monthlyExpenses === 'number') state.finance.monthlyExpenses = p.finance.monthlyExpenses;
+    }
+    if (typeof state.finance.weeklyExpenses !== 'number') state.finance.weeklyExpenses = 0;
+    if (typeof state.finance.monthlyExpenses !== 'number') state.finance.monthlyExpenses = 0;
+    if (Array.isArray(p.roomBilling) && p.roomBilling.length === state.db.rooms.length) {
+      state.roomBilling = p.roomBilling.map(b => ({
+        lastBilledDay: (b && b.lastBilledDay != null) ? b.lastBilledDay : null,
+        weeksBilled: Number((b && b.weeksBilled) || 0),
+        totalCharged: Number((b && b.totalCharged) || 0),
+        justInstalled: Boolean(b && b.justInstalled)
+      }));
+    } else if (!Array.isArray(state.roomBilling) || state.roomBilling.length !== state.db.rooms.length) {
+      state.roomBilling = state.db.rooms.map(()=> ({ lastBilledDay: null, weeksBilled: 0, totalCharged: 0, justInstalled: false }));
+    }
     if (Array.isArray(p.contractsProgress)) {
       for (const cp of p.contractsProgress) {
         const c = state.db.contracts.find(x => x.id === cp.id);
@@ -71,6 +93,7 @@ export function clearPersistenceAndReset() {
     state.cash = 1000;
     state.inventory.clear();
     ensureRoomsInstalled();
+    state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
     for (const c of state.db.contracts) {
       c.worked_hours = 0;
       c.completed = false;
@@ -116,6 +139,7 @@ export function resetGame() {
   state.cash = 1000;
   state.inventory.clear();
   ensureRoomsInstalled();
+  state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
   state.selected.shopItemId = state.db.items.length ? state.db.items[0].id : null;
   log("🔄 Reset: cash=1000, inventari buit, instal·lacions buides.");
   if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();

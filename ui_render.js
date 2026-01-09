@@ -57,6 +57,14 @@ export function getRequirementsElement(contract, roomIndex) {
     }
   }
 
+  const micCount = installedIds(roomIndex, 'mic').length;
+  if (micCount > 0) {
+    const standCount = installedIds(roomIndex, 'mic_stand').length;
+    const hasEnough = standCount >= micCount;
+    container.appendChild(createTextDiv(`Mic stands: ${standCount}/${micCount}`, hasEnough ? '#4CAF50' : '#f44336'));
+    has = true;
+  }
+
   if (req.min_interface_inputs) {
     const interfaces = installedIds(roomIndex, "interface").map(id=>state.itemsById.get(id)).filter(Boolean);
     const maxIns = interfaces.reduce((m,it)=>Math.max(m, Number((it.io && it.io.inputs_total) || (it.stats && it.stats.inputs) || 0)), 0);

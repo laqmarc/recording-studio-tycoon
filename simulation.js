@@ -14,6 +14,12 @@ export function simulateRecording(roomIndex, contract) {
   const acoustic = installedIds(roomIndex, "acoustic_treatment").map(id=>state.itemsById.get(id)).filter(Boolean);
   const monitors = installedIds(roomIndex, "monitor").map(id=>state.itemsById.get(id)).filter(Boolean);
   const headphones = installedIds(roomIndex, "headphones").map(id=>state.itemsById.get(id)).filter(Boolean);
+  const software = [
+    ...installedIds(roomIndex, "software").map(id=>state.itemsById.get(id)).filter(Boolean),
+    ...installedIds(roomIndex, "software_vst").map(id=>state.itemsById.get(id)).filter(Boolean),
+    ...installedIds(roomIndex, "software_mix_master").map(id=>state.itemsById.get(id)).filter(Boolean)
+  ];
+  const instruments = installedIds(roomIndex, "instruments").map(id=>state.itemsById.get(id)).filter(Boolean);
 
   const type = contract.type;
 
@@ -23,6 +29,9 @@ export function simulateRecording(roomIndex, contract) {
   const if_q  = avgStat(interfaces, "conversion_quality");
   const mon_q = avgStat(monitors, "monitor_accuracy");
   const hp_q  = avgStat(headphones, "hp_accuracy");
+  const daw_q = avgStat(software, "daw_quality");
+  const prod_bonus = avgStat(software, "production_bonus");
+  const instrument_q = avgStat(instruments, "instrument_quality");
 
   let room_acoustic = Number(room.base_acoustic||0) + sumStat(acoustic, "room_acoustic_add");
   room_acoustic = clamp(room_acoustic, 0, 100);
@@ -53,6 +62,26 @@ export function simulateRecording(roomIndex, contract) {
       mic_q * 0.25 +
       room_acoustic * 0.15 +
       engineer * 0.20;
+  } else if (type === "production") {
+    quality =
+      mon_q * 0.25 +
+      if_q * 0.10 +
+      room_acoustic * 0.10 +
+      engineer * 0.20 +
+      daw_q * 0.25 +
+      instrument_q * 0.10 +
+      prod_bonus * 4;
+  } else if (type === "mix_master") {
+    const mixQuality =
+      mon_q * 0.40 +
+      room_acoustic * 0.20 +
+      if_q * 0.10 +
+      engineer * 0.30;
+    const masterQuality =
+      mon_q * 0.45 +
+      room_acoustic * 0.30 +
+      engineer * 0.25;
+    quality = (mixQuality + masterQuality) / 2;
   } else { // master
     quality =
       mon_q * 0.45 +
