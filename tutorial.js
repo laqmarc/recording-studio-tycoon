@@ -3,7 +3,7 @@ const storageKey = "studio_tycoon_tutorial_seen";
 const steps = [
   {
     title: "Benvingut",
-    text: "Aixo es una guia rapida. Prem Seguent per veure els panells principals.",
+    text: "Aixo es una guia rapida per jugar a Studio Tycoon. Prem Seguent per veure els panells principals.",
     selector: "header"
   },
   {
