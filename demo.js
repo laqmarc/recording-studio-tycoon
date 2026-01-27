@@ -8922,7 +8922,7 @@ const DEMO = {
         "rack": 1,
         "acoustic_treatment": 6,
         "patchbay": 1,
-        "cable": 10,
+        "cable": 4,
         "mic": 2,
         "preamp": 2,
         "mic_stand": 2,

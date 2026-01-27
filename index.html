@@ -87,7 +87,7 @@
                             <button class="btn2" id="btnUseConsumable">Usar</button>
 
                         </div>
-                        <div class="tiny" style="margin-top:10px">Arrossega items als slots de la sala.</div>
+                        <div class="tiny" style="margin-top:10px">Arrossega items als slots. Arrossega equips del plànol cap aqui per desinstal·lar.</div>
                         <div class="inventory-grid" id="inventoryList"></div>
                     </div>
                 </section>
@@ -127,38 +127,40 @@
                         <small id="shopMeta"></small>
                     </h2>
                     <div class="content">
-                        <div class="grid3">
-                            <div>
-                                <label>Categoria</label>
-                                <select id="selCategory"></select>
+                        <div class="shop-controls">
+                            <div class="grid3">
+                                <div>
+                                    <label>Categoria</label>
+                                    <select id="selCategory"></select>
+                                </div>
+                                <div id="micTypeFilter" style="display:none">
+                                    <label>Tipus mic</label>
+                                    <select id="selMicType">
+                                        <option value="">Tots</option>
+                                        <option value="vocals">Vocals</option>
+                                        <option value="guitarra">Guitarra</option>
+                                        <option value="baix">Baix</option>
+                                        <option value="bombo">Bombo</option>
+                                        <option value="caixa">Caixa</option>
+                                        <option value="tomb">Tom</option>
+                                        <option value="hh">HH</option>
+                                        <option value="oh">OH</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Cerca</label>
+                                    <input id="txtSearch" placeholder="ex: shure, monitor, preamp..." />
+                                </div>
+                                <div>
+                                    <label>Quantitat</label>
+                                    <input id="qtyBuy" type="number" min="1" max="99" value="1" />
+                                </div>
                             </div>
-                            <div id="micTypeFilter" style="display:none">
-                                <label>Tipus mic</label>
-                                <select id="selMicType">
-                                    <option value="">Tots</option>
-                                    <option value="vocals">Vocals</option>
-                                    <option value="guitarra">Guitarra</option>
-                                    <option value="baix">Baix</option>
-                                    <option value="bombo">Bombo</option>
-                                    <option value="caixa">Caixa</option>
-                                    <option value="tomb">Tom</option>
-                                    <option value="hh">HH</option>
-                                    <option value="oh">OH</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Cerca</label>
-                                <input id="txtSearch" placeholder="ex: shure, monitor, preamp..." />
-                            </div>
-                            <div>
-                                <label>Quantitat</label>
-                                <input id="qtyBuy" type="number" min="1" max="99" value="1" />
-                            </div>
-                        </div>
 
-                        <div style="margin-top:10px" class="grid2">
-                            <button class="btn2 btnOk" id="btnBuy">Comprar</button>
-                            <button class="btn2" id="btnAddToInstall">Preparar per instal·lar →</button>
+                            <div class="grid2 shop-actions">
+                                <button class="btn2 btnOk" id="btnBuy">Comprar</button>
+                                <button class="btn2" id="btnAddToInstall">Preparar per instal·lar →</button>
+                            </div>
                         </div>
 
                         <div style="margin-top:12px" class="list" id="shopList"></div>

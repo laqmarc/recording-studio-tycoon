@@ -1,11 +1,12 @@
 // ui_render.mjs - ES module renderer (moved from ui_render.js)
-import { state, installedIds, installToRoom } from './state.js';
-import { euro, xpToNext, invQty, invRemove, log, showNotification } from './helpers.js';
+import { state, installedIds, installToRoom, uninstallItemFromRoom } from './state.js';
+import { euro, xpToNext, invQty, invRemove, invAdd, log, showNotification } from './helpers.js';
 import { getContractETA as getContractETA_impl, workOnContract as workOnContract_impl } from './actions.js';
 
 let micTypeListenerAdded = false;
 let contractRoomListenerAdded = false;
-const dragState = { itemId: null };
+let inventoryDropListenerAdded = false;
+const dragState = { itemId: null, source: null, category: null };
 const ROOM_ART = {
   control_room: 'assets/rooms/control_room.svg',
   live_room: 'assets/rooms/live_room.svg',
@@ -48,6 +49,33 @@ const ITEM_ART = {
 };
 const DEFAULT_ROOM_ART = 'assets/rooms/control_room.svg';
 const DEFAULT_ITEM_ART = 'assets/items/console.svg';
+const STAT_LABELS = {
+  mic_quality: 'Mic',
+  preamp_quality: 'Pre',
+  conversion_quality: 'Conv',
+  monitor_accuracy: 'Mon',
+  hp_accuracy: 'HP',
+  daw_quality: 'DAW',
+  production_bonus: 'Prod',
+  instrument_quality: 'Instr',
+  room_acoustic_add: 'Acoust',
+  latency_score: 'Lat',
+  inputs: 'IN',
+  outputs: 'OUT'
+};
+const PRIMARY_STATS_BY_CATEGORY = {
+  mic: 'mic_quality',
+  preamp: 'preamp_quality',
+  preamp_multi: 'preamp_quality',
+  interface: 'conversion_quality',
+  monitor: 'monitor_accuracy',
+  headphones: 'hp_accuracy',
+  software: 'daw_quality',
+  software_vst: 'production_bonus',
+  software_mix_master: 'daw_quality',
+  instruments: 'instrument_quality',
+  acoustic_treatment: 'room_acoustic_add'
+};
 
 // If tests (or other legacy code) provided a global `state`, merge it into the imported module state
 if (typeof globalThis !== 'undefined' && globalThis.state && typeof state === 'object') {
@@ -84,6 +112,50 @@ function createArt(src, alt) {
   img.alt = alt || '';
   wrap.appendChild(img);
   return wrap;
+}
+
+function formatStatKey(key) {
+  if (!key) return '';
+  if (STAT_LABELS[key]) return STAT_LABELS[key];
+  return key.replace(/_/g, ' ').slice(0, 12);
+}
+
+function getPrimaryStat(item) {
+  if (!item || !item.stats) return null;
+  const preferred = PRIMARY_STATS_BY_CATEGORY[item.category];
+  if (preferred && item.stats[preferred] != null) {
+    return { key: preferred, value: item.stats[preferred] };
+  }
+  const entries = Object.entries(item.stats).filter(([, v]) => typeof v === 'number');
+  if (!entries.length) return null;
+  entries.sort((a, b) => Number(b[1]) - Number(a[1]));
+  return { key: entries[0][0], value: entries[0][1] };
+}
+
+function getTopStats(item, limit = 3) {
+  if (!item || !item.stats) return [];
+  const entries = Object.entries(item.stats)
+    .filter(([, v]) => typeof v === 'number')
+    .sort((a, b) => Number(b[1]) - Number(a[1]))
+    .slice(0, limit);
+  return entries.map(([key, value]) => ({ key, value }));
+}
+
+function createBadge(text, variant, extraClass) {
+  const badge = document.createElement('span');
+  badge.className = `badge ${variant || ''}`.trim();
+  if (extraClass) badge.classList.add(extraClass);
+  badge.textContent = text;
+  return badge;
+}
+
+function getRiskLevel(contract) {
+  const target = Number(contract.target_quality || 0);
+  const duration = Number(contract.duration_hours || 0);
+  const score = target + duration * 0.6;
+  if (score >= 85) return { level: 'high', label: 'Risc alt' };
+  if (score >= 70) return { level: 'mid', label: 'Risc mitja' };
+  return { level: 'low', label: 'Risc baix' };
 }
 
 function setPage(page) {
@@ -182,6 +254,18 @@ function getDraggedItemId(e) {
   return null;
 }
 
+function setDragState(itemId, source, category) {
+  dragState.itemId = itemId;
+  dragState.source = source || null;
+  dragState.category = category || null;
+}
+
+function clearDragState() {
+  dragState.itemId = null;
+  dragState.source = null;
+  dragState.category = null;
+}
+
 function canDropItem(roomIndex, category, itemId) {
   const room = state.db.rooms[roomIndex];
   const item = state.itemsById.get(itemId);
@@ -211,6 +295,31 @@ function installItemToRoom(roomIndex, itemId) {
   renderAll();
   if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
   return { ok: true };
+}
+
+function uninstallItemToInventory(roomIndex, category, itemId) {
+  const room = state.db.rooms[roomIndex];
+  const res = uninstallItemFromRoom(roomIndex, category, itemId);
+  if (!res.ok) return { ok: false, reason: res.reason || 'No es pot desinstal·lar' };
+  invAdd(itemId, 1);
+  const item = state.itemsById.get(itemId);
+  log(`↩️ Desinstal·lat de ${room.name}: ${item ? item.name : itemId} (${category})`);
+  showNotification(`↩️ Desinstal·lat: ${item ? item.name : itemId}`);
+  renderAll();
+  if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
+  return { ok: true };
+}
+
+function getCompatibility(roomIndex, item) {
+  if (!item) return { label: 'N/A', status: 'bad' };
+  if (item.category === 'consumable') return { label: 'Consumible', status: 'ok' };
+  const room = state.db.rooms[roomIndex];
+  const slots = room && room.slots ? room.slots : {};
+  const max = Number(slots[item.category] || 0);
+  if (!max) return { label: 'Sense slot', status: 'bad' };
+  const used = installedIds(roomIndex, item.category).length;
+  if (used >= max) return { label: `Ple ${used}/${max}`, status: 'warn' };
+  return { label: `OK ${used}/${max}`, status: 'ok' };
 }
 
 export function renderAll() {
@@ -309,7 +418,7 @@ export function renderRooms() {
         const isDone = Boolean(c.completed);
 
         const card = document.createElement('div');
-        card.className = 'card';
+        card.className = 'card contract-card';
         if (isDone) card.style.opacity = '.6', card.style.filter = 'grayscale(.4)';
         if (isDone) {
           card.classList.add('is-complete');
@@ -321,6 +430,20 @@ export function renderRooms() {
         const typ = document.createElement('span'); typ.className = 'pill'; typ.textContent = c.type;
         row.appendChild(bt); row.appendChild(typ);
 
+        const badges = document.createElement('div'); badges.className = 'badge-row';
+        if (c.genre && c.genre !== 'any') badges.appendChild(createBadge(c.genre, 'badge--genre'));
+        const risk = getRiskLevel(c);
+        badges.appendChild(createBadge(risk.label, 'badge--risk', risk.level));
+        if (c.target_quality != null) badges.appendChild(createBadge(`Qualitat ${c.target_quality}`, 'badge--quality'));
+        if (c.deadline_days) {
+          const startDay = (c.start_day != null) ? c.start_day : state.time.day;
+          const dueDay = startDay + Number(c.deadline_days || 0);
+          const remainingDays = dueDay - state.time.day;
+          const deadlineText = remainingDays < 0 ? `Tard ${Math.abs(remainingDays)}d` : `D-${remainingDays}d`;
+          const deadlineBadge = createBadge(`Deadline ${deadlineText}`, remainingDays < 0 ? 'badge--late' : 'badge--deadline');
+          badges.appendChild(deadlineBadge);
+        }
+
         const meta = document.createElement('div'); meta.className = 'muted'; meta.style.marginTop = '6px';
         meta.textContent = `${c.duration_hours}h · ${euro(c.base_pay)}`;
         if (isDone) {
@@ -328,17 +451,19 @@ export function renderRooms() {
           meta.appendChild(document.createTextNode(' ')); meta.appendChild(pillDone);
         }
 
-        card.appendChild(row); card.appendChild(meta);
+        card.appendChild(row); card.appendChild(badges); card.appendChild(meta);
 
         const reqEl = getRequirementsElement(c, state.selected.roomIndex);
         if (reqEl) card.appendChild(reqEl);
 
         const progWrap = document.createElement('div'); progWrap.style.marginTop = '8px';
-        const progText = document.createElement('div'); progText.className = 'tiny';
-        const etaSpan = document.createElement('span'); etaSpan.style.float = 'right'; etaSpan.textContent = `ETA: ${etaText}`;
-        progText.textContent = `Progrés: ${worked}/${total}h `; progText.appendChild(etaSpan);
-        const progress = document.createElement('div'); progress.className = 'progress'; progress.style.height = '8px'; progress.style.background = '#eee'; progress.style.borderRadius = '4px'; progress.style.overflow = 'hidden'; progress.style.marginTop = '6px';
-        const progressInner = document.createElement('div'); progressInner.style.width = `${pct}%`; progressInner.style.height = '8px'; progressInner.style.background = isDone? '#999' : '#6bb'; progressInner.style.borderRadius = '4px';
+        const progText = document.createElement('div'); progText.className = 'row tiny';
+        const progLeft = document.createElement('span'); progLeft.textContent = `Progrés: ${worked}/${total}h`;
+        const etaSpan = document.createElement('span'); etaSpan.className = 'eta-pill'; etaSpan.textContent = `ETA ${etaText}`;
+        progText.appendChild(progLeft); progText.appendChild(etaSpan);
+        const progress = document.createElement('div'); progress.className = 'progress'; progress.style.marginTop = '6px';
+        const progressInner = document.createElement('div'); progressInner.className = 'progress-inner'; progressInner.style.width = `${pct}%`;
+        if (isDone) progressInner.style.opacity = '0.6';
         progress.appendChild(progressInner);
         progWrap.appendChild(progText); progWrap.appendChild(progress);
         card.appendChild(progWrap);
@@ -407,9 +532,13 @@ export function renderShop() {
 
   const list = document.getElementById("shopList");
   clearChildren(list);
+  if (list) {
+    list.classList.remove('list');
+    if (!list.classList.contains('shop-grid')) list.classList.add('shop-grid');
+  }
   for (const it of items.slice(0, 200)) {
     const div = document.createElement("div");
-    div.className = "card" + (it.id === state.selected.shopItemId ? " active" : "");
+    div.className = "card shop-card" + (it.id === state.selected.shopItemId ? " active" : "");
     div.style.cursor = "pointer";
     div.addEventListener('click', () => { 
       state.selected.shopItemId = it.id; 
@@ -436,23 +565,67 @@ export function renderShop() {
 
     const notes = document.createElement('div'); notes.className = 'tiny'; notes.style.marginTop = '6px'; notes.textContent = it.notes ? it.notes : '';
 
+    const statWrap = document.createElement('div'); statWrap.className = 'inventory-stats';
+    const topStats = getTopStats(it, 3);
+    for (const st of topStats) {
+      const chip = document.createElement('div'); chip.className = 'stat-chip';
+      chip.textContent = `${formatStatKey(st.key)} ${st.value}`;
+      statWrap.appendChild(chip);
+    }
+
+    const selected = state.itemsById.get(state.selected.shopItemId);
+    let compareRow = null;
+    if (selected && selected.id !== it.id && selected.category === it.category) {
+      compareRow = document.createElement('div'); compareRow.className = 'compare-row';
+      const primary = getPrimaryStat(it);
+      const primarySel = getPrimaryStat(selected);
+      const chunks = [];
+      if (primary && primarySel && primary.key === primarySel.key) {
+        const diff = Number(primary.value) - Number(primarySel.value);
+        if (diff !== 0) chunks.push({
+          text: `${formatStatKey(primary.key)} ${diff > 0 ? `+${diff}` : diff}`,
+          cls: diff > 0 ? 'compare-up' : 'compare-down'
+        });
+      }
+      const priceDiff = Number(it.price || 0) - Number(selected.price || 0);
+      if (priceDiff !== 0) chunks.push({
+        text: `€ ${priceDiff > 0 ? `+${priceDiff}` : priceDiff}`,
+        cls: priceDiff > 0 ? 'compare-down' : 'compare-up'
+      });
+      if (chunks.length) {
+        compareRow.appendChild(document.createTextNode('Comparacio: '));
+        chunks.forEach((chunk, idx) => {
+          const span = document.createElement('span'); span.className = chunk.cls; span.textContent = chunk.text;
+          compareRow.appendChild(span);
+          if (idx < chunks.length - 1) compareRow.appendChild(document.createTextNode(' · '));
+        });
+      } else {
+        compareRow = null;
+      }
+    }
+
     body.appendChild(row); body.appendChild(row2); body.appendChild(notes);
+    if (statWrap.childNodes.length) body.appendChild(statWrap);
     layout.appendChild(art); layout.appendChild(body);
     div.appendChild(layout);
+    if (compareRow) div.appendChild(compareRow);
 
     if (it.category === 'mic' && it.type && it.type.length) {
-      const micTypes = document.createElement('div'); micTypes.className = 'tiny'; micTypes.style.marginTop = '4px'; micTypes.style.color = '#666'; micTypes.textContent = `Tipus: ${it.type.join(', ')}`;
+      const micTypes = document.createElement('div'); micTypes.className = 'tiny'; micTypes.style.marginTop = '4px'; micTypes.textContent = `Tipus: ${it.type.join(', ')}`;
       div.appendChild(micTypes);
     }
 
-    if (it.stats && Object.keys(it.stats).length) {
-      const statsWrap = document.createElement('div'); statsWrap.style.marginTop = '8px';
-      for (const [k,v] of Object.entries(it.stats)) {
-        const s = document.createElement('div'); s.className = 'tiny'; s.textContent = `${k.replace(/_/g,' ')}: ${v}`;
-        statsWrap.appendChild(s);
-      }
-      div.appendChild(statsWrap);
-    }
+    const quickBtn = document.createElement('button');
+    quickBtn.className = 'btn2 btnOk btn-quick';
+    quickBtn.textContent = 'Compra rapida';
+    quickBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      state.selected.shopItemId = it.id;
+      if (typeof window !== 'undefined' && typeof window.buySelected === 'function') window.buySelected();
+      renderShop();
+      renderRight();
+    });
+    div.appendChild(quickBtn);
 
     list.appendChild(div);
   }
@@ -480,59 +653,116 @@ export function renderRight() {
   const meta = document.createElement('div'); meta.className = 'muted'; meta.style.marginTop = '6px';
   meta.textContent = `${room.size_m2} m² · noise ${room.noise_floor_db} dB · base acoustic ${room.base_acoustic}`;
 
-  const slotline = document.createElement('div'); slotline.className = 'slotline';
-  Object.keys(slots).sort().forEach(cat => {
-    const max = slots[cat];
-    const usedIds = (bag[cat] || []);
-    const s = document.createElement('div'); s.className = 'slot slot-drop';
-    s.dataset.category = cat;
-    const head = document.createElement('div'); head.className = 'slot-head';
-    const sb = document.createElement('b'); sb.textContent = cat;
-    const sm = document.createElement('div'); sm.className = 'muted'; sm.textContent = `${usedIds.length}/${max}`;
-    head.appendChild(sb); head.appendChild(sm);
+  const canvas = document.createElement('div'); canvas.className = 'room-canvas';
+  const canvasHead = document.createElement('div'); canvasHead.className = 'room-canvas-head';
+  const headLeft = document.createElement('div'); headLeft.className = 'room-canvas-meta';
+  const infoBlock = document.createElement('div');
+  infoBlock.appendChild(row); infoBlock.appendChild(meta);
+  headLeft.appendChild(hero); headLeft.appendChild(infoBlock);
+  canvasHead.appendChild(headLeft);
+  canvas.appendChild(canvasHead);
 
-    const itemsWrap = document.createElement('div'); itemsWrap.className = 'slot-items';
-    if (usedIds.length) {
-      for (const id of usedIds) {
+  const floorplan = document.createElement('div'); floorplan.className = 'floorplan';
+  Object.keys(slots).sort().forEach(cat => {
+    const max = Number(slots[cat] || 0);
+    const usedIds = (bag[cat] || []);
+    const occupancy = usedIds.length >= max ? 'full' : usedIds.length ? 'partial' : 'empty';
+
+    const zone = document.createElement('div'); zone.className = 'floor-zone';
+    zone.dataset.category = cat;
+    zone.dataset.occupancy = occupancy;
+
+    const zoneHead = document.createElement('div'); zoneHead.className = 'floor-zone-head';
+    const zb = document.createElement('b'); zb.textContent = cat;
+    const zm = document.createElement('div'); zm.className = 'muted'; zm.textContent = `${usedIds.length}/${max}`;
+    zoneHead.appendChild(zb); zoneHead.appendChild(zm);
+
+    const meter = document.createElement('div'); meter.className = 'slot-meter';
+    const meterFill = document.createElement('span'); meterFill.style.width = max ? `${Math.min(100, Math.round((usedIds.length / max) * 100))}%` : '0%';
+    meter.appendChild(meterFill);
+
+    const nodes = document.createElement('div'); nodes.className = 'floor-nodes';
+    for (let i = 0; i < max; i++) {
+      const node = document.createElement('div'); node.className = 'floor-node';
+      node.dataset.category = cat;
+      node.dataset.index = String(i);
+      const isFilled = i < usedIds.length;
+      node.dataset.filled = isFilled ? '1' : '0';
+      if (isFilled) node.classList.add('filled');
+      if (!isFilled) node.classList.add('empty');
+
+      if (isFilled) {
+        const id = usedIds[i];
         const it = state.itemsById.get(id);
-        const chip = document.createElement('div'); chip.className = 'installed-chip';
-        chip.textContent = it ? it.name : id;
-        itemsWrap.appendChild(chip);
+        const token = document.createElement('div'); token.className = 'floor-token';
+        token.setAttribute('draggable', 'true');
+        const tokenImg = document.createElement('img'); tokenImg.src = getItemArt(it); tokenImg.alt = it ? it.name : id;
+        const tokenName = document.createElement('div'); tokenName.className = 'floor-token-name';
+        tokenName.textContent = it ? it.name : id;
+        token.appendChild(tokenImg);
+        token.appendChild(tokenName);
+        token.addEventListener('dragstart', (e) => {
+          setDragState(id, 'installed', cat);
+          token.classList.add('dragging');
+          if (e.dataTransfer) {
+            e.dataTransfer.setData('text/plain', id);
+            e.dataTransfer.effectAllowed = 'move';
+          }
+        });
+        token.addEventListener('dragend', () => {
+          token.classList.remove('dragging');
+          clearDragState();
+          document.querySelectorAll('.floor-node.drag-over').forEach(el => el.classList.remove('drag-over'));
+          const drop = document.querySelector('.inventory-grid.drag-over');
+          if (drop) drop.classList.remove('drag-over');
+        });
+        node.appendChild(token);
+      } else {
+        const hint = document.createElement('div'); hint.className = 'floor-node-hint'; hint.textContent = 'Drop';
+        node.appendChild(hint);
       }
-    } else {
-      const empty = document.createElement('div'); empty.className = 'slot-empty'; empty.textContent = 'Arrossega un item aqui';
-      itemsWrap.appendChild(empty);
+
+      node.addEventListener('dragover', (e) => {
+        if (dragState.source !== 'inventory') return;
+        if (node.dataset.filled === '1') return;
+        const itemId = getDraggedItemId(e);
+        if (!itemId) return;
+        const res = canDropItem(state.selected.roomIndex, cat, itemId);
+        if (!res.ok) return;
+        e.preventDefault();
+        node.classList.add('drag-over');
+        node.dataset.dropLabel = res.item ? res.item.name : itemId;
+      });
+      node.addEventListener('dragleave', () => {
+        node.classList.remove('drag-over');
+        if (node.dataset && node.dataset.dropLabel) delete node.dataset.dropLabel;
+      });
+      node.addEventListener('drop', (e) => {
+        e.preventDefault();
+        node.classList.remove('drag-over');
+        if (node.dataset && node.dataset.dropLabel) delete node.dataset.dropLabel;
+        if (dragState.source !== 'inventory') return;
+        const itemId = getDraggedItemId(e);
+        if (!itemId) return;
+        const res = canDropItem(state.selected.roomIndex, cat, itemId);
+        if (!res.ok) {
+          log(`❌ ${res.reason}`);
+          return;
+        }
+        installItemToRoom(state.selected.roomIndex, itemId);
+      });
+
+      nodes.appendChild(node);
     }
 
-    s.appendChild(head);
-    s.appendChild(itemsWrap);
-
-    s.addEventListener('dragover', (e) => {
-      const itemId = getDraggedItemId(e);
-      if (!itemId) return;
-      const res = canDropItem(state.selected.roomIndex, cat, itemId);
-      if (!res.ok) return;
-      e.preventDefault();
-      s.classList.add('drag-over');
-    });
-    s.addEventListener('dragleave', () => s.classList.remove('drag-over'));
-    s.addEventListener('drop', (e) => {
-      e.preventDefault();
-      s.classList.remove('drag-over');
-      const itemId = getDraggedItemId(e);
-      if (!itemId) return;
-      const res = canDropItem(state.selected.roomIndex, cat, itemId);
-      if (!res.ok) {
-        log(`❌ ${res.reason}`);
-        return;
-      }
-      installItemToRoom(state.selected.roomIndex, itemId);
-    });
-
-    slotline.appendChild(s);
+    zone.appendChild(zoneHead);
+    zone.appendChild(meter);
+    zone.appendChild(nodes);
+    floorplan.appendChild(zone);
   });
 
-  details.appendChild(hero); details.appendChild(row); details.appendChild(meta); details.appendChild(slotline);
+  canvas.appendChild(floorplan);
+  details.appendChild(canvas);
 
   // (Per-room billing history removed from room details)
 
@@ -573,7 +803,7 @@ export function renderRight() {
           renderRight();
         });
         card.addEventListener('dragstart', (e) => {
-          dragState.itemId = it.id;
+          setDragState(it.id, 'inventory', it.category);
           card.classList.add('dragging');
           if (e.dataTransfer) {
             e.dataTransfer.setData('text/plain', it.id);
@@ -581,9 +811,12 @@ export function renderRight() {
           }
         });
         card.addEventListener('dragend', () => {
-          dragState.itemId = null;
+          clearDragState();
           card.classList.remove('dragging');
-          document.querySelectorAll('.slot-drop.drag-over').forEach(el => el.classList.remove('drag-over'));
+          document.querySelectorAll('.floor-node').forEach(el => {
+            el.classList.remove('drag-over');
+            if (el.dataset && el.dataset.dropLabel) delete el.dataset.dropLabel;
+          });
         });
 
         const layout = document.createElement('div');
@@ -599,16 +832,50 @@ export function renderRight() {
 
         const row2 = document.createElement('div'); row2.className = 'row muted'; row2.style.marginTop = '6px';
         const catSpan = document.createElement('span'); catSpan.textContent = it.category;
-        const priceSpan = document.createElement('span'); priceSpan.textContent = euro(it.price || 0);
-        row2.appendChild(catSpan); row2.appendChild(priceSpan);
+        const compat = getCompatibility(state.selected.roomIndex, it);
+        const compatSpan = document.createElement('span'); compatSpan.className = `compat-pill ${compat.status}`; compatSpan.textContent = compat.label;
+        row2.appendChild(catSpan); row2.appendChild(compatSpan);
 
-        const notes = document.createElement('div'); notes.className = 'tiny'; notes.style.marginTop = '6px'; notes.textContent = it.notes ? it.notes : '';
+        const notes = document.createElement('div'); notes.className = 'tiny'; notes.style.marginTop = '6px';
+        notes.textContent = it.notes ? it.notes : '';
+        const priceLine = document.createElement('div'); priceLine.className = 'tiny'; priceLine.textContent = `Preu: ${euro(it.price || 0)}`;
 
-        body.appendChild(row); body.appendChild(row2); body.appendChild(notes);
+        const statsWrap = document.createElement('div'); statsWrap.className = 'inventory-stats';
+        const stats = getTopStats(it, 3);
+        for (const st of stats) {
+          const chip = document.createElement('div'); chip.className = 'stat-chip';
+          chip.textContent = `${formatStatKey(st.key)} ${st.value}`;
+          statsWrap.appendChild(chip);
+        }
+
+        body.appendChild(row); body.appendChild(row2);
+        if (notes.textContent) body.appendChild(notes);
+        body.appendChild(priceLine);
+        if (statsWrap.childNodes.length) body.appendChild(statsWrap);
         layout.appendChild(art); layout.appendChild(body);
         card.appendChild(layout);
         invList.appendChild(card);
       }
+    }
+    if (!inventoryDropListenerAdded) {
+      invList.addEventListener('dragover', (e) => {
+        if (dragState.source !== 'installed') return;
+        e.preventDefault();
+        invList.classList.add('drag-over');
+      });
+      invList.addEventListener('dragleave', () => invList.classList.remove('drag-over'));
+      invList.addEventListener('drop', (e) => {
+        e.preventDefault();
+        invList.classList.remove('drag-over');
+        if (dragState.source !== 'installed') return;
+        const itemId = getDraggedItemId(e);
+        const category = dragState.category;
+        if (!itemId || !category) return;
+        const res = uninstallItemToInventory(state.selected.roomIndex, category, itemId);
+        if (!res.ok) log(`❌ ${res.reason}`);
+        clearDragState();
+      });
+      inventoryDropListenerAdded = true;
     }
   }
 
@@ -617,11 +884,19 @@ export function renderRight() {
   if (k) clearChildren(k);
   if (mobileKpis) clearChildren(mobileKpis);
   const xpNext = xpToNext(state.player.level || 1);
-  const makeBox = (label, value) => {
+  const makeBox = (label, value, meter, variant) => {
     const box = document.createElement('div'); box.className = 'box';
     const m = document.createElement('div'); m.className = 'muted'; m.textContent = label;
     const v = document.createElement('div'); v.className = 'v'; v.textContent = value;
-    box.appendChild(m); box.appendChild(v); return box;
+    box.appendChild(m); box.appendChild(v);
+    if (typeof meter === 'number') {
+      const meterWrap = document.createElement('div'); meterWrap.className = `kpi-meter${variant ? ` ${variant}` : ''}`;
+      const meterFill = document.createElement('span');
+      meterFill.style.width = `${Math.max(6, Math.min(100, Math.round(meter)))}%`;
+      meterWrap.appendChild(meterFill);
+      box.appendChild(meterWrap);
+    }
+    return box;
   };
   // Weekly expenses: current recurring weekly cost (sum of price_per_week for active rooms)
   let currentRecurring = 0;
@@ -634,23 +909,26 @@ export function renderRight() {
     }
   }
   const weeklyAccum = (state.finance && state.finance.weeklyExpenses) ? Math.round(state.finance.weeklyExpenses) : 0;
+  const usedSlotCount = Object.values(bag).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
+  const totalSlotCount = Object.values(slots).reduce((sum, v) => sum + Number(v || 0), 0);
+  const workHours = Number(state.time.workHoursPerDay || 8);
   const kpiData = [
-    { label: 'Cash', value: euro(Math.round(state.cash)) },
-    { label: 'Inventari', value: `${state.inventory.size}` },
-    { label: 'Sala slots', value: `${Object.keys(slots).length}` },
-    { label: 'Temps', value: `Dia ${state.time.day} - Hora ${state.time.hour}/${state.time.workHoursPerDay}` },
-    { label: 'Nivell', value: `${state.player.level} - XP ${state.player.xp}/${xpNext}` },
-    { label: 'Fatiga', value: `${state.player.fatigue.toFixed(1)}h` },
-    { label: 'Despesa setmanal', value: euro(currentRecurring) },
-    { label: 'Total facturat', value: euro(weeklyAccum) }
+    { label: 'Cash', value: euro(Math.round(state.cash)), meter: (state.cash / 5000) * 100 },
+    { label: 'Inventari', value: `${state.inventory.size}`, meter: (state.inventory.size / 50) * 100 },
+    { label: 'Sala slots', value: `${usedSlotCount}/${totalSlotCount}`, meter: totalSlotCount ? (usedSlotCount / totalSlotCount) * 100 : 0 },
+    { label: 'Temps', value: `Dia ${state.time.day} - Hora ${state.time.hour}/${state.time.workHoursPerDay}`, meter: (Number(state.time.hour || 0) / workHours) * 100, variant: 'kpi-meter--amber' },
+    { label: 'Nivell', value: `${state.player.level} - XP ${state.player.xp}/${xpNext}`, meter: (state.player.xp / xpNext) * 100 },
+    { label: 'Fatiga', value: `${state.player.fatigue.toFixed(1)}h`, meter: (state.player.fatigue / 20) * 100, variant: 'kpi-meter--amber' },
+    { label: 'Despesa setmanal', value: euro(currentRecurring), meter: (currentRecurring / 5000) * 100, variant: 'kpi-meter--amber' },
+    { label: 'Total facturat', value: euro(weeklyAccum), meter: (weeklyAccum / 10000) * 100 }
   ];
   if (k) {
-    for (const item of kpiData) k.appendChild(makeBox(item.label, item.value));
+    for (const item of kpiData) k.appendChild(makeBox(item.label, item.value, item.meter, item.variant));
   }
   if (mobileKpis) {
-    const allowed = new Set(['Cash', 'Temps', 'Nivell', 'Fatiga', 'Despeses']);
+    const allowed = new Set(['Cash', 'Temps', 'Nivell', 'Fatiga', 'Despesa setmanal']);
     for (const item of kpiData) {
-      if (allowed.has(item.label)) mobileKpis.appendChild(makeBox(item.label, item.value));
+      if (allowed.has(item.label)) mobileKpis.appendChild(makeBox(item.label, item.value, item.meter, item.variant));
     }
   }
   // Show fatigue warning if short-term fatigue exceeds threshold

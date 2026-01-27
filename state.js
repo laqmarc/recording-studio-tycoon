@@ -75,6 +75,22 @@ export function uninstallFromRoom(roomIndex, category) {
   return { ok:true, removed };
 }
 
+export function uninstallItemFromRoom(roomIndex, category, itemId) {
+  const bag = state.roomsInstalled[roomIndex];
+  if (!bag[category] || !bag[category].length) return { ok:false, reason:"No hi ha res instal·lat" };
+  const idx = bag[category].indexOf(itemId);
+  if (idx === -1) return { ok:false, reason:"Item no trobat" };
+  const removed = bag[category].splice(idx, 1)[0];
+  // If room becomes empty, clear billing marker (future charges stop)
+  try {
+    const stillHas = Object.values(bag).some(arr => Array.isArray(arr) && arr.length > 0);
+    if (!stillHas && state.roomBilling && state.roomBilling[roomIndex]) {
+      state.roomBilling[roomIndex].lastBilledDay = state.roomBilling[roomIndex].lastBilledDay || null;
+    }
+  } catch (e) {}
+  return { ok:true, removed };
+}
+
 // Recalculate the compatible `player.fatigue` field from short/chronic components.
 export function updateFatigueDerived() {
   if (!state.player) return;
@@ -90,5 +106,6 @@ if (typeof window !== 'undefined') {
   window.installedIds = installedIds;
   window.installToRoom = installToRoom;
   window.uninstallFromRoom = uninstallFromRoom;
+  window.uninstallItemFromRoom = uninstallItemFromRoom;
   window.updateFatigueDerived = updateFatigueDerived;
 }
