@@ -159,6 +159,7 @@ export function advanceTime(hours) {
   if (typeof state === 'undefined' || !state.time) return;
   state.time.hour += hours;
   while (state.time.hour >= state.time.workHoursPerDay) {
+    const completedDay = state.time.day;
     state.time.hour -= state.time.workHoursPerDay;
     state.time.day += 1;
     // Recover fatigue when day changes: reduce short-term fatigue by base + rest bonus,
@@ -187,9 +188,37 @@ export function advanceTime(hours) {
         if (daily && typeof log === 'function') log(`💸 Costos diaris sales: ${euro(daily)} · Despesa setmanal acumulada: ${Math.round((state.finance && state.finance.weeklyExpenses) || 0)}€`);
       } catch (e) {}
       log(`🌅 Nou dia! Fatiga curta: ${state.player.fatigueShort.toFixed(1)}h · Fatiga crònica: ${state.player.fatigueChronic.toFixed(2)}`);
+      try { if (typeof window !== 'undefined' && typeof window.processScheduledDay === 'function') window.processScheduledDay(completedDay); } catch (e) {}
       try { if (typeof window !== 'undefined' && typeof window.generateDailyOffers === 'function') window.generateDailyOffers(); } catch (e) {}
     }
   }
+}
+
+export function processScheduledDay(day) {
+  if (!state || !Array.isArray(state.schedule)) return;
+  const scheduled = state.schedule.filter(s => s.day === day);
+  if (!scheduled.length) return;
+  const completedIds = new Set();
+  for (const entry of scheduled) {
+    try {
+      if (typeof window !== 'undefined' && typeof window.applyScheduledWork === 'function') {
+        const res = window.applyScheduledWork(entry.contractId, entry.hours, entry.roomIndex, day);
+        if (res && res.completed && res.id) completedIds.add(res.id);
+      }
+    } catch (e) {}
+  }
+  // remove finished day entries
+  state.schedule = state.schedule.filter(s => s.day !== day);
+  // remove any future entries for completed contracts
+  try {
+    const completed = new Set((state.db && Array.isArray(state.db.contracts)) ? state.db.contracts.filter(c => c.completed).map(c => c.id) : []);
+    for (const id of completedIds) completed.add(id);
+    if (completed.size) state.schedule = state.schedule.filter(s => !completed.has(s.contractId));
+    if (state.db && Array.isArray(state.db.contracts) && completed.size) {
+      state.db.contracts = state.db.contracts.filter(c => !completed.has(c.id));
+    }
+  } catch (e) {}
+  try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
 }
 
 // Apply daily room running costs: called indirectly from advanceTime loop
@@ -308,7 +337,7 @@ export function showNotification(message, duration = 3000) {
 
 // Attach to window for backward compatibility with non-module scripts
 if (typeof window !== 'undefined') {
-  window.Helpers = Object.assign(window.Helpers || {}, { log, euro, clamp, avgStat, sumStat, xpToNext, addXp, invQty, invAdd, invRemove, checkContractRequirements, advanceTime, showNotification, getItemCondition, setItemCondition, applyItemWear, calcRoomMaintenanceDaily });
+  window.Helpers = Object.assign(window.Helpers || {}, { log, euro, clamp, avgStat, sumStat, xpToNext, addXp, invQty, invAdd, invRemove, checkContractRequirements, advanceTime, showNotification, getItemCondition, setItemCondition, applyItemWear, calcRoomMaintenanceDaily, processScheduledDay });
   // Overwrite any temporary shim wrappers so the real implementations are used
   window.log = log;
   window.euro = euro;
@@ -323,6 +352,7 @@ if (typeof window !== 'undefined') {
   window.getItemCondition = getItemCondition;
   window.setItemCondition = setItemCondition;
   window.applyItemWear = applyItemWear;
+  window.processScheduledDay = processScheduledDay;
   window.useConsumable = useConsumable;
   // Expose advanceTime and requirement checker as direct globals for legacy callers
   window.advanceTime = advanceTime;

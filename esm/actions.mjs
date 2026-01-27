@@ -49,14 +49,11 @@ export function workOnContract(contractId, hours) {
 
   const c = state.db.contracts.find(x => x.id === contractId);
   if (!c) return log('Contracte no trobat.');
-  if (assignContractPeople) assignContractPeople(c);
-  if (c.completed) {
-    c.worked_hours = 0;
-    c.completed = false;
-    c.completed_at = null;
-    c.start_day = state.time.day;
-    log(`🔄 Reiniciant contracte: ${c.name}`);
+  if (c.completed) return log('ℹ️ Aquesta feina ja esta completada.');
+  if (!Array.isArray(state.schedule) || !state.schedule.some(s => s.contractId === c.id && s.day === state.time.day)) {
+    return log('ℹ️ Aquesta feina nomes avanca des del calendari.');
   }
+  if (assignContractPeople) assignContractPeople(c);
   if (c.start_day == null) c.start_day = state.time.day;
   const room = state.db.rooms[state.selected.roomIndex];
   const req = c.requirements || {};
@@ -127,6 +124,65 @@ export function workOnContract(contractId, hours) {
   if (applyItemWear) applyItemWear(state.selected.roomIndex, actual_hours, 1);
   if (advanceTime) advanceTime(actual_hours);
   if (renderAll) renderAll();
+}
+
+export function applyScheduledWork(contractId, hours, roomIndex, day) {
+  const state = getState();
+  const log = getWin('log') || ((m)=>console.log(m));
+  const simulateContract = getWin('simulateContract');
+  const renderAll = getWin('renderAll');
+  const showNotification = getWin('showNotification') || (()=>{});
+  const saveState = getWin('saveState') || (()=>{});
+  const assignContractPeople = getWin('assignContractPeople');
+  const applyItemWear = getWin('applyItemWear');
+  const checkContractRequirements = getWin('checkContractRequirements');
+  const installedIds = getWin('installedIds');
+
+  const c = state.db.contracts.find(x => x.id === contractId);
+  if (!c || c.completed) return { completed: false };
+  if (assignContractPeople) assignContractPeople(c);
+  if (c.start_day == null) c.start_day = day || state.time.day;
+
+  if (checkContractRequirements && !checkContractRequirements(c, roomIndex)) {
+    log(`⚠️ Requisits incomplets: ${c.name}`);
+    return { completed: false };
+  }
+
+  const remaining = (c.duration_hours || 0) - (c.worked_hours || 0);
+  const actual_hours = Math.min(Number(hours || 0), remaining);
+  const producerLevel = (state.staff && state.staff.producer && state.staff.producer.level) ? Number(state.staff.producer.level) : 1;
+  const engineerLevel = (state.staff && state.staff.engineer && state.staff.engineer.level) ? Number(state.staff.engineer.level) : 1;
+  const speedBonus = Math.min(0.4, producerLevel * 0.03);
+  const fatigueReduction = Math.min(0.4, engineerLevel * 0.03);
+  const progressHours = Math.min(remaining, actual_hours * (1 + speedBonus));
+  c.worked_hours = Number(c.worked_hours || 0) + progressHours;
+
+  if (c.worked_hours >= (c.duration_hours || 0)) {
+    c.worked_hours = c.duration_hours || c.worked_hours;
+    const prevRoom = state.selected.roomIndex;
+    state.selected.roomIndex = roomIndex;
+    const ok = simulateContract && simulateContract(c.id);
+    state.selected.roomIndex = prevRoom;
+    if (ok) {
+      c.completed = true; c.completed_at = { day: state.time.day, hour: state.time.hour };
+      log(`✅ Feina completada: ${c.name}`);
+      showNotification(`🎉 Feina "${c.name}" completada!`);
+      if (renderAll) renderAll();
+      saveState();
+      return { completed: true, id: c.id };
+    }
+  } else {
+    log(`🗓️ Calendari: ${c.name} ${c.worked_hours}/${c.duration_hours}h`);
+  }
+
+  const fatigueGain = actual_hours * (1 - fatigueReduction);
+  state.player.fatigueShort = (state.player.fatigueShort || 0) + fatigueGain;
+  state.player.fatigueChronic = (state.player.fatigueChronic || 0) + fatigueGain * 0.05;
+  if (typeof window !== 'undefined' && typeof window.updateFatigueDerived === 'function') window.updateFatigueDerived();
+  if (applyItemWear) applyItemWear(roomIndex, actual_hours, 1);
+  if (renderAll) renderAll();
+  saveState();
+  return { completed: false };
 }
 
 export function buySelected() {

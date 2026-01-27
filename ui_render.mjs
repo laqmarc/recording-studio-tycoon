@@ -403,6 +403,34 @@ function assignContractPeople(contract) {
   return contract.assigned_people;
 }
 
+function getScheduleUsedHours(roomIndex, day) {
+  const schedule = Array.isArray(state.schedule) ? state.schedule : [];
+  return schedule
+    .filter(s => s.roomIndex === roomIndex && s.day === day)
+    .reduce((sum, s) => sum + Number(s.hours || 0), 0);
+}
+
+function scheduleContract(contractId, roomIndex, startDay) {
+  const contract = state.db.contracts.find(c => c.id === contractId);
+  if (!contract || contract.completed) return;
+  const workHours = Number(state.time.workHoursPerDay || 8);
+  state.schedule = Array.isArray(state.schedule) ? state.schedule : [];
+  state.schedule = state.schedule.filter(s => s.contractId !== contractId);
+  let remaining = Math.max(0, Number(contract.duration_hours || 0) - Number(contract.worked_hours || 0));
+  let day = Number(startDay || state.time.day || 1);
+  let safety = 0;
+  while (remaining > 0 && safety < 60) {
+    const used = getScheduleUsedHours(roomIndex, day);
+    const available = Math.max(0, workHours - used);
+    if (available <= 0) { day += 1; safety += 1; continue; }
+    const hours = Math.min(remaining, available);
+    state.schedule.push({ contractId, roomIndex, day, hours });
+    remaining -= hours;
+    day += 1;
+    safety += 1;
+  }
+}
+
 function getUpgradeCost(type, level) {
   const base = type === 'acoustic' ? 350 : type === 'isolation' ? 420 : 600;
   return Math.round(base * Math.pow(level + 1, 1.25));
@@ -922,7 +950,8 @@ export function renderRooms() {
 
   if (typeof window !== 'undefined' && typeof window.generateDailyOffers === 'function') {
     const day = Number(state.time.day || 1);
-    if (!state.market || state.market.lastDayGenerated !== day) {
+    const hasOffers = state.market && Array.isArray(state.market.offers) && state.market.offers.length > 0;
+    if (!state.market || state.market.lastDayGenerated !== day || !hasOffers) {
       window.generateDailyOffers(true);
     }
   }
@@ -1024,6 +1053,7 @@ export function renderRooms() {
         card.addEventListener('dragstart', (e) => {
           if (e.dataTransfer) {
             e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'contract', contractId: c.id }));
+            e.dataTransfer.effectAllowed = 'move';
           }
         });
         if (isDone) card.style.opacity = '.6', card.style.filter = 'grayscale(.4)';
@@ -1177,23 +1207,8 @@ export function renderRooms() {
         progWrap.appendChild(progText); progWrap.appendChild(progress);
         card.appendChild(progWrap);
 
-        const actionsDiv = document.createElement('div'); actionsDiv.style.marginTop = '8px'; actionsDiv.style.display = 'flex'; actionsDiv.style.gap = '6px';
-        const btn1 = document.createElement('button'); btn1.className = 'btn2'; btn1.textContent = isDone ? 'Reiniciar' : 'Treballar 1h'; btn1.addEventListener('click', () => workOnContract_impl(c.id, 1));
-        const btn2 = document.createElement('button'); btn2.className = 'btn2'; btn2.textContent = isDone ? 'Reiniciar dia' : `Treballar ${wh}h`; btn2.addEventListener('click', () => workOnContract_impl(c.id, wh));
-        const btn3 = document.createElement('button'); btn3.className = 'btn2 btnOk'; btn3.textContent = isDone ? 'Reiniciar i finalitzar' : 'Finalitzar'; btn3.addEventListener('click', () => workOnContract_impl(c.id, 9999));
-        actionsDiv.appendChild(btn1); actionsDiv.appendChild(btn2); actionsDiv.appendChild(btn3);
-        card.appendChild(actionsDiv);
-
-        const negWrap = document.createElement('div'); negWrap.className = 'negotiation-row';
-        const negTitle = document.createElement('div'); negTitle.className = 'tiny'; negTitle.textContent = 'Negociacio:';
-        const negActions = document.createElement('div'); negActions.className = 'negotiation-actions';
-        const btnFlex = document.createElement('button'); btnFlex.className = 'btn2'; btnFlex.textContent = 'Flexible'; btnFlex.addEventListener('click', () => { applyNegotiation(c, 'flex'); renderAll(); if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); });
-        const btnPremium = document.createElement('button'); btnPremium.className = 'btn2'; btnPremium.textContent = 'Premium'; btnPremium.addEventListener('click', () => { applyNegotiation(c, 'premium'); renderAll(); if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); });
-        const btnRush = document.createElement('button'); btnRush.className = 'btn2 btnSpecial'; btnRush.textContent = 'Rush'; btnRush.addEventListener('click', () => { applyNegotiation(c, 'rush'); renderAll(); if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); });
-        const btnReset = document.createElement('button'); btnReset.className = 'btn2'; btnReset.textContent = 'Reset'; btnReset.addEventListener('click', () => { applyNegotiation(c, 'reset'); renderAll(); if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); });
-        negActions.appendChild(btnFlex); negActions.appendChild(btnPremium); negActions.appendChild(btnRush); negActions.appendChild(btnReset);
-        negWrap.appendChild(negTitle); negWrap.appendChild(negActions);
-        card.appendChild(negWrap);
+        const schedNote = document.createElement('div'); schedNote.className = 'tiny'; schedNote.textContent = '⏱️ Aquesta feina es fa des del calendari.';
+        card.appendChild(schedNote);
 
         leftContracts.appendChild(card);
       }
@@ -1284,14 +1299,17 @@ export function renderRooms() {
         const pill = document.createElement('span'); pill.className = 'pill'; pill.textContent = offer.type;
         row.appendChild(name); row.appendChild(pill);
         const meta = document.createElement('div'); meta.className = 'offer-meta';
-        meta.textContent = `${offer.duration_hours}h · ${euro(offer.base_pay)} · Qualitat ${offer.target_quality} · Deadline ${offer.deadline_days}d`;
+        meta.textContent = `${offer.duration_hours}h · ${euro(offer.base_pay)} · Qualitat ${offer.target_quality} · Deadline ${offer.deadline_days}d · Sala ${offer.requirements && offer.requirements.room_type ? offer.requirements.room_type : 'any'}`;
+        const reqEl = getRequirementsElement(offer, state.selected.roomIndex);
         const actions = document.createElement('div'); actions.className = 'offer-actions';
         const btnAccept = document.createElement('button'); btnAccept.className = 'btn2 btnOk'; btnAccept.textContent = 'Acceptar';
         btnAccept.addEventListener('click', () => { if (typeof window !== 'undefined' && typeof window.acceptOffer === 'function') window.acceptOffer(offer.id); });
         const btnDecline = document.createElement('button'); btnDecline.className = 'btn2'; btnDecline.textContent = 'Declinar';
         btnDecline.addEventListener('click', () => { if (typeof window !== 'undefined' && typeof window.declineOffer === 'function') window.declineOffer(offer.id); });
         actions.appendChild(btnAccept); actions.appendChild(btnDecline);
-        card.appendChild(row); card.appendChild(meta); card.appendChild(actions);
+        card.appendChild(row); card.appendChild(meta);
+        if (reqEl) card.appendChild(reqEl);
+        card.appendChild(actions);
         offersEl.appendChild(card);
       }
     }
@@ -1328,7 +1346,7 @@ export function renderRooms() {
           const c = state.db.contracts.find(x => x.id === s.contractId);
           if (!c) continue;
           const chip = document.createElement('div'); chip.className = 'schedule-item';
-          chip.textContent = `${c.name} (${c.duration_hours}h)`;
+          chip.textContent = `${c.name} (${s.hours}h)`;
           chip.setAttribute('draggable', 'true');
           chip.addEventListener('dragstart', (e) => {
             if (e.dataTransfer) {
@@ -1344,9 +1362,6 @@ export function renderRooms() {
         }
 
         cell.addEventListener('dragover', (e) => {
-          if (!e.dataTransfer) return;
-          const raw = e.dataTransfer.getData('text/plain');
-          if (!raw) return;
           e.preventDefault();
           cell.classList.add('drag-over');
         });
@@ -1370,13 +1385,23 @@ export function renderRooms() {
               return;
             }
           }
-          state.schedule = Array.isArray(state.schedule) ? state.schedule : [];
-          state.schedule = state.schedule.filter(s => s.contractId !== contractId);
-          state.schedule.push({ contractId, roomIndex, day: dayNum });
+          try {
+            if (typeof window !== 'undefined' && typeof window.checkContractRequirements === 'function') {
+              const ok = window.checkContractRequirements(contract, roomIndex);
+              if (!ok) log('⚠️ Requisits tecnics encara no complerts (pots preparar-ho abans de la sessio)');
+            }
+          } catch (e) {}
+          scheduleContract(contractId, roomIndex, dayNum);
           if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
           renderAll();
         });
 
+        const used = getScheduleUsedHours(idx, day);
+        if (used > 0) {
+          const badge = document.createElement('div'); badge.className = 'tiny';
+          badge.textContent = `${used}/${state.time.workHoursPerDay}h`;
+          cell.appendChild(badge);
+        }
         row.appendChild(cell);
       }
       grid.appendChild(row);

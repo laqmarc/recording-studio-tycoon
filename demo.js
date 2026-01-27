@@ -8929,7 +8929,7 @@ const DEMO = {
         "mic_accessory": 2,
         "effects": 2,
         "instruments": 1,
-        "software": 1
+        "software_daw": 1
       },
       "price_per_week": 150.0
     },
@@ -9416,3 +9416,6 @@ const DEMO = {
 if (typeof window !== "undefined" && window.PEOPLE) {
   DEMO.people = window.PEOPLE;
 }
+
+// Remove preset contracts; focus on client offers
+DEMO.contracts = [];

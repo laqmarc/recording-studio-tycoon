@@ -206,6 +206,7 @@ export function loadFromObject(obj) {
   const selCat = document.getElementById("selCategory");
   if (selCat) selCat.options.length = 0;
   if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
+  try { if (typeof window !== 'undefined' && typeof window.generateDailyOffers === 'function') window.generateDailyOffers(true); } catch (e) {}
 }
 
 export function resetGame() {

@@ -14,6 +14,7 @@ function call(name, ...args) {
 // Expose direct globals for legacy code if not already present
 if (typeof window !== 'undefined') {
   window.workOnContract = window.workOnContract || ((id,h)=>call('workOnContract', id, h));
+  window.applyScheduledWork = window.applyScheduledWork || ((id,h,room,day)=>call('applyScheduledWork', id, h, room, day));
   window.buySelected = window.buySelected || (()=>call('buySelected'));
   window.prepareInstallFromShop = window.prepareInstallFromShop || (()=>call('prepareInstallFromShop'));
   window.installSelected = window.installSelected || (()=>call('installSelected'));
