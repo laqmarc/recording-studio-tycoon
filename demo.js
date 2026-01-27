@@ -9413,9 +9413,12 @@ const DEMO = {
   ]
 };
 
-if (typeof window !== "undefined" && window.PEOPLE) {
-  DEMO.people = window.PEOPLE;
-}
-
 // Remove preset contracts; focus on client offers
 DEMO.contracts = [];
+
+if (typeof window !== "undefined") {
+  if (window.PEOPLE) {
+    DEMO.people = window.PEOPLE;
+  }
+  window.dispatchEvent(new CustomEvent('demo-ready'));
+}

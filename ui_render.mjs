@@ -1,7 +1,13 @@
 // ui_render.mjs - ES module renderer (moved from ui_render.js)
 import { state, installedIds, installToRoom, uninstallItemFromRoom, getRoomEffective, getRoomSlotCapacity } from './state.js';
+import { PEOPLE_FALLBACK } from './people_data.js';
 import { euro, xpToNext, invQty, invRemove, invAdd, log, showNotification, avgStat } from './helpers.js';
 import { getContractETA as getContractETA_impl, workOnContract as workOnContract_impl } from './actions.js';
+
+if (state.db && (!Array.isArray(state.db.people) || !state.db.people.length)) {
+  state.db.people = PEOPLE_FALLBACK;
+  if (typeof window !== 'undefined') window.PEOPLE = state.db.people;
+}
 
 let micTypeListenerAdded = false;
 let contractRoomListenerAdded = false;
@@ -268,7 +274,18 @@ function getUpgradeMeta(roomIndex) {
   };
 }
 
+function ensurePeopleData() {
+  if (!state.db) return;
+  if (Array.isArray(state.db.people) && state.db.people.length) return;
+  let source = null;
+  if (typeof window !== 'undefined' && Array.isArray(window.PEOPLE) && window.PEOPLE.length) source = window.PEOPLE;
+  else source = PEOPLE_FALLBACK;
+  state.db.people = Array.isArray(source) ? source : [];
+  if (typeof window !== 'undefined') window.PEOPLE = state.db.people;
+}
+
 function getPeopleByIdMap() {
+  ensurePeopleData();
   const people = (state.db && Array.isArray(state.db.people)) ? state.db.people : [];
   const map = new Map();
   for (const p of people) map.set(p.id, p);
@@ -319,6 +336,7 @@ function buildRoleDefs(contract) {
 }
 
 function pickPerson(role, genre, instrument, used) {
+  ensurePeopleData();
   const people = (state.db && Array.isArray(state.db.people)) ? state.db.people : [];
   const filtered = people.filter(p => p.role === role && isHired(p.id) && !used.has(p.id));
   const ranked = (list) => list.sort((a, b) => Number(b.skill || 0) - Number(a.skill || 0) || Number(b.reliability || 0) - Number(a.reliability || 0));
@@ -332,6 +350,7 @@ function pickPerson(role, genre, instrument, used) {
 }
 
 function getPeopleOptions(role, genre, instrument) {
+  ensurePeopleData();
   const people = (state.db && Array.isArray(state.db.people)) ? state.db.people : [];
   const hired = people.filter(p => isHired(p.id));
   const filtered = hired.filter(p => p.role === role && matchesGenre(p, genre) && matchesInstrument(p, instrument));
@@ -378,7 +397,9 @@ function guessInstrumentForGenre(genre) {
 }
 
 function assignContractPeople(contract) {
-  if (!contract || !state.db || !Array.isArray(state.db.people)) return [];
+  if (!contract || !state.db) return [];
+  ensurePeopleData();
+  if (!Array.isArray(state.db.people)) return [];
   const roleDefs = buildRoleDefs(contract);
   const peopleMap = getPeopleByIdMap();
   let existing = Array.isArray(contract.assigned_people_map) ? contract.assigned_people_map : [];
@@ -756,7 +777,7 @@ function renderSignalFlowOverlay(canvas, floorplan) {
 }
 
 function setPage(page) {
-  const normalized = (page === 'contracts' || page === 'shop' || page === 'rooms') ? page : 'rooms';
+  const normalized = (page === 'contracts' || page === 'shop' || page === 'rooms' || page === 'people') ? page : 'rooms';
   state.ui = state.ui || { page: 'rooms' };
   state.ui.page = normalized;
   if (typeof document !== 'undefined') {
@@ -765,6 +786,7 @@ function setPage(page) {
       btn.classList.toggle('active', btn.getAttribute('data-page-tab') === normalized);
     });
   }
+  try { console.log('[page]', normalized); } catch (e) {}
 }
 
 function initPageNav() {
@@ -950,6 +972,7 @@ function getCompatibility(roomIndex, item) {
 }
 
 export function renderAll() {
+  ensurePeopleData();
   const moneyEl = document.getElementById('money');
   if (moneyEl) moneyEl.textContent = `Cash: ${Math.round(state.cash)}€`;
   renderRooms();
@@ -1336,7 +1359,15 @@ export function renderRooms() {
   const personnelPanel = document.getElementById('personnelPanel');
   if (personnelPanel) {
     clearChildren(personnelPanel);
+    ensurePeopleData();
     const people = (state.db && Array.isArray(state.db.people)) ? state.db.people : [];
+    const playerLevel = Number(state.player && state.player.level || 1);
+    if (!people.length) {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'muted';
+      placeholder.textContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Personal en carrega...';
+      personnelPanel.appendChild(placeholder);
+    }
     const hiredSet = new Set(Array.isArray(state.hiredPeople) ? state.hiredPeople : []);
     const activeAssigned = new Set();
     try {
@@ -1352,43 +1383,79 @@ export function renderRooms() {
     const hiredTitle = document.createElement('div'); hiredTitle.className = 'personnel-title'; hiredTitle.textContent = 'Contractats';
     const hiredList = document.createElement('div'); hiredList.className = 'personnel-list';
     const hiredPeople = people.filter(p => hiredSet.has(p.id));
+    const hiredMusicians = hiredPeople.filter(p => p.role === 'musician');
+    const hiredTechs = hiredPeople.filter(p => p.role !== 'musician');
+    const renderPersonCard = (p, container) => {
+      const card = document.createElement('div'); card.className = 'personnel-card';
+      const row = document.createElement('div'); row.className = 'personnel-row';
+      const name = document.createElement('b'); name.textContent = p.name;
+      const role = document.createElement('span'); role.className = 'pill'; role.textContent = p.role;
+      row.appendChild(name); row.appendChild(role);
+      const meta = document.createElement('div'); meta.className = 'personnel-meta';
+      const instr = p.instruments && p.instruments.length ? p.instruments.join(', ') : '';
+      const lvl = Number(p.unlock_level || 1);
+      meta.textContent = `Skill ${p.skill || 0} · ${instr} · ${euro(p.fee_per_hour || 0)}/h · Lvl ${lvl}`;
+      const actions = document.createElement('div'); actions.className = 'offer-actions';
+      const btn = document.createElement('button'); btn.className = 'btn2'; btn.textContent = activeAssigned.has(p.id) ? 'Assignat' : 'Descontractar';
+      btn.disabled = activeAssigned.has(p.id);
+      btn.addEventListener('click', () => {
+        state.hiredPeople = (state.hiredPeople || []).filter(id => id !== p.id);
+        if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
+        renderAll();
+      });
+      actions.appendChild(btn);
+      card.appendChild(row); card.appendChild(meta); card.appendChild(actions);
+      container.appendChild(card);
+    };
     if (!hiredPeople.length) {
       const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'No tens personal contractat.';
       hiredList.appendChild(empty);
     } else {
-      for (const p of hiredPeople) {
-        const card = document.createElement('div'); card.className = 'personnel-card';
-        const row = document.createElement('div'); row.className = 'personnel-row';
-        const name = document.createElement('b'); name.textContent = p.name;
-        const role = document.createElement('span'); role.className = 'pill'; role.textContent = p.role;
-        row.appendChild(name); row.appendChild(role);
-        const meta = document.createElement('div'); meta.className = 'personnel-meta';
-        const instr = p.instruments && p.instruments.length ? p.instruments.join(', ') : '';
-        meta.textContent = `Skill ${p.skill || 0} · ${instr} · ${euro(p.fee_per_hour || 0)}/h`;
-        const actions = document.createElement('div'); actions.className = 'offer-actions';
-        const btn = document.createElement('button'); btn.className = 'btn2'; btn.textContent = activeAssigned.has(p.id) ? 'Assignat' : 'Descontractar';
-        btn.disabled = activeAssigned.has(p.id);
-        btn.addEventListener('click', () => {
-          state.hiredPeople = (state.hiredPeople || []).filter(id => id !== p.id);
-          if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
-          renderAll();
-        });
-        actions.appendChild(btn);
-        card.appendChild(row); card.appendChild(meta); card.appendChild(actions);
-        hiredList.appendChild(card);
+      const columns = document.createElement('div'); columns.className = 'personnel-columns';
+      const musCol = document.createElement('div'); musCol.className = 'personnel-col';
+      const techCol = document.createElement('div'); techCol.className = 'personnel-col';
+      const musTitle = document.createElement('div'); musTitle.className = 'personnel-subtitle'; musTitle.textContent = 'Musics';
+      const techTitle = document.createElement('div'); techTitle.className = 'personnel-subtitle'; techTitle.textContent = 'Tecnics';
+      const musList = document.createElement('div'); musList.className = 'personnel-list';
+      const techList = document.createElement('div'); techList.className = 'personnel-list';
+      if (!hiredMusicians.length) {
+        const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'Sense musics contractats.';
+        musList.appendChild(empty);
+      } else {
+        hiredMusicians.forEach(p => renderPersonCard(p, musList));
       }
+      if (!hiredTechs.length) {
+        const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'Sense tecnics contractats.';
+        techList.appendChild(empty);
+      } else {
+        hiredTechs.forEach(p => renderPersonCard(p, techList));
+      }
+      musCol.appendChild(musTitle); musCol.appendChild(musList);
+      techCol.appendChild(techTitle); techCol.appendChild(techList);
+      columns.appendChild(musCol); columns.appendChild(techCol);
+      hiredList.appendChild(columns);
     }
     hiredSection.appendChild(hiredTitle); hiredSection.appendChild(hiredList);
 
     const availableSection = document.createElement('div'); availableSection.className = 'personnel-section';
     const availTitle = document.createElement('div'); availTitle.className = 'personnel-title'; availTitle.textContent = 'Disponibles';
     const availList = document.createElement('div'); availList.className = 'personnel-list';
-    const availablePeople = people.filter(p => !hiredSet.has(p.id));
+    const availablePeople = people.filter(p => !hiredSet.has(p.id) && Number(p.unlock_level || 1) <= playerLevel);
+    const lockedPeople = people.filter(p => !hiredSet.has(p.id) && Number(p.unlock_level || 1) > playerLevel);
+    const availableMusicians = availablePeople.filter(p => p.role === 'musician');
+    const availableTechs = availablePeople.filter(p => p.role !== 'musician');
     if (!availablePeople.length) {
-      const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'No hi ha mes personal.';
+      const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'No hi ha mes personal disponible.';
       availList.appendChild(empty);
     } else {
-      for (const p of availablePeople) {
+      const columns = document.createElement('div'); columns.className = 'personnel-columns';
+      const musCol = document.createElement('div'); musCol.className = 'personnel-col';
+      const techCol = document.createElement('div'); techCol.className = 'personnel-col';
+      const musTitle = document.createElement('div'); musTitle.className = 'personnel-subtitle'; musTitle.textContent = 'Musics';
+      const techTitle = document.createElement('div'); techTitle.className = 'personnel-subtitle'; techTitle.textContent = 'Tecnics';
+      const musList = document.createElement('div'); musList.className = 'personnel-list';
+      const techList = document.createElement('div'); techList.className = 'personnel-list';
+      const renderHireCard = (p, container) => {
         const card = document.createElement('div'); card.className = 'personnel-card';
         const row = document.createElement('div'); row.className = 'personnel-row';
         const name = document.createElement('b'); name.textContent = p.name;
@@ -1396,7 +1463,8 @@ export function renderRooms() {
         row.appendChild(name); row.appendChild(role);
         const meta = document.createElement('div'); meta.className = 'personnel-meta';
         const instr = p.instruments && p.instruments.length ? p.instruments.join(', ') : '';
-        meta.textContent = `Skill ${p.skill || 0} · ${instr} · ${euro(p.fee_per_hour || 0)}/h`;
+        const lvl = Number(p.unlock_level || 1);
+        meta.textContent = `Skill ${p.skill || 0} · ${instr} · ${euro(p.fee_per_hour || 0)}/h · Lvl ${lvl}`;
         const actions = document.createElement('div'); actions.className = 'offer-actions';
         const btn = document.createElement('button'); btn.className = 'btn2 btnOk'; btn.textContent = 'Contractar';
         btn.addEventListener('click', () => {
@@ -1407,8 +1475,43 @@ export function renderRooms() {
         });
         actions.appendChild(btn);
         card.appendChild(row); card.appendChild(meta); card.appendChild(actions);
-        availList.appendChild(card);
+        container.appendChild(card);
+      };
+      if (!availableMusicians.length) {
+        const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'Sense musics disponibles.';
+        musList.appendChild(empty);
+      } else {
+        availableMusicians.forEach(p => renderHireCard(p, musList));
       }
+      if (!availableTechs.length) {
+        const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'Sense tecnics disponibles.';
+        techList.appendChild(empty);
+      } else {
+        availableTechs.forEach(p => renderHireCard(p, techList));
+      }
+      musCol.appendChild(musTitle); musCol.appendChild(musList);
+      techCol.appendChild(techTitle); techCol.appendChild(techList);
+      columns.appendChild(musCol); columns.appendChild(techCol);
+      availList.appendChild(columns);
+    }
+
+    if (lockedPeople.length) {
+      const lockedTitle = document.createElement('div'); lockedTitle.className = 'personnel-subtitle'; lockedTitle.textContent = 'Bloquejats';
+      const lockedList = document.createElement('div'); lockedList.className = 'personnel-list';
+      lockedPeople.forEach(p => {
+        const card = document.createElement('div'); card.className = 'personnel-card';
+        const row = document.createElement('div'); row.className = 'personnel-row';
+        const name = document.createElement('b'); name.textContent = p.name;
+        const role = document.createElement('span'); role.className = 'pill'; role.textContent = p.role;
+        row.appendChild(name); row.appendChild(role);
+        const meta = document.createElement('div'); meta.className = 'personnel-meta';
+        const lvl = Number(p.unlock_level || 1);
+        meta.textContent = `Desbloqueja a nivell ${lvl}`;
+        card.appendChild(row); card.appendChild(meta);
+        lockedList.appendChild(card);
+      });
+      availList.appendChild(lockedTitle);
+      availList.appendChild(lockedList);
     }
     availableSection.appendChild(availTitle); availableSection.appendChild(availList);
 

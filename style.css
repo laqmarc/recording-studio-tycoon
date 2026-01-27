@@ -130,7 +130,8 @@ main {
 body:not([data-page]) .page[data-page="rooms"],
 body[data-page="rooms"] .page[data-page="rooms"],
 body[data-page="contracts"] .page[data-page="contracts"],
-body[data-page="shop"] .page[data-page="shop"] {
+body[data-page="shop"] .page[data-page="shop"],
+body[data-page="people"] .page[data-page="people"] {
   display: block;
 }
 
@@ -145,6 +146,10 @@ body[data-page="shop"] .page[data-page="shop"] {
 
 .page-contracts {
   grid-template-columns: 1fr 1fr;
+}
+
+.page-people {
+  grid-template-columns: 1fr;
 }
 
 .page-shop {
@@ -1076,6 +1081,19 @@ input, select {
 .personnel-grid {
   display: grid;
   gap: 10px;
+  grid-template-columns: 1fr;
+}
+
+.personnel-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .personnel-columns {
+    grid-template-columns: 1fr;
+  }
 }
 
 .personnel-section {
@@ -1089,6 +1107,14 @@ input, select {
   font-family: var(--font-display);
   font-size: 13px;
   margin-bottom: 8px;
+}
+
+.personnel-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 6px 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
 .personnel-list {

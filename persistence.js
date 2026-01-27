@@ -1,5 +1,6 @@
 // persistence.js - save/load functions (ES module)
 import { state, rebuildIndexes, ensureRoomsInstalled } from './state.js';
+import { PEOPLE_FALLBACK } from './people_data.js';
 import { log } from './helpers.js';
 
 export function saveState() {
@@ -178,7 +179,7 @@ export function loadFromObject(obj) {
   const items = obj.items || [];
   const rooms = obj.rooms || [];
   const contracts = obj.contracts || [];
-  const people = obj.people || [];
+  const people = obj.people || (typeof window !== 'undefined' ? window.PEOPLE : null) || PEOPLE_FALLBACK || [];
 
   state.db = { items, rooms, contracts, people };
   rebuildIndexes();

@@ -88,14 +88,19 @@ if (typeof document !== 'undefined') {
   });
 
   // Boot actions
-  const bootLoad = () => { if (typeof loadFromObject === 'function' && typeof DEMO !== 'undefined') loadFromObject(DEMO); };
+  const bootLoad = () => {
+    if (typeof window !== 'undefined' && window.__demoLoaded) return;
+    if (typeof loadFromObject === 'function' && typeof DEMO !== 'undefined') {
+      if (typeof window !== 'undefined') window.__demoLoaded = true;
+      loadFromObject(DEMO);
+    }
+  };
   if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
-    if (window.PEOPLE) {
+    if (window.PEOPLE && typeof DEMO !== 'undefined') {
       bootLoad();
     } else {
       window.addEventListener('people-ready', bootLoad, { once: true });
-      // fallback in case people.json fails
-      setTimeout(() => { if (!window.PEOPLE) bootLoad(); }, 800);
+      window.addEventListener('demo-ready', bootLoad, { once: true });
     }
   } else {
     bootLoad();
