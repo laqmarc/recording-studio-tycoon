@@ -6,7 +6,8 @@ import { getContractETA as getContractETA_impl, workOnContract as workOnContract
 let micTypeListenerAdded = false;
 let contractRoomListenerAdded = false;
 let inventoryDropListenerAdded = false;
-const dragState = { itemId: null, source: null, category: null };
+const dragState = { itemId: null, source: null, category: null, index: null };
+let audioCtx = null;
 const ROOM_ART = {
   control_room: 'assets/rooms/control_room.svg',
   live_room: 'assets/rooms/live_room.svg',
@@ -149,6 +150,72 @@ function createBadge(text, variant, extraClass) {
   return badge;
 }
 
+function ensureRoomLayout(roomIndex, category, maxSlots, bagIds) {
+  state.ui = state.ui || {};
+  state.ui.roomLayout = state.ui.roomLayout || {};
+  const roomLayout = state.ui.roomLayout[roomIndex] || (state.ui.roomLayout[roomIndex] = {});
+  let layout = roomLayout[category];
+  if (!Array.isArray(layout) || layout.length !== maxSlots) {
+    layout = Array.from({ length: maxSlots }, () => null);
+  }
+  const counts = new Map();
+  for (const id of bagIds) counts.set(id, (counts.get(id) || 0) + 1);
+  layout = layout.map(id => {
+    const c = counts.get(id) || 0;
+    if (id && c > 0) {
+      counts.set(id, c - 1);
+      return id;
+    }
+    return null;
+  });
+  for (const id of bagIds) {
+    const c = counts.get(id) || 0;
+    if (c > 0) {
+      const emptyIdx = layout.findIndex(x => !x);
+      if (emptyIdx !== -1) {
+        layout[emptyIdx] = id;
+        counts.set(id, c - 1);
+      }
+    }
+  }
+  roomLayout[category] = layout;
+  state.ui.roomLayout[roomIndex] = roomLayout;
+  return layout;
+}
+
+function setLayoutItem(roomIndex, category, itemId, targetIndex) {
+  const room = state.db.rooms[roomIndex];
+  const maxSlots = Number((room && room.slots && room.slots[category]) || 0);
+  const bagIds = installedIds(roomIndex, category);
+  const layout = ensureRoomLayout(roomIndex, category, maxSlots, bagIds);
+  const currentIdx = layout.indexOf(itemId);
+  if (currentIdx !== -1) layout[currentIdx] = null;
+  if (targetIndex != null && targetIndex >= 0 && targetIndex < layout.length) {
+    if (!layout[targetIndex]) {
+      layout[targetIndex] = itemId;
+    } else {
+      // if occupied, swap
+      const other = layout[targetIndex];
+      layout[targetIndex] = itemId;
+      if (currentIdx !== -1) layout[currentIdx] = other;
+    }
+  } else {
+    const emptyIdx = layout.findIndex(x => !x);
+    if (emptyIdx !== -1) layout[emptyIdx] = itemId;
+  }
+  state.ui.roomLayout[roomIndex][category] = layout;
+}
+
+function removeLayoutItem(roomIndex, category, itemId, index) {
+  const room = state.db.rooms[roomIndex];
+  const maxSlots = Number((room && room.slots && room.slots[category]) || 0);
+  const bagIds = installedIds(roomIndex, category).filter(id => id !== itemId);
+  const layout = ensureRoomLayout(roomIndex, category, maxSlots, bagIds);
+  let idx = typeof index === 'number' ? index : layout.indexOf(itemId);
+  if (idx !== -1 && layout[idx] === itemId) layout[idx] = null;
+  state.ui.roomLayout[roomIndex][category] = layout;
+}
+
 function getRiskLevel(contract) {
   const target = Number(contract.target_quality || 0);
   const duration = Number(contract.duration_hours || 0);
@@ -258,12 +325,39 @@ function setDragState(itemId, source, category) {
   dragState.itemId = itemId;
   dragState.source = source || null;
   dragState.category = category || null;
+  dragState.index = null;
 }
 
 function clearDragState() {
   dragState.itemId = null;
   dragState.source = null;
   dragState.category = null;
+  dragState.index = null;
+}
+
+function playSnapSound() {
+  try {
+    if (typeof window === 'undefined') return;
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = audioCtx;
+    if (ctx.state === 'suspended') ctx.resume();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(520, ctx.currentTime);
+    gain.gain.setValueAtTime(0.001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.15);
+  } catch (e) { /* ignore audio errors */ }
+}
+
+function triggerSnap(el) {
+  if (!el) return;
+  el.classList.add('snap');
+  setTimeout(() => { el.classList.remove('snap'); }, 260);
 }
 
 function canDropItem(roomIndex, category, itemId) {
@@ -281,7 +375,7 @@ function canDropItem(roomIndex, category, itemId) {
   return { ok: true, item, used, max };
 }
 
-function installItemToRoom(roomIndex, itemId) {
+function installItemToRoom(roomIndex, itemId, targetIndex) {
   const item = state.itemsById.get(itemId);
   if (!item) return { ok: false, reason: 'Item no trobat' };
   const category = item.category || 'misc';
@@ -289,6 +383,7 @@ function installItemToRoom(roomIndex, itemId) {
   if (!res.ok) return { ok: false, reason: res.reason || 'No es pot instal·lar' };
   const removed = invRemove(itemId, 1);
   if (!removed) return { ok: false, reason: 'Inventari insuficient' };
+  setLayoutItem(roomIndex, category, itemId, targetIndex);
   const room = state.db.rooms[roomIndex];
   log(`🧩 Instal·lat a ${room.name}: ${item.name} (${category})`);
   showNotification(`🧩 Instal·lat: ${item.name}`);
@@ -301,6 +396,7 @@ function uninstallItemToInventory(roomIndex, category, itemId) {
   const room = state.db.rooms[roomIndex];
   const res = uninstallItemFromRoom(roomIndex, category, itemId);
   if (!res.ok) return { ok: false, reason: res.reason || 'No es pot desinstal·lar' };
+  removeLayoutItem(roomIndex, category, itemId, dragState.index);
   invAdd(itemId, 1);
   const item = state.itemsById.get(itemId);
   log(`↩️ Desinstal·lat de ${room.name}: ${item ? item.name : itemId} (${category})`);
@@ -558,12 +654,12 @@ export function renderShop() {
     const pill = document.createElement('span'); pill.className = `pill ${tierPill}`; pill.textContent = tier;
     row.appendChild(b); row.appendChild(pill);
 
-    const row2 = document.createElement('div'); row2.className = 'row muted'; row2.style.marginTop = '6px';
-    const catSpan = document.createElement('span'); catSpan.textContent = it.category;
-    const priceSpan = document.createElement('span'); priceSpan.textContent = euro(it.price || 0);
+    const row2 = document.createElement('div'); row2.className = 'shop-sub';
+    const catSpan = document.createElement('span'); catSpan.className = 'shop-cat'; catSpan.textContent = it.category;
+    const priceSpan = document.createElement('span'); priceSpan.className = 'shop-price'; priceSpan.textContent = euro(it.price || 0);
     row2.appendChild(catSpan); row2.appendChild(priceSpan);
 
-    const notes = document.createElement('div'); notes.className = 'tiny'; notes.style.marginTop = '6px'; notes.textContent = it.notes ? it.notes : '';
+    const notes = document.createElement('div'); notes.className = 'shop-notes'; notes.textContent = it.notes ? it.notes : '';
 
     const statWrap = document.createElement('div'); statWrap.className = 'inventory-stats';
     const topStats = getTopStats(it, 3);
@@ -604,7 +700,8 @@ export function renderShop() {
       }
     }
 
-    body.appendChild(row); body.appendChild(row2); body.appendChild(notes);
+    body.appendChild(row); body.appendChild(row2);
+    if (notes.textContent) body.appendChild(notes);
     if (statWrap.childNodes.length) body.appendChild(statWrap);
     layout.appendChild(art); layout.appendChild(body);
     div.appendChild(layout);
@@ -625,7 +722,9 @@ export function renderShop() {
       renderShop();
       renderRight();
     });
-    div.appendChild(quickBtn);
+    const actions = document.createElement('div'); actions.className = 'shop-actions-row';
+    actions.appendChild(quickBtn);
+    div.appendChild(actions);
 
     list.appendChild(div);
   }
@@ -665,8 +764,9 @@ export function renderRight() {
   const floorplan = document.createElement('div'); floorplan.className = 'floorplan';
   Object.keys(slots).sort().forEach(cat => {
     const max = Number(slots[cat] || 0);
-    const usedIds = (bag[cat] || []);
-    const occupancy = usedIds.length >= max ? 'full' : usedIds.length ? 'partial' : 'empty';
+    const bagIds = (bag[cat] || []);
+    const occupancy = bagIds.length >= max ? 'full' : bagIds.length ? 'partial' : 'empty';
+    const layout = ensureRoomLayout(state.selected.roomIndex, cat, max, bagIds);
 
     const zone = document.createElement('div'); zone.className = 'floor-zone';
     zone.dataset.category = cat;
@@ -674,11 +774,11 @@ export function renderRight() {
 
     const zoneHead = document.createElement('div'); zoneHead.className = 'floor-zone-head';
     const zb = document.createElement('b'); zb.textContent = cat;
-    const zm = document.createElement('div'); zm.className = 'muted'; zm.textContent = `${usedIds.length}/${max}`;
+    const zm = document.createElement('div'); zm.className = 'muted'; zm.textContent = `${bagIds.length}/${max}`;
     zoneHead.appendChild(zb); zoneHead.appendChild(zm);
 
     const meter = document.createElement('div'); meter.className = 'slot-meter';
-    const meterFill = document.createElement('span'); meterFill.style.width = max ? `${Math.min(100, Math.round((usedIds.length / max) * 100))}%` : '0%';
+    const meterFill = document.createElement('span'); meterFill.style.width = max ? `${Math.min(100, Math.round((bagIds.length / max) * 100))}%` : '0%';
     meter.appendChild(meterFill);
 
     const nodes = document.createElement('div'); nodes.className = 'floor-nodes';
@@ -686,13 +786,13 @@ export function renderRight() {
       const node = document.createElement('div'); node.className = 'floor-node';
       node.dataset.category = cat;
       node.dataset.index = String(i);
-      const isFilled = i < usedIds.length;
+      const isFilled = Boolean(layout[i]);
       node.dataset.filled = isFilled ? '1' : '0';
       if (isFilled) node.classList.add('filled');
       if (!isFilled) node.classList.add('empty');
 
       if (isFilled) {
-        const id = usedIds[i];
+        const id = layout[i];
         const it = state.itemsById.get(id);
         const token = document.createElement('div'); token.className = 'floor-token';
         token.setAttribute('draggable', 'true');
@@ -703,6 +803,7 @@ export function renderRight() {
         token.appendChild(tokenName);
         token.addEventListener('dragstart', (e) => {
           setDragState(id, 'installed', cat);
+          dragState.index = Number(node.dataset.index || 0);
           token.classList.add('dragging');
           if (e.dataTransfer) {
             e.dataTransfer.setData('text/plain', id);
@@ -723,15 +824,22 @@ export function renderRight() {
       }
 
       node.addEventListener('dragover', (e) => {
-        if (dragState.source !== 'inventory') return;
-        if (node.dataset.filled === '1') return;
+        if (!dragState.source) return;
+        if (dragState.source === 'installed' && dragState.category !== cat) return;
         const itemId = getDraggedItemId(e);
         if (!itemId) return;
-        const res = canDropItem(state.selected.roomIndex, cat, itemId);
-        if (!res.ok) return;
+        if (dragState.source === 'inventory') {
+          if (node.dataset.filled === '1') return;
+          const res = canDropItem(state.selected.roomIndex, cat, itemId);
+          if (!res.ok) return;
+          node.dataset.dropLabel = res.item ? res.item.name : itemId;
+        } else {
+          const item = state.itemsById.get(itemId);
+          const label = node.dataset.filled === '1' ? 'Swap' : 'Moure';
+          node.dataset.dropLabel = `${label} ${item ? item.name : ''}`.trim();
+        }
         e.preventDefault();
         node.classList.add('drag-over');
-        node.dataset.dropLabel = res.item ? res.item.name : itemId;
       });
       node.addEventListener('dragleave', () => {
         node.classList.remove('drag-over');
@@ -741,15 +849,35 @@ export function renderRight() {
         e.preventDefault();
         node.classList.remove('drag-over');
         if (node.dataset && node.dataset.dropLabel) delete node.dataset.dropLabel;
-        if (dragState.source !== 'inventory') return;
+        if (!dragState.source) return;
         const itemId = getDraggedItemId(e);
         if (!itemId) return;
-        const res = canDropItem(state.selected.roomIndex, cat, itemId);
-        if (!res.ok) {
-          log(`❌ ${res.reason}`);
-          return;
+        const targetIndex = Number(node.dataset.index || 0);
+        if (dragState.source === 'inventory') {
+          const res = canDropItem(state.selected.roomIndex, cat, itemId);
+          if (!res.ok) {
+            log(`❌ ${res.reason}`);
+            return;
+          }
+          const ok = installItemToRoom(state.selected.roomIndex, itemId, targetIndex);
+          if (ok && ok.ok) { triggerSnap(node); playSnapSound(); }
+        } else if (dragState.source === 'installed') {
+          if (dragState.category !== cat) return;
+          const fromIndex = Number(dragState.index || 0);
+          const room = state.db.rooms[state.selected.roomIndex];
+          const maxSlots = Number((room && room.slots && room.slots[cat]) || 0);
+          const bagIds = installedIds(state.selected.roomIndex, cat);
+          const layout = ensureRoomLayout(state.selected.roomIndex, cat, maxSlots, bagIds);
+          if (fromIndex === targetIndex) return;
+          const fromId = layout[fromIndex];
+          const toId = layout[targetIndex];
+          layout[fromIndex] = toId || null;
+          layout[targetIndex] = fromId;
+          state.ui.roomLayout[state.selected.roomIndex][cat] = layout;
+          renderAll();
+          triggerSnap(node);
+          playSnapSound();
         }
-        installItemToRoom(state.selected.roomIndex, itemId);
       });
 
       nodes.appendChild(node);
@@ -873,6 +1001,7 @@ export function renderRight() {
         if (!itemId || !category) return;
         const res = uninstallItemToInventory(state.selected.roomIndex, category, itemId);
         if (!res.ok) log(`❌ ${res.reason}`);
+        if (res.ok) { triggerSnap(invList); playSnapSound(); }
         clearDragState();
       });
       inventoryDropListenerAdded = true;

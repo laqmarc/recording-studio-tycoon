@@ -9171,7 +9171,7 @@ const DEMO = {
       "duration_hours": 6,
       "base_pay": 650,
       "target_quality": 65,
-      "unlock_level": 5,
+      "unlock_level": 3,
       "requirements": {
         "room_type": "live_room",
         "min_interface_inputs": 8,
