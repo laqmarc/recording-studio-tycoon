@@ -3,38 +3,45 @@ const storageKey = "studio_tycoon_tutorial_seen";
 const steps = [
   {
     title: "Benvingut",
-    text: "Aixo es una guia rapida per jugar a Studio Tycoon. Prem Seguent per veure els panells principals.",
-    selector: "header"
+    text: "Aixo es una guia rapida per jugar a Studio Tycoon. Usa les pestanyes per canviar de pagina.",
+    selector: "header",
+    page: "rooms"
   },
   {
     title: "Sales",
-    text: "Selecciona una sala per instal lar equips i veure els slots disponibles.",
-    selector: "#roomList"
+    text: "Selecciona una sala i mira els slots disponibles.",
+    selector: "#roomList",
+    page: "rooms"
   },
   {
     title: "Contractes",
-    text: "Aqui tens contractes compatibles amb la sala seleccionada.",
-    selector: "#leftContracts"
+    text: "Aqui tens contractes compatibles amb la sala activa.",
+    selector: "#leftContracts",
+    page: "contracts"
   },
   {
     title: "Botiga",
     text: "Compra equips i consumibles. Filtra per categoria i cerca noms.",
-    selector: "#shopList"
+    selector: "#shopList",
+    page: "shop"
   },
   {
     title: "Sala + Inventari",
-    text: "Instal la equips, desinstal la i usa consumibles.",
-    selector: "#inventoryControls"
+    text: "Instal la equips, desinstal la i usa consumibles. Pots arrossegar items als slots.",
+    selector: "#inventoryControls",
+    page: "rooms"
   },
   {
     title: "Passar dia",
     text: "Avanca el temps per recuperar fatiga i aplicar costos.",
-    selector: "#btnNextDay"
+    selector: "#btnNextDay",
+    page: "rooms"
   },
   {
     title: "Llestos",
     text: "Ja pots jugar. Pots reiniciar el tutorial esborrant la persistencia.",
-    selector: null
+    selector: null,
+    page: "rooms"
   }
 ];
 
@@ -109,6 +116,9 @@ function buildTour() {
 
   function render() {
     const step = steps[index];
+    if (step.page && typeof window !== "undefined" && typeof window.setPage === "function") {
+      window.setPage(step.page);
+    }
     title.textContent = step.title;
     text.textContent = step.text;
     stepInfo.textContent = `Pas ${index + 1} / ${steps.length}`;

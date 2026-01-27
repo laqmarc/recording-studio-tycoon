@@ -1,9 +1,11 @@
 // ui_render.mjs - ES module renderer (moved from ui_render.js)
-import { state, installedIds } from './state.js';
-import { euro, xpToNext, invQty } from './helpers.js';
+import { state, installedIds, installToRoom } from './state.js';
+import { euro, xpToNext, invQty, invRemove, log, showNotification } from './helpers.js';
 import { getContractETA as getContractETA_impl, workOnContract as workOnContract_impl } from './actions.js';
 
 let micTypeListenerAdded = false;
+let contractRoomListenerAdded = false;
+const dragState = { itemId: null };
 const ROOM_ART = {
   control_room: 'assets/rooms/control_room.svg',
   live_room: 'assets/rooms/live_room.svg',
@@ -84,6 +86,27 @@ function createArt(src, alt) {
   return wrap;
 }
 
+function setPage(page) {
+  const normalized = (page === 'contracts' || page === 'shop' || page === 'rooms') ? page : 'rooms';
+  state.ui = state.ui || { page: 'rooms' };
+  state.ui.page = normalized;
+  if (typeof document !== 'undefined') {
+    document.body.setAttribute('data-page', normalized);
+    document.querySelectorAll('[data-page-tab]').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-page-tab') === normalized);
+    });
+  }
+}
+
+function initPageNav() {
+  const tabs = document.querySelectorAll('[data-page-tab]');
+  if (!tabs.length) return;
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => setPage(btn.getAttribute('data-page-tab')));
+  });
+  setPage((state.ui && state.ui.page) ? state.ui.page : 'rooms');
+}
+
 export function getRequirementsElement(contract, roomIndex) {
   const req = contract.requirements || {};
   const container = document.createElement('div');
@@ -153,6 +176,43 @@ export function getRequirementsElement(contract, roomIndex) {
   return has ? container : null;
 }
 
+function getDraggedItemId(e) {
+  if (dragState.itemId) return dragState.itemId;
+  if (e && e.dataTransfer) return e.dataTransfer.getData('text/plain');
+  return null;
+}
+
+function canDropItem(roomIndex, category, itemId) {
+  const room = state.db.rooms[roomIndex];
+  const item = state.itemsById.get(itemId);
+  if (!room) return { ok: false, reason: 'Sala no trobada' };
+  if (!item) return { ok: false, reason: 'Item no trobat' };
+  const itemCat = item.category || 'misc';
+  if (itemCat !== category) return { ok: false, reason: `Slot ${category} requerit` };
+  if (invQty(itemId) <= 0) return { ok: false, reason: 'No tens aquest item' };
+  const slots = room.slots || {};
+  const max = Number(slots[category] || 0);
+  const used = installedIds(roomIndex, category).length;
+  if (used >= max) return { ok: false, reason: `No hi ha slots de ${category}` };
+  return { ok: true, item, used, max };
+}
+
+function installItemToRoom(roomIndex, itemId) {
+  const item = state.itemsById.get(itemId);
+  if (!item) return { ok: false, reason: 'Item no trobat' };
+  const category = item.category || 'misc';
+  const res = installToRoom(roomIndex, category, itemId);
+  if (!res.ok) return { ok: false, reason: res.reason || 'No es pot instal·lar' };
+  const removed = invRemove(itemId, 1);
+  if (!removed) return { ok: false, reason: 'Inventari insuficient' };
+  const room = state.db.rooms[roomIndex];
+  log(`🧩 Instal·lat a ${room.name}: ${item.name} (${category})`);
+  showNotification(`🧩 Instal·lat: ${item.name}`);
+  renderAll();
+  if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
+  return { ok: true };
+}
+
 export function renderAll() {
   const moneyEl = document.getElementById('money');
   if (moneyEl) moneyEl.textContent = `Cash: ${Math.round(state.cash)}€`;
@@ -170,6 +230,24 @@ export function renderRooms() {
   const visibleIndices = visibleRooms.map(v => v.idx);
   if (visibleIndices.length > 0 && !visibleIndices.includes(state.selected.roomIndex)) {
     state.selected.roomIndex = visibleIndices[0];
+  }
+
+  const contractRoomSelect = document.getElementById('selContractRoom');
+  if (contractRoomSelect) {
+    contractRoomSelect.options.length = 0;
+    visibleRooms.forEach(({ r, idx }) => contractRoomSelect.add(new Option(r.name, String(idx))));
+    if (visibleIndices.includes(state.selected.roomIndex)) {
+      contractRoomSelect.value = String(state.selected.roomIndex);
+    } else if (visibleRooms.length) {
+      contractRoomSelect.value = String(visibleRooms[0].idx);
+    }
+    if (!contractRoomListenerAdded) {
+      contractRoomSelect.addEventListener('change', () => {
+        state.selected.roomIndex = Number(contractRoomSelect.value);
+        renderAll();
+      });
+      contractRoomListenerAdded = true;
+    }
   }
 
   visibleRooms.forEach(({ r, idx }) => {
@@ -215,6 +293,7 @@ export function renderRooms() {
       const unlockLevel = Number(c.unlock_level || 1);
       return unlockLevel <= playerLevel && (!req.room_type || req.room_type === (room && room.type));
     });
+    const contractsMeta = document.getElementById('contractsMeta'); if (contractsMeta) contractsMeta.textContent = `${applicable.length} contractes`;
     clearChildren(leftContracts);
     if (!applicable.length) {
       const m = document.createElement('div'); m.className = 'muted'; m.textContent = 'No hi ha contractes compatibles per aquesta sala.';
@@ -404,11 +483,53 @@ export function renderRight() {
   const slotline = document.createElement('div'); slotline.className = 'slotline';
   Object.keys(slots).sort().forEach(cat => {
     const max = slots[cat];
-    const used = (bag[cat] || []).length;
-    const s = document.createElement('div'); s.className = 'slot';
+    const usedIds = (bag[cat] || []);
+    const s = document.createElement('div'); s.className = 'slot slot-drop';
+    s.dataset.category = cat;
+    const head = document.createElement('div'); head.className = 'slot-head';
     const sb = document.createElement('b'); sb.textContent = cat;
-    const sm = document.createElement('div'); sm.className = 'muted'; sm.textContent = `${used}/${max}`;
-    s.appendChild(sb); s.appendChild(sm); slotline.appendChild(s);
+    const sm = document.createElement('div'); sm.className = 'muted'; sm.textContent = `${usedIds.length}/${max}`;
+    head.appendChild(sb); head.appendChild(sm);
+
+    const itemsWrap = document.createElement('div'); itemsWrap.className = 'slot-items';
+    if (usedIds.length) {
+      for (const id of usedIds) {
+        const it = state.itemsById.get(id);
+        const chip = document.createElement('div'); chip.className = 'installed-chip';
+        chip.textContent = it ? it.name : id;
+        itemsWrap.appendChild(chip);
+      }
+    } else {
+      const empty = document.createElement('div'); empty.className = 'slot-empty'; empty.textContent = 'Arrossega un item aqui';
+      itemsWrap.appendChild(empty);
+    }
+
+    s.appendChild(head);
+    s.appendChild(itemsWrap);
+
+    s.addEventListener('dragover', (e) => {
+      const itemId = getDraggedItemId(e);
+      if (!itemId) return;
+      const res = canDropItem(state.selected.roomIndex, cat, itemId);
+      if (!res.ok) return;
+      e.preventDefault();
+      s.classList.add('drag-over');
+    });
+    s.addEventListener('dragleave', () => s.classList.remove('drag-over'));
+    s.addEventListener('drop', (e) => {
+      e.preventDefault();
+      s.classList.remove('drag-over');
+      const itemId = getDraggedItemId(e);
+      if (!itemId) return;
+      const res = canDropItem(state.selected.roomIndex, cat, itemId);
+      if (!res.ok) {
+        log(`❌ ${res.reason}`);
+        return;
+      }
+      installItemToRoom(state.selected.roomIndex, itemId);
+    });
+
+    slotline.appendChild(s);
   });
 
   details.appendChild(hero); details.appendChild(row); details.appendChild(meta); details.appendChild(slotline);
@@ -433,6 +554,63 @@ export function renderRight() {
   for (const it of owned) selItem.add(new Option(`${it.name} (x${invQty(it.id)})`, it.id));
   if (prevSelItem && owned.find(o=>o.id === prevSelItem)) selItem.value = prevSelItem;
   else if (!selItem.value && owned.length) selItem.value = owned[0].id;
+
+  const invList = document.getElementById('inventoryList');
+  if (invList) {
+    clearChildren(invList);
+    if (!owned.length) {
+      const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'Inventari buit en aquesta categoria.';
+      invList.appendChild(empty);
+    } else {
+      for (const it of owned) {
+        const qty = invQty(it.id);
+        const card = document.createElement('div');
+        const isSelected = selItem && selItem.value === it.id;
+        card.className = `card inventory-card${isSelected ? ' active' : ''}`;
+        card.setAttribute('draggable', 'true');
+        card.addEventListener('click', () => {
+          if (selItem) selItem.value = it.id;
+          renderRight();
+        });
+        card.addEventListener('dragstart', (e) => {
+          dragState.itemId = it.id;
+          card.classList.add('dragging');
+          if (e.dataTransfer) {
+            e.dataTransfer.setData('text/plain', it.id);
+            e.dataTransfer.effectAllowed = 'move';
+          }
+        });
+        card.addEventListener('dragend', () => {
+          dragState.itemId = null;
+          card.classList.remove('dragging');
+          document.querySelectorAll('.slot-drop.drag-over').forEach(el => el.classList.remove('drag-over'));
+        });
+
+        const layout = document.createElement('div');
+        layout.className = 'card-grid';
+        const art = createArt(getItemArt(it), `${it.name} art`);
+        const body = document.createElement('div');
+        body.className = 'card-body';
+
+        const row = document.createElement('div'); row.className = 'row';
+        const b = document.createElement('b'); b.textContent = it.name;
+        const pill = document.createElement('span'); pill.className = 'pill'; pill.textContent = `x${qty}`;
+        row.appendChild(b); row.appendChild(pill);
+
+        const row2 = document.createElement('div'); row2.className = 'row muted'; row2.style.marginTop = '6px';
+        const catSpan = document.createElement('span'); catSpan.textContent = it.category;
+        const priceSpan = document.createElement('span'); priceSpan.textContent = euro(it.price || 0);
+        row2.appendChild(catSpan); row2.appendChild(priceSpan);
+
+        const notes = document.createElement('div'); notes.className = 'tiny'; notes.style.marginTop = '6px'; notes.textContent = it.notes ? it.notes : '';
+
+        body.appendChild(row); body.appendChild(row2); body.appendChild(notes);
+        layout.appendChild(art); layout.appendChild(body);
+        card.appendChild(layout);
+        invList.appendChild(card);
+      }
+    }
+  }
 
   const k = document.getElementById("kpis");
   const mobileKpis = document.getElementById("mobileKpis");
@@ -497,9 +675,14 @@ if (typeof window !== 'undefined') {
   window.renderRight = window.renderRight || renderRight;
   window.getRequirementsElement = window.getRequirementsElement || getRequirementsElement;
   window.clearChildren = window.clearChildren || clearChildren;
+  window.setPage = window.setPage || setPage;
   // ensure action bindings point to module impl when available
   window.getContractETA = window.getContractETA || getContractETA_impl;
   window.workOnContract = window.workOnContract || workOnContract_impl;
+}
+
+if (typeof document !== 'undefined') {
+  initPageNav();
 }
 
 // If data was loaded before this module initialized (DEMO loaded and persistence.loadFromObject ran), render now

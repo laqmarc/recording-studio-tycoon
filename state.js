@@ -7,6 +7,7 @@ export const state = {
   itemsByCategory: new Map(),
   inventory: new Map(), // id -> qty
   selected: { roomIndex: 0, shopItemId: null },
+  ui: { page: "rooms" },
   roomsInstalled: [], // per room: { category -> [itemId,...] }
   // billing info per room: { lastBilledDay: number|null }
   roomBilling: [],
