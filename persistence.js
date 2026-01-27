@@ -22,6 +22,8 @@ export function saveState() {
       reputation: state.reputation || { overall: 0, byGenre: {} },
       roomUpgrades: state.roomUpgrades || {},
       itemCondition: state.itemCondition ? Array.from(state.itemCondition.entries()) : [],
+      market: state.market || { offers: [], lastDayGenerated: 0 },
+      schedule: Array.isArray(state.schedule) ? state.schedule : [],
       inventory: Array.from(state.inventory.entries()),
       roomsInstalled: state.roomsInstalled,
       roomBilling: state.roomBilling,
@@ -94,6 +96,8 @@ export function loadStateFromStorage() {
       state.itemCondition = new Map();
       for (const [id, value] of p.itemCondition) state.itemCondition.set(id, Number(value));
     }
+    if (p.market && typeof p.market === 'object') state.market = p.market;
+    if (Array.isArray(p.schedule)) state.schedule = p.schedule;
     if (typeof state.finance.weeklyExpenses !== 'number') state.finance.weeklyExpenses = 0;
     if (typeof state.finance.monthlyExpenses !== 'number') state.finance.monthlyExpenses = 0;
     if (Array.isArray(p.roomBilling) && p.roomBilling.length === state.db.rooms.length) {
@@ -151,6 +155,8 @@ export function clearPersistenceAndReset() {
     state.reputation = { overall: 0, byGenre: {} };
     state.roomUpgrades = {};
     state.itemCondition = new Map();
+    state.market = { offers: [], lastDayGenerated: 0 };
+    state.schedule = [];
     ensureRoomsInstalled();
     state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
     for (const c of state.db.contracts) {
@@ -185,6 +191,8 @@ export function loadFromObject(obj) {
   state.reputation = state.reputation || { overall: 0, byGenre: {} };
   state.roomUpgrades = state.roomUpgrades || {};
   state.itemCondition = state.itemCondition || new Map();
+  state.market = state.market || { offers: [], lastDayGenerated: 0 };
+  state.schedule = Array.isArray(state.schedule) ? state.schedule : [];
   // Ensure finance tracking exists after loading demo data
   state.finance = state.finance || { monthlyExpenses: 0 };
   // Start with zero accumulated weekly expenses by default; rooms only incur
@@ -211,6 +219,8 @@ export function resetGame() {
   state.reputation = { overall: 0, byGenre: {} };
   state.roomUpgrades = {};
   state.itemCondition = new Map();
+  state.market = { offers: [], lastDayGenerated: 0 };
+  state.schedule = [];
   log("🔄 Reset: cash=1000, inventari buit, instal·lacions buides.");
   if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
   localStorage.removeItem('studio_tycoon_state_v1');

@@ -6,6 +6,7 @@ import { getContractETA as getContractETA_impl, workOnContract as workOnContract
 let micTypeListenerAdded = false;
 let contractRoomListenerAdded = false;
 let inventoryDropListenerAdded = false;
+let clientFetchListenerAdded = false;
 const dragState = { itemId: null, source: null, category: null, index: null };
 let audioCtx = null;
 const ROOM_ART = {
@@ -919,6 +920,13 @@ export function renderRooms() {
   const visibleRooms = state.db.rooms.map((r, idx) => ({ r, idx })).filter(({ r }) => Number(r.unlock_level || 1) <= Number(state.player.level || 1));
   const roomsMeta = document.getElementById('roomsMeta'); if (roomsMeta) roomsMeta.textContent = `${visibleRooms.length} sales`;
 
+  if (typeof window !== 'undefined' && typeof window.generateDailyOffers === 'function') {
+    const day = Number(state.time.day || 1);
+    if (!state.market || state.market.lastDayGenerated !== day) {
+      window.generateDailyOffers(true);
+    }
+  }
+
   const visibleIndices = visibleRooms.map(v => v.idx);
   if (visibleIndices.length > 0 && !visibleIndices.includes(state.selected.roomIndex)) {
     state.selected.roomIndex = visibleIndices[0];
@@ -940,6 +948,15 @@ export function renderRooms() {
       });
       contractRoomListenerAdded = true;
     }
+  }
+
+  const btnFetch = document.getElementById('btnFetchClients');
+  if (btnFetch && !clientFetchListenerAdded) {
+    btnFetch.addEventListener('click', () => {
+      if (typeof window !== 'undefined' && typeof window.generateDailyOffers === 'function') window.generateDailyOffers(true);
+      renderAll();
+    });
+    clientFetchListenerAdded = true;
   }
 
   visibleRooms.forEach(({ r, idx }) => {
@@ -1003,6 +1020,12 @@ export function renderRooms() {
 
         const card = document.createElement('div');
         card.className = 'card contract-card';
+        card.setAttribute('draggable', 'true');
+        card.addEventListener('dragstart', (e) => {
+          if (e.dataTransfer) {
+            e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'contract', contractId: c.id }));
+          }
+        });
         if (isDone) card.style.opacity = '.6', card.style.filter = 'grayscale(.4)';
         if (isDone) {
           card.classList.add('is-complete');
@@ -1085,6 +1108,23 @@ export function renderRooms() {
               select.add(new Option(`${p.name} (${p.skill})`, p.id));
             }
             select.value = currentId;
+          } else if (!currentId) {
+            // fallback: auto-assign best option into selection
+            const fallbackId = select.options.length > 1 ? select.options[1].value : '';
+            if (fallbackId) {
+              select.value = fallbackId;
+              const map = Array.isArray(c.assigned_people_map) ? c.assigned_people_map : [];
+              let target = map.find(e => e && e.role === def.role && (e.instrument || '') === (def.instrument || ''));
+              if (!target) {
+                target = { role: def.role, instrument: def.instrument || '', id: fallbackId };
+                map.push(target);
+              } else {
+                target.id = fallbackId;
+              }
+              const seen = new Set();
+              c.assigned_people = map.filter(p => p && p.id && !seen.has(p.id) && seen.add(p.id)).map(p => p.id);
+              c.assigned_people_map = map;
+            }
           }
 
           select.addEventListener('change', () => {
@@ -1227,6 +1267,121 @@ export function renderRooms() {
       }
       repPanelRooms.appendChild(repBars);
     }
+  }
+
+  const offersEl = document.getElementById('clientOffers');
+  if (offersEl) {
+    clearChildren(offersEl);
+    const offers = (state.market && Array.isArray(state.market.offers)) ? state.market.offers : [];
+    if (!offers.length) {
+      const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'No hi ha ofertes avui.';
+      offersEl.appendChild(empty);
+    } else {
+      for (const offer of offers) {
+        const card = document.createElement('div'); card.className = 'offer-card';
+        const row = document.createElement('div'); row.className = 'offer-row';
+        const name = document.createElement('b'); name.textContent = offer.name;
+        const pill = document.createElement('span'); pill.className = 'pill'; pill.textContent = offer.type;
+        row.appendChild(name); row.appendChild(pill);
+        const meta = document.createElement('div'); meta.className = 'offer-meta';
+        meta.textContent = `${offer.duration_hours}h · ${euro(offer.base_pay)} · Qualitat ${offer.target_quality} · Deadline ${offer.deadline_days}d`;
+        const actions = document.createElement('div'); actions.className = 'offer-actions';
+        const btnAccept = document.createElement('button'); btnAccept.className = 'btn2 btnOk'; btnAccept.textContent = 'Acceptar';
+        btnAccept.addEventListener('click', () => { if (typeof window !== 'undefined' && typeof window.acceptOffer === 'function') window.acceptOffer(offer.id); });
+        const btnDecline = document.createElement('button'); btnDecline.className = 'btn2'; btnDecline.textContent = 'Declinar';
+        btnDecline.addEventListener('click', () => { if (typeof window !== 'undefined' && typeof window.declineOffer === 'function') window.declineOffer(offer.id); });
+        actions.appendChild(btnAccept); actions.appendChild(btnDecline);
+        card.appendChild(row); card.appendChild(meta); card.appendChild(actions);
+        offersEl.appendChild(card);
+      }
+    }
+  }
+
+  const scheduleBoard = document.getElementById('scheduleBoard');
+  if (scheduleBoard) {
+    clearChildren(scheduleBoard);
+    const visibleRooms = state.db.rooms.map((r, idx) => ({ r, idx }))
+      .filter(({ r }) => Number(r.unlock_level || 1) <= Number(state.player.level || 1));
+    const days = 7;
+    const startDay = Number(state.time.day || 1);
+    const schedule = Array.isArray(state.schedule) ? state.schedule : [];
+    const grid = document.createElement('div'); grid.className = 'schedule-grid';
+    const head = document.createElement('div'); head.className = 'schedule-head';
+    const blank = document.createElement('div'); blank.textContent = 'Sala'; head.appendChild(blank);
+    for (let i = 0; i < days; i++) {
+      const d = document.createElement('div'); d.textContent = `Dia ${startDay + i}`; head.appendChild(d);
+    }
+    grid.appendChild(head);
+
+    for (const { r, idx } of visibleRooms) {
+      const row = document.createElement('div'); row.className = 'schedule-row';
+      const roomCell = document.createElement('div'); roomCell.className = 'schedule-room'; roomCell.textContent = r.name;
+      row.appendChild(roomCell);
+      for (let i = 0; i < days; i++) {
+        const day = startDay + i;
+        const cell = document.createElement('div'); cell.className = 'schedule-cell';
+        cell.dataset.roomIndex = String(idx);
+        cell.dataset.day = String(day);
+
+        const items = schedule.filter(s => s.roomIndex === idx && s.day === day);
+        for (const s of items) {
+          const c = state.db.contracts.find(x => x.id === s.contractId);
+          if (!c) continue;
+          const chip = document.createElement('div'); chip.className = 'schedule-item';
+          chip.textContent = `${c.name} (${c.duration_hours}h)`;
+          chip.setAttribute('draggable', 'true');
+          chip.addEventListener('dragstart', (e) => {
+            if (e.dataTransfer) {
+              e.dataTransfer.setData('text/plain', JSON.stringify({
+                type: 'scheduled',
+                contractId: s.contractId,
+                roomIndex: s.roomIndex,
+                day: s.day
+              }));
+            }
+          });
+          cell.appendChild(chip);
+        }
+
+        cell.addEventListener('dragover', (e) => {
+          if (!e.dataTransfer) return;
+          const raw = e.dataTransfer.getData('text/plain');
+          if (!raw) return;
+          e.preventDefault();
+          cell.classList.add('drag-over');
+        });
+        cell.addEventListener('dragleave', () => cell.classList.remove('drag-over'));
+        cell.addEventListener('drop', (e) => {
+          e.preventDefault();
+          cell.classList.remove('drag-over');
+          const raw = e.dataTransfer ? e.dataTransfer.getData('text/plain') : '';
+          if (!raw) return;
+          let payload = null;
+          try { payload = JSON.parse(raw); } catch (err) { payload = { type: 'contract', contractId: raw }; }
+          const contractId = payload.contractId || payload.id;
+          const contract = state.db.contracts.find(x => x.id === contractId);
+          if (!contract) return;
+          const roomIndex = Number(cell.dataset.roomIndex || 0);
+          const dayNum = Number(cell.dataset.day || startDay);
+          if (contract.requirements && contract.requirements.room_type) {
+            const room = state.db.rooms[roomIndex];
+            if (room && room.type !== contract.requirements.room_type) {
+              log('❌ Sala incompatible');
+              return;
+            }
+          }
+          state.schedule = Array.isArray(state.schedule) ? state.schedule : [];
+          state.schedule = state.schedule.filter(s => s.contractId !== contractId);
+          state.schedule.push({ contractId, roomIndex, day: dayNum });
+          if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
+          renderAll();
+        });
+
+        row.appendChild(cell);
+      }
+      grid.appendChild(row);
+    }
+    scheduleBoard.appendChild(grid);
   }
 }
 

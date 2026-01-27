@@ -121,6 +121,30 @@
                         <div class="rep-panel" id="repPanel"></div>
                     </div>
                 </section>
+
+                <section class="panel">
+                    <h2>
+                        📬 Clients
+                        <small>ofertes diaries</small>
+                    </h2>
+                    <div class="content">
+                        <div class="grid2" style="margin-bottom:10px">
+                            <button class="btn2" id="btnFetchClients">Buscar client</button>
+                            <div class="tiny" style="align-self:end">Genera noves ofertes.</div>
+                        </div>
+                        <div id="clientOffers" class="list"></div>
+                    </div>
+                </section>
+
+                <section class="panel full">
+                    <h2>
+                        🗓️ Calendari
+                        <small>drag & drop per sala</small>
+                    </h2>
+                    <div class="content">
+                        <div id="scheduleBoard"></div>
+                    </div>
+                </section>
             </div>
         </section>
 
@@ -184,6 +208,7 @@
     <script type="module" src="helpers.js"></script>
     <script type="module" src="persistence.js"></script>
     <script type="module" src="simulation.js"></script>
+    <script type="module" src="client_market.js"></script>
     <script type="module" src="people_loader.js"></script>
     <script src="demo.js" defer></script>
     <script type="module" src="actions.js"></script>

@@ -187,6 +187,7 @@ export function advanceTime(hours) {
         if (daily && typeof log === 'function') log(`💸 Costos diaris sales: ${euro(daily)} · Despesa setmanal acumulada: ${Math.round((state.finance && state.finance.weeklyExpenses) || 0)}€`);
       } catch (e) {}
       log(`🌅 Nou dia! Fatiga curta: ${state.player.fatigueShort.toFixed(1)}h · Fatiga crònica: ${state.player.fatigueChronic.toFixed(2)}`);
+      try { if (typeof window !== 'undefined' && typeof window.generateDailyOffers === 'function') window.generateDailyOffers(); } catch (e) {}
     }
   }
 }

@@ -12,6 +12,8 @@ export const state = {
   reputation: { overall: 0, byGenre: {} },
   roomUpgrades: {},
   itemCondition: new Map(),
+  market: { offers: [], lastDayGenerated: 0 },
+  schedule: [],
   roomsInstalled: [], // per room: { category -> [itemId,...] }
   // billing info per room: { lastBilledDay: number|null }
   roomBilling: [],
