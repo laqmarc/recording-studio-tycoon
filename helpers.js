@@ -53,6 +53,53 @@ export function invRemove(id, qty=1){
   return true;
 }
 
+// Gear condition and maintenance
+export function getItemCondition(id) {
+  if (typeof state === 'undefined') return 100;
+  state.itemCondition = state.itemCondition || new Map();
+  const cur = Number(state.itemCondition.get(id));
+  return Number.isFinite(cur) ? cur : 100;
+}
+
+export function setItemCondition(id, value) {
+  if (typeof state === 'undefined') return;
+  state.itemCondition = state.itemCondition || new Map();
+  const v = clamp(Number(value), 0, 100);
+  state.itemCondition.set(id, v);
+}
+
+export function applyItemWear(roomIndex, hours = 1, multiplier = 1) {
+  if (!state || !state.roomsInstalled || !state.itemsById) return;
+  state.itemCondition = state.itemCondition || new Map();
+  const bag = state.roomsInstalled[roomIndex] || {};
+  const counts = new Map();
+  for (const ids of Object.values(bag)) {
+    for (const id of (ids || [])) counts.set(id, (counts.get(id) || 0) + 1);
+  }
+  for (const [id] of counts.entries()) {
+    const item = state.itemsById.get(id);
+    const reliability = Number((item && item.stats && item.stats.reliability) || 80);
+    const wearRate = clamp((100 - reliability) / 600, 0.02, 0.5);
+    const wear = wearRate * Number(hours || 0) * Number(multiplier || 1);
+    const next = clamp(getItemCondition(id) - wear, 5, 100);
+    state.itemCondition.set(id, next);
+  }
+}
+
+export function calcRoomMaintenanceDaily(roomIndex) {
+  if (!state || !state.roomsInstalled || !state.itemsById) return 0;
+  const bag = state.roomsInstalled[roomIndex] || {};
+  let total = 0;
+  for (const ids of Object.values(bag)) {
+    for (const id of (ids || [])) {
+      const item = state.itemsById.get(id);
+      const weekly = Number((item && item.stats && item.stats.maintenance_weekly) || 0);
+      total += weekly / 7;
+    }
+  }
+  return total;
+}
+
 // Contract requirement checker
 export function checkContractRequirements(contract, roomIndex) {
   const req = contract.requirements || {};
@@ -148,6 +195,20 @@ export function advanceTime(hours) {
 export function applyDailyRoomCosts() {
   if (!state || !state.db || !Array.isArray(state.db.rooms)) return 0;
   let charged = 0;
+  // Staff payroll (daily)
+  try {
+    const engLevel = (state.staff && state.staff.engineer && state.staff.engineer.level) ? Number(state.staff.engineer.level) : 1;
+    const prodLevel = (state.staff && state.staff.producer && state.staff.producer.level) ? Number(state.staff.producer.level) : 1;
+    const staffWeekly = engLevel * 120 + prodLevel * 100;
+    const staffDaily = staffWeekly / 7;
+    if (staffWeekly > 0) {
+      state.cash = Number(state.cash || 0) - staffDaily;
+      state.finance = state.finance || {};
+      state.finance.weeklyExpenses = (state.finance.weeklyExpenses || 0) + staffDaily;
+      charged += staffDaily;
+      state.finance.staffWeekly = staffWeekly;
+    }
+  } catch (e) {}
   // Ensure roomBilling array exists
   state.roomBilling = state.roomBilling || state.db.rooms.map(()=>({ lastBilledDay: null }));
   for (let i = 0; i < state.db.rooms.length; i++) {
@@ -156,6 +217,17 @@ export function applyDailyRoomCosts() {
     const bag = (Array.isArray(state.roomsInstalled) && state.roomsInstalled[i]) ? state.roomsInstalled[i] : {};
     const hasInstalled = Object.values(bag).some(arr => Array.isArray(arr) && arr.length > 0);
     if (!hasInstalled) continue;
+
+    // Maintenance daily cost for installed items
+    try {
+      const maintenanceDaily = calcRoomMaintenanceDaily(i);
+      if (maintenanceDaily > 0) {
+        state.cash = Number(state.cash || 0) - maintenanceDaily;
+        state.finance = state.finance || {};
+        state.finance.weeklyExpenses = (state.finance.weeklyExpenses || 0) + maintenanceDaily;
+        charged += maintenanceDaily;
+      }
+    } catch (e) {}
 
     const billing = state.roomBilling[i] = state.roomBilling[i] || { lastBilledDay: null };
     // If room was just installed, bill full week immediately and set lastBilledDay
@@ -235,7 +307,7 @@ export function showNotification(message, duration = 3000) {
 
 // Attach to window for backward compatibility with non-module scripts
 if (typeof window !== 'undefined') {
-  window.Helpers = Object.assign(window.Helpers || {}, { log, euro, clamp, avgStat, sumStat, xpToNext, addXp, invQty, invAdd, invRemove, checkContractRequirements, advanceTime, showNotification });
+  window.Helpers = Object.assign(window.Helpers || {}, { log, euro, clamp, avgStat, sumStat, xpToNext, addXp, invQty, invAdd, invRemove, checkContractRequirements, advanceTime, showNotification, getItemCondition, setItemCondition, applyItemWear, calcRoomMaintenanceDaily });
   // Overwrite any temporary shim wrappers so the real implementations are used
   window.log = log;
   window.euro = euro;
@@ -247,6 +319,9 @@ if (typeof window !== 'undefined') {
   window.invQty = invQty;
   window.invAdd = invAdd;
   window.invRemove = invRemove;
+  window.getItemCondition = getItemCondition;
+  window.setItemCondition = setItemCondition;
+  window.applyItemWear = applyItemWear;
   window.useConsumable = useConsumable;
   // Expose advanceTime and requirement checker as direct globals for legacy callers
   window.advanceTime = advanceTime;

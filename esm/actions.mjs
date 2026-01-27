@@ -13,15 +13,18 @@ function installedIds(roomIndex, category) {
 export function getContractETA(c) {
   const state = getState();
   if (!state) return { days:0, hours:0, finishDay:0, finishHour:0 };
+  const producerLevel = (state.staff && state.staff.producer && state.staff.producer.level) ? Number(state.staff.producer.level) : 1;
+  const speedBonus = Math.min(0.4, producerLevel * 0.03);
   const worked = Number(c.worked_hours || 0);
   const total = Number(c.duration_hours || 0);
   const remaining = Math.max(0, total - worked);
   if (remaining === 0) return { days:0, hours:0, finishDay: state.time.day, finishHour: state.time.hour };
+  const effectiveRemaining = remaining / (1 + speedBonus);
   const hoursLeftToday = state.time.workHoursPerDay - state.time.hour;
-  if (remaining <= hoursLeftToday) {
-    return { days:0, hours:remaining, finishDay: state.time.day, finishHour: state.time.hour + remaining };
+  if (effectiveRemaining <= hoursLeftToday) {
+    return { days:0, hours:effectiveRemaining, finishDay: state.time.day, finishHour: state.time.hour + effectiveRemaining };
   }
-  let rem = remaining - hoursLeftToday;
+  let rem = effectiveRemaining - hoursLeftToday;
   const fullDays = Math.floor(rem / state.time.workHoursPerDay);
   const finalHours = rem % state.time.workHoursPerDay;
   const finishDay = state.time.day + 1 + fullDays;
@@ -41,9 +44,12 @@ export function workOnContract(contractId, hours) {
   const renderAll = getWin('renderAll');
   const showNotification = getWin('showNotification') || (()=>{});
   const saveState = getWin('saveState') || (()=>{});
+  const assignContractPeople = getWin('assignContractPeople');
+  const applyItemWear = getWin('applyItemWear');
 
   const c = state.db.contracts.find(x => x.id === contractId);
   if (!c) return log('Contracte no trobat.');
+  if (assignContractPeople) assignContractPeople(c);
   if (c.completed) {
     c.worked_hours = 0;
     c.completed = false;
@@ -91,7 +97,12 @@ export function workOnContract(contractId, hours) {
 
   const remaining = (c.duration_hours || 0) - (c.worked_hours || 0);
   const actual_hours = Math.min(Number(hours || 0), remaining);
-  c.worked_hours = Number(c.worked_hours || 0) + actual_hours;
+  const producerLevel = (state.staff && state.staff.producer && state.staff.producer.level) ? Number(state.staff.producer.level) : 1;
+  const engineerLevel = (state.staff && state.staff.engineer && state.staff.engineer.level) ? Number(state.staff.engineer.level) : 1;
+  const speedBonus = Math.min(0.4, producerLevel * 0.03);
+  const fatigueReduction = Math.min(0.4, engineerLevel * 0.03);
+  const progressHours = Math.min(remaining, actual_hours * (1 + speedBonus));
+  c.worked_hours = Number(c.worked_hours || 0) + progressHours;
   if (c.worked_hours >= (c.duration_hours || 0)) {
     c.worked_hours = c.duration_hours || c.worked_hours;
     log(`✅ Contracte completat: ${c.name} (treballats ${c.worked_hours}h/${c.duration_hours}h)`);
@@ -103,13 +114,17 @@ export function workOnContract(contractId, hours) {
       saveState();
     }
   } else {
-    log(`🛠️ Treballat ${actual_hours}h sobre ${c.name} — ${c.worked_hours}/${c.duration_hours}h`);
+    const speedPct = Math.round(speedBonus * 100);
+    const speedText = speedPct ? ` (+${speedPct}%)` : '';
+    log(`🛠️ Treballat ${actual_hours}h${speedText} sobre ${c.name} — ${c.worked_hours}/${c.duration_hours}h`);
   }
 
-  // Accumulate fatigue: short-term increases by hours, chronic accumulates slowly
-  state.player.fatigueShort = (state.player.fatigueShort || 0) + actual_hours;
-  state.player.fatigueChronic = (state.player.fatigueChronic || 0) + actual_hours * 0.05; // 5% of hours become chronic
+  // Accumulate fatigue: reduced by engineer skill
+  const fatigueGain = actual_hours * (1 - fatigueReduction);
+  state.player.fatigueShort = (state.player.fatigueShort || 0) + fatigueGain;
+  state.player.fatigueChronic = (state.player.fatigueChronic || 0) + fatigueGain * 0.05; // 5% of hours become chronic
   if (typeof window !== 'undefined' && typeof window.updateFatigueDerived === 'function') window.updateFatigueDerived();
+  if (applyItemWear) applyItemWear(state.selected.roomIndex, actual_hours, 1);
   if (advanceTime) advanceTime(actual_hours);
   if (renderAll) renderAll();
 }

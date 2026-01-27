@@ -9412,3 +9412,7 @@ const DEMO = {
 
   ]
 };
+
+if (typeof window !== "undefined" && window.PEOPLE) {
+  DEMO.people = window.PEOPLE;
+}

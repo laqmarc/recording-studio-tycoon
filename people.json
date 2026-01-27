@@ -1,0 +1,180 @@
+[
+  {
+    "id": "mus_aria",
+    "name": "Aria Vox",
+    "role": "musician",
+    "instruments": ["vocals"],
+    "genres": ["pop", "rap", "hiphop"],
+    "skill": 74,
+    "vibe": 70,
+    "stamina": 65,
+    "reliability": 82,
+    "fee_per_hour": 25
+  },
+  {
+    "id": "mus_nico",
+    "name": "Nico Strings",
+    "role": "musician",
+    "instruments": ["guitarra"],
+    "genres": ["rock", "pop"],
+    "skill": 78,
+    "vibe": 62,
+    "stamina": 60,
+    "reliability": 76,
+    "fee_per_hour": 28
+  },
+  {
+    "id": "mus_bass",
+    "name": "Lo Bass",
+    "role": "musician",
+    "instruments": ["baix"],
+    "genres": ["rock", "funk"],
+    "skill": 72,
+    "vibe": 66,
+    "stamina": 68,
+    "reliability": 80,
+    "fee_per_hour": 22
+  },
+  {
+    "id": "mus_drummer",
+    "name": "Kiko Drums",
+    "role": "musician",
+    "instruments": ["bombo", "caixa", "tomb", "hh", "oh"],
+    "genres": ["rock", "live"],
+    "skill": 80,
+    "vibe": 58,
+    "stamina": 75,
+    "reliability": 78,
+    "fee_per_hour": 30
+  },
+  {
+    "id": "mus_podcast",
+    "name": "Lia Talk",
+    "role": "musician",
+    "instruments": ["vocals"],
+    "genres": ["podcast"],
+    "skill": 68,
+    "vibe": 82,
+    "stamina": 70,
+    "reliability": 85,
+    "fee_per_hour": 18
+  },
+  {
+    "id": "mus_stream",
+    "name": "Jin Live",
+    "role": "musician",
+    "instruments": ["vocals"],
+    "genres": ["live"],
+    "skill": 70,
+    "vibe": 75,
+    "stamina": 72,
+    "reliability": 79,
+    "fee_per_hour": 20
+  },
+  {
+    "id": "mus_piano",
+    "name": "Maya Keys",
+    "role": "musician",
+    "instruments": ["instruments"],
+    "genres": ["pop", "film_score"],
+    "skill": 82,
+    "vibe": 60,
+    "stamina": 65,
+    "reliability": 84,
+    "fee_per_hour": 35
+  },
+  {
+    "id": "mus_synth",
+    "name": "Echo Synth",
+    "role": "musician",
+    "instruments": ["instruments"],
+    "genres": ["hiphop", "pop"],
+    "skill": 76,
+    "vibe": 70,
+    "stamina": 60,
+    "reliability": 77,
+    "fee_per_hour": 26
+  },
+  {
+    "id": "mus_vocal2",
+    "name": "Sia R",
+    "role": "musician",
+    "instruments": ["vocals"],
+    "genres": ["rap", "any"],
+    "skill": 66,
+    "vibe": 78,
+    "stamina": 62,
+    "reliability": 74,
+    "fee_per_hour": 17
+  },
+  {
+    "id": "prod_neo",
+    "name": "Neo Producer",
+    "role": "producer",
+    "genres": ["hiphop", "pop", "rap"],
+    "skill": 80,
+    "speed": 70,
+    "reliability": 86,
+    "fee_per_hour": 40
+  },
+  {
+    "id": "prod_film",
+    "name": "Nova Score",
+    "role": "producer",
+    "genres": ["film_score"],
+    "skill": 88,
+    "speed": 55,
+    "reliability": 90,
+    "fee_per_hour": 55
+  },
+  {
+    "id": "eng_ore",
+    "name": "Ori Engineer",
+    "role": "engineer",
+    "genres": ["any"],
+    "skill": 78,
+    "speed": 60,
+    "reliability": 85,
+    "fee_per_hour": 35
+  },
+  {
+    "id": "eng_live",
+    "name": "Live Tech",
+    "role": "engineer",
+    "genres": ["live"],
+    "skill": 72,
+    "speed": 65,
+    "reliability": 78,
+    "fee_per_hour": 30
+  },
+  {
+    "id": "edit_mix",
+    "name": "Cut Editor",
+    "role": "editor",
+    "genres": ["any"],
+    "skill": 74,
+    "speed": 72,
+    "reliability": 83,
+    "fee_per_hour": 28
+  },
+  {
+    "id": "master_glow",
+    "name": "Glow Master",
+    "role": "mastering",
+    "genres": ["any"],
+    "skill": 86,
+    "speed": 55,
+    "reliability": 92,
+    "fee_per_hour": 50
+  },
+  {
+    "id": "tech_patch",
+    "name": "Patch Tech",
+    "role": "technician",
+    "genres": ["any"],
+    "skill": 70,
+    "speed": 80,
+    "reliability": 90,
+    "fee_per_hour": 22
+  }
+]

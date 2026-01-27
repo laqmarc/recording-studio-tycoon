@@ -12,10 +12,30 @@ export function saveState() {
         weeklyExpenses: Number((state.finance && state.finance.weeklyExpenses) || 0),
         monthlyExpenses: Number((state.finance && state.finance.monthlyExpenses) || 0)
       },
+      ui: {
+        page: state.ui && state.ui.page || 'rooms',
+        roomLayout: state.ui && state.ui.roomLayout ? state.ui.roomLayout : {},
+        showSignalFlow: !!(state.ui && state.ui.showSignalFlow),
+        ambient: state.ui && state.ui.ambient ? state.ui.ambient : { enabled: false, volume: 0.2 }
+      },
+      staff: state.staff || { engineer: { level: 1 }, producer: { level: 1 } },
+      reputation: state.reputation || { overall: 0, byGenre: {} },
+      roomUpgrades: state.roomUpgrades || {},
+      itemCondition: state.itemCondition ? Array.from(state.itemCondition.entries()) : [],
       inventory: Array.from(state.inventory.entries()),
       roomsInstalled: state.roomsInstalled,
       roomBilling: state.roomBilling,
-      contractsProgress: state.db.contracts.map(c => ({ id: c.id, worked_hours: c.worked_hours || 0, completed: !!c.completed, completed_at: c.completed_at || null }))
+      contractsProgress: state.db.contracts.map(c => ({ id: c.id, worked_hours: c.worked_hours || 0, completed: !!c.completed, completed_at: c.completed_at || null })),
+      contractsMeta: state.db.contracts.map(c => ({
+        id: c.id,
+        base_pay: c.base_pay,
+        target_quality: c.target_quality,
+        deadline_days: c.deadline_days,
+        negotiated: c.negotiated || null,
+        base_terms: c._base_terms || null,
+        assigned_people: Array.isArray(c.assigned_people) ? c.assigned_people : [],
+        assigned_people_map: Array.isArray(c.assigned_people_map) ? c.assigned_people_map : []
+      }))
     };
     localStorage.setItem('studio_tycoon_state_v1', JSON.stringify(payload));
     log('💾 Estat guardat');
@@ -49,10 +69,30 @@ export function loadStateFromStorage() {
     if (Array.isArray(p.roomsInstalled) && p.roomsInstalled.length === state.db.rooms.length) {
       state.roomsInstalled = p.roomsInstalled;
     }
+    if (!state.roomUpgrades || typeof state.roomUpgrades !== 'object') state.roomUpgrades = {};
+    if (state.db && Array.isArray(state.db.rooms)) {
+      state.db.rooms.forEach((r, idx) => {
+        state.roomUpgrades[idx] = state.roomUpgrades[idx] || { acoustic: 0, isolation: 0, slots: 0 };
+      });
+    }
     state.finance = state.finance || {};
     if (p.finance && typeof p.finance === 'object') {
       if (typeof p.finance.weeklyExpenses === 'number') state.finance.weeklyExpenses = p.finance.weeklyExpenses;
       if (typeof p.finance.monthlyExpenses === 'number') state.finance.monthlyExpenses = p.finance.monthlyExpenses;
+    }
+    if (p.ui && typeof p.ui === 'object') {
+      state.ui = state.ui || { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 } };
+      if (typeof p.ui.page === 'string') state.ui.page = p.ui.page;
+      if (p.ui.roomLayout && typeof p.ui.roomLayout === 'object') state.ui.roomLayout = p.ui.roomLayout;
+      if (typeof p.ui.showSignalFlow === 'boolean') state.ui.showSignalFlow = p.ui.showSignalFlow;
+      if (p.ui.ambient && typeof p.ui.ambient === 'object') state.ui.ambient = p.ui.ambient;
+    }
+    if (p.staff && typeof p.staff === 'object') state.staff = p.staff;
+    if (p.reputation && typeof p.reputation === 'object') state.reputation = p.reputation;
+    if (p.roomUpgrades && typeof p.roomUpgrades === 'object') state.roomUpgrades = p.roomUpgrades;
+    if (Array.isArray(p.itemCondition)) {
+      state.itemCondition = new Map();
+      for (const [id, value] of p.itemCondition) state.itemCondition.set(id, Number(value));
     }
     if (typeof state.finance.weeklyExpenses !== 'number') state.finance.weeklyExpenses = 0;
     if (typeof state.finance.monthlyExpenses !== 'number') state.finance.monthlyExpenses = 0;
@@ -76,6 +116,20 @@ export function loadStateFromStorage() {
         }
       }
     }
+    if (Array.isArray(p.contractsMeta)) {
+      for (const cm of p.contractsMeta) {
+        const c = state.db.contracts.find(x => x.id === cm.id);
+        if (c) {
+          if (cm.base_pay != null) c.base_pay = cm.base_pay;
+          if (cm.target_quality != null) c.target_quality = cm.target_quality;
+          if (cm.deadline_days != null) c.deadline_days = cm.deadline_days;
+          c.negotiated = cm.negotiated || null;
+          if (cm.base_terms) c._base_terms = cm.base_terms;
+          if (Array.isArray(cm.assigned_people)) c.assigned_people = cm.assigned_people;
+          if (Array.isArray(cm.assigned_people_map)) c.assigned_people_map = cm.assigned_people_map;
+        }
+      }
+    }
     if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
     log('📥 Estat carregat des de localStorage');
     return true;
@@ -92,6 +146,11 @@ export function clearPersistenceAndReset() {
     state.time = { day: 1, hour: 0, workHoursPerDay: state.time.workHoursPerDay || 8 };
     state.cash = 1000;
     state.inventory.clear();
+    state.ui = { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 } };
+    state.staff = { engineer: { level: 1 }, producer: { level: 1 } };
+    state.reputation = { overall: 0, byGenre: {} };
+    state.roomUpgrades = {};
+    state.itemCondition = new Map();
     ensureRoomsInstalled();
     state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
     for (const c of state.db.contracts) {
@@ -110,8 +169,9 @@ export function loadFromObject(obj) {
   const items = obj.items || [];
   const rooms = obj.rooms || [];
   const contracts = obj.contracts || [];
+  const people = obj.people || [];
 
-  state.db = { items, rooms, contracts };
+  state.db = { items, rooms, contracts, people };
   rebuildIndexes();
   for (const c of state.db.contracts) {
     if (c.worked_hours == null) c.worked_hours = 0;
@@ -120,6 +180,11 @@ export function loadFromObject(obj) {
   ensureRoomsInstalled();
   state.selected.roomIndex = 0;
   state.selected.shopItemId = items.length ? items[0].id : null;
+  state.ui = state.ui || { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 } };
+  state.staff = state.staff || { engineer: { level: 1 }, producer: { level: 1 } };
+  state.reputation = state.reputation || { overall: 0, byGenre: {} };
+  state.roomUpgrades = state.roomUpgrades || {};
+  state.itemCondition = state.itemCondition || new Map();
   // Ensure finance tracking exists after loading demo data
   state.finance = state.finance || { monthlyExpenses: 0 };
   // Start with zero accumulated weekly expenses by default; rooms only incur
@@ -141,6 +206,11 @@ export function resetGame() {
   ensureRoomsInstalled();
   state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
   state.selected.shopItemId = state.db.items.length ? state.db.items[0].id : null;
+  state.ui = { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 } };
+  state.staff = { engineer: { level: 1 }, producer: { level: 1 } };
+  state.reputation = { overall: 0, byGenre: {} };
+  state.roomUpgrades = {};
+  state.itemCondition = new Map();
   log("🔄 Reset: cash=1000, inventari buit, instal·lacions buides.");
   if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
   localStorage.removeItem('studio_tycoon_state_v1');

@@ -1,13 +1,17 @@
 // state.js - global state and data (now an ES module with window compatibility)
 export const state = {
   cash: 1000,
-  db: { items: [], rooms: [], contracts: [] },
+  db: { items: [], rooms: [], contracts: [], people: [] },
   finance: { weeklyExpenses: 0 },
   itemsById: new Map(),
   itemsByCategory: new Map(),
   inventory: new Map(), // id -> qty
   selected: { roomIndex: 0, shopItemId: null },
-  ui: { page: "rooms", roomLayout: {} },
+  ui: { page: "rooms", roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 } },
+  staff: { engineer: { level: 1 }, producer: { level: 1 } },
+  reputation: { overall: 0, byGenre: {} },
+  roomUpgrades: {},
+  itemCondition: new Map(),
   roomsInstalled: [], // per room: { category -> [itemId,...] }
   // billing info per room: { lastBilledDay: number|null }
   roomBilling: [],
@@ -34,15 +38,44 @@ export function ensureRoomsInstalled() {
   state.roomsInstalled = state.db.rooms.map(()=> ({}));
   // initialize billing info array in parallel with roomsInstalled
   state.roomBilling = state.db.rooms.map(()=> ({ lastBilledDay: null, weeksBilled: 0, totalCharged: 0, justInstalled: false }));
+  state.roomUpgrades = state.roomUpgrades || {};
+  state.db.rooms.forEach((r, idx) => {
+    state.roomUpgrades[idx] = state.roomUpgrades[idx] || { acoustic: 0, isolation: 0, slots: 0 };
+  });
 }
 export function installedIds(roomIndex, category) {
   const bag = state.roomsInstalled[roomIndex] || {};
   return bag[category] || [];
 }
+function ensureRoomBase(room) {
+  if (!room) return;
+  if (room._base_acoustic == null) room._base_acoustic = room.base_acoustic || 0;
+  if (room._base_noise == null) room._base_noise = room.noise_floor_db || -60;
+  if (!room._base_slots) room._base_slots = Object.assign({}, room.slots || {});
+}
+
+export function getRoomEffective(roomIndex) {
+  const room = state.db.rooms[roomIndex];
+  if (!room) return { room: null, slots: {}, base_acoustic: 0, noise_floor_db: -60 };
+  ensureRoomBase(room);
+  const upgrades = (state.roomUpgrades && state.roomUpgrades[roomIndex]) || { acoustic: 0, isolation: 0, slots: 0 };
+  const base_acoustic = Number(room._base_acoustic || 0) + Number(upgrades.acoustic || 0) * 5;
+  const noise_floor_db = Number(room._base_noise || -60) - Number(upgrades.isolation || 0) * 2;
+  const slots = Object.assign({}, room._base_slots || room.slots || {});
+  const slotBonus = Number(upgrades.slots || 0);
+  if (slotBonus > 0) {
+    for (const key of Object.keys(slots)) slots[key] = Number(slots[key] || 0) + slotBonus;
+  }
+  return { room, slots, base_acoustic, noise_floor_db };
+}
+
+export function getRoomSlotCapacity(roomIndex, category) {
+  const eff = getRoomEffective(roomIndex);
+  return Number((eff.slots && eff.slots[category]) || 0);
+}
 export function installToRoom(roomIndex, category, itemId) {
   const room = state.db.rooms[roomIndex];
-  const slots = room.slots || {};
-  const max = Number(slots[category] || 0);
+  const max = getRoomSlotCapacity(roomIndex, category);
   const bag = state.roomsInstalled[roomIndex];
   bag[category] = bag[category] || [];
   if (bag[category].length >= max) return { ok:false, reason:`No hi ha slots de ${category} (max ${max})` };
@@ -104,6 +137,8 @@ if (typeof window !== 'undefined') {
   window.rebuildIndexes = rebuildIndexes;
   window.ensureRoomsInstalled = ensureRoomsInstalled;
   window.installedIds = installedIds;
+  window.getRoomEffective = getRoomEffective;
+  window.getRoomSlotCapacity = getRoomSlotCapacity;
   window.installToRoom = installToRoom;
   window.uninstallFromRoom = uninstallFromRoom;
   window.uninstallItemFromRoom = uninstallItemFromRoom;

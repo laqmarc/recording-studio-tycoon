@@ -87,7 +87,18 @@ if (typeof document !== 'undefined') {
   });
 
   // Boot actions
-  if (typeof loadFromObject === 'function' && typeof DEMO !== 'undefined') loadFromObject(DEMO);
+  const bootLoad = () => { if (typeof loadFromObject === 'function' && typeof DEMO !== 'undefined') loadFromObject(DEMO); };
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    if (window.PEOPLE) {
+      bootLoad();
+    } else {
+      window.addEventListener('people-ready', bootLoad, { once: true });
+      // fallback in case people.json fails
+      setTimeout(() => { if (!window.PEOPLE) bootLoad(); }, 800);
+    }
+  } else {
+    bootLoad();
+  }
   if (typeof ensurePlayerDefaults === 'function') ensurePlayerDefaults();
   try { if (typeof loadStateFromStorage === 'function') loadStateFromStorage(); } catch(e) {}
 }
