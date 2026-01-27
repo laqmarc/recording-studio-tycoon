@@ -24,6 +24,7 @@ export function saveState() {
       itemCondition: state.itemCondition ? Array.from(state.itemCondition.entries()) : [],
       market: state.market || { offers: [], lastDayGenerated: 0 },
       schedule: Array.isArray(state.schedule) ? state.schedule : [],
+      hiredPeople: Array.isArray(state.hiredPeople) ? state.hiredPeople : [],
       inventory: Array.from(state.inventory.entries()),
       roomsInstalled: state.roomsInstalled,
       roomBilling: state.roomBilling,
@@ -98,6 +99,7 @@ export function loadStateFromStorage() {
     }
     if (p.market && typeof p.market === 'object') state.market = p.market;
     if (Array.isArray(p.schedule)) state.schedule = p.schedule;
+    if (Array.isArray(p.hiredPeople)) state.hiredPeople = p.hiredPeople;
     if (typeof state.finance.weeklyExpenses !== 'number') state.finance.weeklyExpenses = 0;
     if (typeof state.finance.monthlyExpenses !== 'number') state.finance.monthlyExpenses = 0;
     if (Array.isArray(p.roomBilling) && p.roomBilling.length === state.db.rooms.length) {
@@ -157,6 +159,7 @@ export function clearPersistenceAndReset() {
     state.itemCondition = new Map();
     state.market = { offers: [], lastDayGenerated: 0 };
     state.schedule = [];
+    state.hiredPeople = [];
     ensureRoomsInstalled();
     state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
     for (const c of state.db.contracts) {
@@ -193,6 +196,7 @@ export function loadFromObject(obj) {
   state.itemCondition = state.itemCondition || new Map();
   state.market = state.market || { offers: [], lastDayGenerated: 0 };
   state.schedule = Array.isArray(state.schedule) ? state.schedule : [];
+  state.hiredPeople = Array.isArray(state.hiredPeople) ? state.hiredPeople : [];
   // Ensure finance tracking exists after loading demo data
   state.finance = state.finance || { monthlyExpenses: 0 };
   // Start with zero accumulated weekly expenses by default; rooms only incur
@@ -222,6 +226,7 @@ export function resetGame() {
   state.itemCondition = new Map();
   state.market = { offers: [], lastDayGenerated: 0 };
   state.schedule = [];
+  state.hiredPeople = [];
   log("🔄 Reset: cash=1000, inventari buit, instal·lacions buides.");
   if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
   localStorage.removeItem('studio_tycoon_state_v1');

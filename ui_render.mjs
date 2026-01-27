@@ -226,6 +226,14 @@ function getRiskLevel(contract) {
   return { level: 'low', label: 'Risc baix' };
 }
 
+function formatEta(eta) {
+  const days = Number(eta.days || 0);
+  const hoursRaw = Number(eta.hours || 0);
+  const hours = Math.round(hoursRaw * 10) / 10;
+  if (days > 0) return `${days}d ${hours}h`;
+  return `${hours}h`;
+}
+
 function getStaffLevels() {
   const engineer = (state.staff && state.staff.engineer && state.staff.engineer.level) ? Number(state.staff.engineer.level) : 1;
   const producer = (state.staff && state.staff.producer && state.staff.producer.level) ? Number(state.staff.producer.level) : 1;
@@ -285,6 +293,10 @@ function matchesInstrument(person, instrument) {
   return instruments.includes(instrument);
 }
 
+function isHired(id) {
+  return Array.isArray(state.hiredPeople) && state.hiredPeople.includes(id);
+}
+
 function buildRoleDefs(contract) {
   const req = contract.requirements || {};
   const genre = contract.genre || 'any';
@@ -308,20 +320,23 @@ function buildRoleDefs(contract) {
 
 function pickPerson(role, genre, instrument, used) {
   const people = (state.db && Array.isArray(state.db.people)) ? state.db.people : [];
-  const filtered = people.filter(p => p.role === role && !used.has(p.id));
+  const filtered = people.filter(p => p.role === role && isHired(p.id) && !used.has(p.id));
   const ranked = (list) => list.sort((a, b) => Number(b.skill || 0) - Number(a.skill || 0) || Number(b.reliability || 0) - Number(a.reliability || 0));
   let list = filtered.filter(p => matchesGenre(p, genre) && matchesInstrument(p, instrument));
   if (!list.length) list = filtered.filter(p => matchesGenre(p, genre));
   if (!list.length) list = filtered;
   list = ranked(list);
-  return list[0] || null;
+  if (list[0]) return list[0];
+  if (role !== 'musician') return getSelfPerson(role);
+  return null;
 }
 
 function getPeopleOptions(role, genre, instrument) {
   const people = (state.db && Array.isArray(state.db.people)) ? state.db.people : [];
-  const filtered = people.filter(p => p.role === role && matchesGenre(p, genre) && matchesInstrument(p, instrument));
-  const fallback = people.filter(p => p.role === role && matchesGenre(p, genre));
-  const list = filtered.length ? filtered : fallback.length ? fallback : people.filter(p => p.role === role);
+  const hired = people.filter(p => isHired(p.id));
+  const filtered = hired.filter(p => p.role === role && matchesGenre(p, genre) && matchesInstrument(p, instrument));
+  const fallback = hired.filter(p => p.role === role && matchesGenre(p, genre));
+  const list = filtered.length ? filtered : fallback.length ? fallback : hired.filter(p => p.role === role);
   const sorted = list.sort((a,b)=>Number(b.skill||0)-Number(a.skill||0));
   if (role !== 'musician') {
     const self = getSelfPerson(role);
@@ -1044,7 +1059,7 @@ export function renderRooms() {
         const remaining = Math.max(0, total - worked);
         const pct = total ? Math.round((worked/total)*100) : 0;
         const eta = getContractETA_impl(c);
-        const etaText = remaining === 0 ? 'Ready' : (eta.days ? `${eta.days}d ${eta.hours}h` : `${eta.hours}h`);
+        const etaText = remaining === 0 ? 'Ready' : formatEta(eta);
         const isDone = Boolean(c.completed);
 
         const card = document.createElement('div');
@@ -1128,6 +1143,9 @@ export function renderRooms() {
           select.add(new Option('Auto', ''));
           const options = getPeopleOptions(def.role, genre, def.instrument);
           options.forEach(p => select.add(new Option(`${p.name} (${p.skill})`, p.id)));
+          if (!options.length && def.role === 'musician') {
+            select.add(new Option('No tens musics contractats', ''));
+          }
 
           const entry = assignedMap.find(e => e && e.role === def.role && (e.instrument || '') === (def.instrument || ''));
           const currentId = entry && entry.id ? entry.id : '';
@@ -1313,6 +1331,90 @@ export function renderRooms() {
         offersEl.appendChild(card);
       }
     }
+  }
+
+  const personnelPanel = document.getElementById('personnelPanel');
+  if (personnelPanel) {
+    clearChildren(personnelPanel);
+    const people = (state.db && Array.isArray(state.db.people)) ? state.db.people : [];
+    const hiredSet = new Set(Array.isArray(state.hiredPeople) ? state.hiredPeople : []);
+    const activeAssigned = new Set();
+    try {
+      for (const c of state.db.contracts || []) {
+        if (c.completed) continue;
+        if (Array.isArray(c.assigned_people)) c.assigned_people.forEach(id => activeAssigned.add(id));
+      }
+    } catch (e) {}
+
+    const grid = document.createElement('div'); grid.className = 'personnel-grid';
+
+    const hiredSection = document.createElement('div'); hiredSection.className = 'personnel-section';
+    const hiredTitle = document.createElement('div'); hiredTitle.className = 'personnel-title'; hiredTitle.textContent = 'Contractats';
+    const hiredList = document.createElement('div'); hiredList.className = 'personnel-list';
+    const hiredPeople = people.filter(p => hiredSet.has(p.id));
+    if (!hiredPeople.length) {
+      const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'No tens personal contractat.';
+      hiredList.appendChild(empty);
+    } else {
+      for (const p of hiredPeople) {
+        const card = document.createElement('div'); card.className = 'personnel-card';
+        const row = document.createElement('div'); row.className = 'personnel-row';
+        const name = document.createElement('b'); name.textContent = p.name;
+        const role = document.createElement('span'); role.className = 'pill'; role.textContent = p.role;
+        row.appendChild(name); row.appendChild(role);
+        const meta = document.createElement('div'); meta.className = 'personnel-meta';
+        const instr = p.instruments && p.instruments.length ? p.instruments.join(', ') : '';
+        meta.textContent = `Skill ${p.skill || 0} · ${instr} · ${euro(p.fee_per_hour || 0)}/h`;
+        const actions = document.createElement('div'); actions.className = 'offer-actions';
+        const btn = document.createElement('button'); btn.className = 'btn2'; btn.textContent = activeAssigned.has(p.id) ? 'Assignat' : 'Descontractar';
+        btn.disabled = activeAssigned.has(p.id);
+        btn.addEventListener('click', () => {
+          state.hiredPeople = (state.hiredPeople || []).filter(id => id !== p.id);
+          if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
+          renderAll();
+        });
+        actions.appendChild(btn);
+        card.appendChild(row); card.appendChild(meta); card.appendChild(actions);
+        hiredList.appendChild(card);
+      }
+    }
+    hiredSection.appendChild(hiredTitle); hiredSection.appendChild(hiredList);
+
+    const availableSection = document.createElement('div'); availableSection.className = 'personnel-section';
+    const availTitle = document.createElement('div'); availTitle.className = 'personnel-title'; availTitle.textContent = 'Disponibles';
+    const availList = document.createElement('div'); availList.className = 'personnel-list';
+    const availablePeople = people.filter(p => !hiredSet.has(p.id));
+    if (!availablePeople.length) {
+      const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'No hi ha mes personal.';
+      availList.appendChild(empty);
+    } else {
+      for (const p of availablePeople) {
+        const card = document.createElement('div'); card.className = 'personnel-card';
+        const row = document.createElement('div'); row.className = 'personnel-row';
+        const name = document.createElement('b'); name.textContent = p.name;
+        const role = document.createElement('span'); role.className = 'pill'; role.textContent = p.role;
+        row.appendChild(name); row.appendChild(role);
+        const meta = document.createElement('div'); meta.className = 'personnel-meta';
+        const instr = p.instruments && p.instruments.length ? p.instruments.join(', ') : '';
+        meta.textContent = `Skill ${p.skill || 0} · ${instr} · ${euro(p.fee_per_hour || 0)}/h`;
+        const actions = document.createElement('div'); actions.className = 'offer-actions';
+        const btn = document.createElement('button'); btn.className = 'btn2 btnOk'; btn.textContent = 'Contractar';
+        btn.addEventListener('click', () => {
+          state.hiredPeople = Array.isArray(state.hiredPeople) ? state.hiredPeople : [];
+          if (!state.hiredPeople.includes(p.id)) state.hiredPeople.push(p.id);
+          if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
+          renderAll();
+        });
+        actions.appendChild(btn);
+        card.appendChild(row); card.appendChild(meta); card.appendChild(actions);
+        availList.appendChild(card);
+      }
+    }
+    availableSection.appendChild(availTitle); availableSection.appendChild(availList);
+
+    grid.appendChild(hiredSection);
+    grid.appendChild(availableSection);
+    personnelPanel.appendChild(grid);
   }
 
   const scheduleBoard = document.getElementById('scheduleBoard');
@@ -1895,42 +1997,25 @@ export function renderRight() {
 
   // (Per-room billing history removed from room details)
 
-  const invCats = Array.from(state.itemsByCategory.keys()).sort();
   const selCat = document.getElementById("selInvCategory");
-  const prevSelCat = selCat.value;
-  // repopulate select
-  selCat.options.length = 0;
-  for (const c of invCats) selCat.add(new Option(c, c));
-  if (prevSelCat && invCats.includes(prevSelCat)) selCat.value = prevSelCat;
-  else if (invCats.length) selCat.value = invCats[0];
+  if (selCat && selCat.parentElement) selCat.parentElement.style.display = 'none';
 
-  const cat = selCat.value;
-  const owned = (state.itemsByCategory.get(cat) || []).filter(it => invQty(it.id) > 0);
+  const owned = Array.from(state.inventory.keys()).map(id => state.itemsById.get(id)).filter(Boolean);
 
   const selItem = document.getElementById("selInvItem");
-  const prevSelItem = selItem.value;
-  selItem.options.length = 0;
-  for (const it of owned) selItem.add(new Option(`${it.name} (x${invQty(it.id)})`, it.id));
-  if (prevSelItem && owned.find(o=>o.id === prevSelItem)) selItem.value = prevSelItem;
-  else if (!selItem.value && owned.length) selItem.value = owned[0].id;
 
   const invList = document.getElementById('inventoryList');
   if (invList) {
     clearChildren(invList);
     if (!owned.length) {
-      const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'Inventari buit en aquesta categoria.';
+      const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'Inventari buit.';
       invList.appendChild(empty);
     } else {
       for (const it of owned) {
         const qty = invQty(it.id);
         const card = document.createElement('div');
-        const isSelected = selItem && selItem.value === it.id;
-        card.className = `card inventory-card${isSelected ? ' active' : ''}`;
+        card.className = 'card inventory-card';
         card.setAttribute('draggable', 'true');
-        card.addEventListener('click', () => {
-          if (selItem) selItem.value = it.id;
-          renderRight();
-        });
         card.addEventListener('dragstart', (e) => {
           setDragState(it.id, 'inventory', it.category);
           card.classList.add('dragging');

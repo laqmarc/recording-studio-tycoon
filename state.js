@@ -14,6 +14,7 @@ export const state = {
   itemCondition: new Map(),
   market: { offers: [], lastDayGenerated: 0 },
   schedule: [],
+  hiredPeople: [],
   roomsInstalled: [], // per room: { category -> [itemId,...] }
   // billing info per room: { lastBilledDay: number|null }
   roomBilling: [],

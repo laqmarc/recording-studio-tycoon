@@ -1073,6 +1073,51 @@ input, select {
 
 .schedule-item:active { cursor: grabbing; }
 
+.personnel-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.personnel-section {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(255,255,255,0.04);
+}
+
+.personnel-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.personnel-list {
+  display: grid;
+  gap: 6px;
+}
+
+.personnel-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+  background: rgba(255,255,255,0.04);
+}
+
+.personnel-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+
+.personnel-meta {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
 .kpi { display: flex; gap: 10px; flex-wrap: wrap; }
 .header-kpis { display: flex; align-items: center; gap: 12px; }
 .kpi .box { border: 1px solid var(--line); border-radius: 14px; padding: 10px; background: rgba(255,255,255,0.08); min-width: inherit; }
