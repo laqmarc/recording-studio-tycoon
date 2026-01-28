@@ -191,13 +191,41 @@ export function simulateContract(contractId) {
     log(`⏰ Contracte entregat tard! Penalització aplicada. Payout reduït.`);
   }
   // Talent fees
+  const resolvePerson = (id) => {
+    if (!id) return null;
+    if (String(id).startsWith('self_')) {
+      const role = String(id).replace('self_', '');
+      const eng = (state.staff && state.staff.engineer && state.staff.engineer.level) ? Number(state.staff.engineer.level) : 1;
+      const prod = (state.staff && state.staff.producer && state.staff.producer.level) ? Number(state.staff.producer.level) : 1;
+      let skill = 55;
+      if (role === 'engineer') skill = 55 + eng * 5;
+      else if (role === 'producer') skill = 55 + prod * 5;
+      else if (role === 'editor') skill = 50 + eng * 4;
+      else if (role === 'mastering') skill = 55 + eng * 4;
+      else if (role === 'technician') skill = 50 + eng * 3;
+      return { id, role, name: 'Jo', skill, fee_per_hour: 0 };
+    }
+    if (state.db && Array.isArray(state.db.people)) return state.db.people.find(p => p.id === id) || null;
+    return null;
+  };
+
   let talent_cost = 0;
+  const feeLines = [];
+  const duration = Number(contract.duration_hours || 0);
   try {
-    if (Array.isArray(contract.assigned_people)) {
-      for (const id of contract.assigned_people) {
-        const p = resolvePerson(id);
-        if (p) talent_cost += Number(p.fee_per_hour || 0) * Number(contract.duration_hours || 0);
-      }
+    const entries = Array.isArray(contract.assigned_people_map) && contract.assigned_people_map.length
+      ? contract.assigned_people_map
+      : (Array.isArray(contract.assigned_people) ? contract.assigned_people.map(id => ({ id })) : []);
+    for (const entry of entries) {
+      if (!entry || !entry.id) continue;
+      const p = resolvePerson(entry.id);
+      if (!p) continue;
+      const fee = Number(p.fee_per_hour || 0);
+      const cost = fee * duration;
+      talent_cost += cost;
+      const roleLabel = entry.role || p.role || 'talent';
+      const inst = entry.instrument ? ` (${entry.instrument})` : '';
+      feeLines.push(`${roleLabel}: ${p.name || entry.id}${inst} · ${euro(fee)}/h · ${euro(cost)}`);
     }
   } catch (e) {}
   payout = Math.max(0, Math.round(payout - talent_cost));
@@ -214,7 +242,8 @@ export function simulateContract(contractId) {
     state.reputation.byGenre[genreKey] = (state.reputation.byGenre[genreKey] || 0) + repGain;
   } catch (e) {}
 
-  log(`🎬 Sessió: ${contract.name}\n- Qualitat: ${res.final_quality.toFixed(1)}\n- Latència: ${res.latency_ms.toFixed(1)} ms\n- Happiness: ${res.happiness.toFixed(1)}\n- Payout: ${euro(payout)}\n- XP: ${xpAward}\n- Penalitzacions: Soroll ${res.noise_penalty.toFixed(1)}, Fatiga ${res.fatigue_penalty.toFixed(1)}, Estat equips ${res.condition_penalty.toFixed(1)}\n- Bonus: Talent ${res.talent_bonus.toFixed(1)}, Sinergia ${res.synergy_bonus.toFixed(1)}\n- Fees talent: ${euro(talent_cost)}\n`);
+  const feeBlock = feeLines.length ? `\n- Talent:\n  - ${feeLines.join('\n  - ')}` : '\n- Talent: (Auto/Jo)';
+  log(`🎬 Sessió: ${contract.name}\n- Qualitat: ${res.final_quality.toFixed(1)}\n- Latència: ${res.latency_ms.toFixed(1)} ms\n- Happiness: ${res.happiness.toFixed(1)}\n- Payout: ${euro(payout)}\n- XP: ${xpAward}\n- Penalitzacions: Soroll ${res.noise_penalty.toFixed(1)}, Fatiga ${res.fatigue_penalty.toFixed(1)}, Estat equips ${res.condition_penalty.toFixed(1)}\n- Bonus: Talent ${res.talent_bonus.toFixed(1)}, Sinergia ${res.synergy_bonus.toFixed(1)}${feeBlock}\n- Fees talent: ${euro(talent_cost)}\n`);
 
   if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
   if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();

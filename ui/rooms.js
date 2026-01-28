@@ -205,7 +205,8 @@ export function renderRooms(options = {}) {
           const select = document.createElement('select');
           select.dataset.role = def.role;
           select.dataset.instrument = def.instrument || '';
-          select.add(new Option('Auto', ''));
+          const autoLabel = def.role === 'musician' ? 'Auto' : 'Auto (Jo)';
+          select.add(new Option(autoLabel, ''));
           const optionsList = getPeopleOptions(def.role, genre, def.instrument);
           optionsList.forEach(p => select.add(new Option(`${p.name} (${p.skill})`, p.id)));
           if (!optionsList.length && def.role === 'musician') {
