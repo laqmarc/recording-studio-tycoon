@@ -1,51 +1,51 @@
 # Recording Studio Tycoon
 
-Prototype jugable per provar mecàniques de gestió d'un estudi de grabació de so: comprar, instal·lar equips, treballar contractes i gestionar costos i fatiga.
+Prototype jugable per gestionar un estudi: sales, inventari, clients, calendaris, personal, reputacio i costos.
 
-**Inici ràpid**
-- Obrir [index.html](index.html) en un navegador modern (o servir el directori amb un servidor estàtic).
+**Inici rapid**
+- Obre `index.html` en un navegador modern (o serveix el directori amb un servidor static).
 
 **Com jugar (resum)**
-- Compra items des del panell `Shop`.
-- A la secció `Sala + Inventari` selecciona una sala, tria un item del teu inventari i fes clic `Instal·lar a la sala` per instal·lar-lo.
-- Quan instal·les el primer equip d'una sala comencen els costos: es cobra la setmana sencera (`price_per_week`) en la primera instal·lació i després cada 7 dies.
-- Usa consumibles (`coffee`, `good_bed`) des del teu inventari mitjançant el botó `Usar`.
-- Prem `Passar dia` per avançar el dia; el joc aplica recuperació de fatiga i gestiona cobraments setmanals.
-- Treballa en `Contracts` des de la llista esquerra per guanyar diners i experiència; la fatiga redueix la qualitat.
+- `Shop`: compra equips i afegeix-los a inventari.
+- `Sales`: selecciona una sala i instal·la equips amb drag & drop al floorplan.
+- `Feines`: accepta ofertes i planifica la feina al calendari (drag & drop).
+- `Personal`: contracta musics i tecnics per poder assignar-los manualment.
 
-**Detalls de jugabilitat**
-- Fatiga: el jugador té `fatigueShort` i `fatigueChronic`; el valor `player.fatigue` és derivat. Cada nit es recupera un 50% de la fatiga curta i la crònica decau lentament.
-- Consumibles:
-  - `coffee`: redueix la fatiga curta immediatament.
-  - `good_bed`: augmenta la recuperació de la següent nit.
-- Economies i facturació:
-  - No pagues per una sala fins que hi instal·les alguna cosa.
-  - En la primera instal·lació d'una sala es cobra la setmana sencera (full `price_per_week`).
-  - Cada 7 dies es cobra novament la setmana sencera; els cobrament acumulats apareixen a `Total facturat`.
+**Sistemes principals**
+- **Sales + inventari**: drag & drop d'inventari a la sala; els slots limiten quins items pots instal·lar.
+- **Contractes + calendari**: les feines avancen via calendari. Programa hores i avanca el temps per completar-les.
+- **Clients i ofertes**: generacio diaria d'ofertes segons reputacio, nivell i sales desbloquejades.
+- **Personal i talent**: assigns manuals dins de “Detalls”. Per defecte es fa servir “Jo” (0 EUR/h). Si assigns un professional, es cobra el fee al completar la feina.
+- **Reputacio**: puja per genere quan completes feines i millora la qualitat de les ofertes.
+- **Manteniment**: desgast d'equip i cost de reparacio sota l'inventari de la sala.
+- **Fatiga**: afecta la qualitat. Es recupera cada nit i es mostra a KPIs.
+- **Economia**: costos diaris + facturacio setmanal de sales actives. Tot queda reflectit a KPIs.
 
 **UI i controls**
-- Les KPI principals estan al header: `Cash`, `Inventari`, `Sala slots`, `Temps`, `Nivell`, `Fatiga`, `Despesa setmanal` i `Total facturat`.
-- Les controls d'inventari i botons d'acció estan fixats a la part inferior (desktop) per a accés ràpid.
-- Les notificacions mostren els cobrament i altres esdeveniments.
+- Contractes compactes: a la columna d'esquerra ocupen poc espai; fes clic a **Detalls** per desplegar informació.
+- Calendari de 7 dies amb drag & drop per planificar.
+- KPIs principals al header per control rapid.
+
+**Logs de sessio**
+- Quan completes una feina, el log mostra qualitat, penalitzacions i un detall del talent assignat (rol, nom, EUR/h i cost total).
 
 **Fitxers clau**
-- `index.html` — entrada i estructura principal.
-- `state.js` — estat global i funcions d'índex.
-- `helpers.js` — utilitats, `advanceTime`, facturació (`applyDailyRoomCosts`), consumibles.
-- `persistence.js` — càrrega/guardat (localStorage) i inicialització de demo.
-- `ui_render.mjs` — render ESM del DOM (mostra KPIs i controls).
-- `actions.js` — handlers d'acció (comprar, instal·lar, treballar).
-- `demo.js` — dades de demostració (rooms, items, contracts).
+- `index.html` — estructura principal.
+- `ui_render.mjs` — orquestracio de render.
+- `ui/` — mòduls per sales, shop, personal, calendari, etc.
+- `state.js` — estat global.
+- `helpers.js` — temps, economia, fatiga i utilitats.
+- `client_market.js` — generacio d'ofertes.
+- `simulation.js` — simulacio de feines i payouts.
+- `persistence.js` — guardar/carregar a localStorage.
 
-**Desenvolupament i tests**
-- Instal·lar dependències i córrer tests:
-
+**Tests**
 ```bash
 npm install
 npm test
 ```
 
-- Les proves estan a `__tests__/` i el codi per a tests es troba a `lib/`.
+Els tests viuen a `__tests__/` i cobreixen UI, simulacio, accions, persistencia i helpers.
 
 
 
