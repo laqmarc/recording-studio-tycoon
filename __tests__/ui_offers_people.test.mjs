@@ -9,7 +9,7 @@ describe('ui/offers', () => {
     const stateMod = await import('../state.js');
     state = stateMod.state;
     document.body.innerHTML = `<div id="clientOffers"></div>`;
-    state.db.rooms = [{ id: 'r1', type: 'control_room' }];
+    state.db.rooms = [];
     state.roomsInstalled = [{}];
     state.itemsById = new Map();
     state.selected.roomIndex = 0;

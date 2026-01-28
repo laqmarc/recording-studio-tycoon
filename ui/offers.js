@@ -2,12 +2,23 @@ import { state } from '../state.js';
 import { euro } from '../helpers.js';
 import { clearChildren } from './shared.js';
 import { getRequirementsElement } from './requirements.js';
+import { ensureRoomOffers } from '../client_market.js';
 
 export function renderOffers() {
   const offersEl = document.getElementById('clientOffers');
   if (!offersEl) return;
   clearChildren(offersEl);
-  const offers = (state.market && Array.isArray(state.market.offers)) ? state.market.offers : [];
+  const room = state.db && Array.isArray(state.db.rooms) ? state.db.rooms[state.selected.roomIndex] : null;
+  const roomType = room ? room.type : null;
+  if (roomType) ensureRoomOffers(roomType, 2);
+  const offers = (state.market && Array.isArray(state.market.offers))
+    ? state.market.offers.filter(o => {
+      const reqType = o.requirements && o.requirements.room_type;
+      if (!roomType) return true;
+      if (!reqType) return true;
+      return reqType === roomType;
+    })
+    : [];
   if (!offers.length) {
     const empty = document.createElement('div');
     empty.className = 'muted';

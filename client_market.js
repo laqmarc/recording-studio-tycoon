@@ -16,6 +16,17 @@ const TEMPLATE_POOL = [
   },
   {
     type: 'recording',
+    room_type: 'control_room',
+    unlock_level: 2,
+    allowed_genres: ['any'],
+    base_pay: [140, 320],
+    target_quality: [58, 75],
+    duration: [3, 6],
+    deadline: [2, 5],
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, cable: 2, mic_stand: 1, software: 1 }
+  },
+  {
+    type: 'recording',
     room_type: 'vocal_booth',
     unlock_level: 3,
     allowed_genres: ['pop', 'rap', 'hiphop', 'podcast'],
@@ -24,6 +35,18 @@ const TEMPLATE_POOL = [
     duration: [2, 4],
     deadline: [1, 3],
     min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, pop_filter: 1, mic_stand: 1 },
+    mic_types: ['vocals']
+  },
+  {
+    type: 'recording',
+    room_type: 'vocal_booth',
+    unlock_level: 4,
+    allowed_genres: ['pop', 'rap', 'hiphop', 'podcast'],
+    base_pay: [180, 340],
+    target_quality: [62, 80],
+    duration: [2, 5],
+    deadline: [1, 3],
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, pop_filter: 1, mic_stand: 1, shock_mount: 1 },
     mic_types: ['vocals']
   },
   {
@@ -39,6 +62,18 @@ const TEMPLATE_POOL = [
     mic_types: ['guitarra', 'caixa', 'oh']
   },
   {
+    type: 'recording',
+    room_type: 'live_room',
+    unlock_level: 5,
+    allowed_genres: ['rock', 'live'],
+    base_pay: [300, 520],
+    target_quality: [64, 82],
+    duration: [5, 8],
+    deadline: [2, 5],
+    min_items: { mic: 6, preamp_multi: 1, interface: 1, headphones: 4, cable: 10, mic_stand: 6, multicore: 1 },
+    mic_types: ['guitarra', 'caixa', 'oh', 'bombo']
+  },
+  {
     type: 'mix',
     room_type: 'control_room',
     unlock_level: 1,
@@ -48,17 +83,6 @@ const TEMPLATE_POOL = [
     duration: [3, 5],
     deadline: [2, 4],
     min_items: { monitor: 2, acoustic_treatment: 2 }
-  },
-  {
-    type: 'mix',
-    room_type: 'control_room',
-    unlock_level: 1,
-    allowed_genres: ['any'],
-    base_pay: [120, 220],
-    target_quality: [55, 70],
-    duration: [2, 4],
-    deadline: [2, 4],
-    min_items: { monitor: 2, software_daw: 1 }
   },
   {
     type: 'mix',
@@ -73,6 +97,17 @@ const TEMPLATE_POOL = [
   },
   {
     type: 'mix',
+    room_type: 'control_room',
+    unlock_level: 4,
+    allowed_genres: ['any'],
+    base_pay: [220, 380],
+    target_quality: [65, 80],
+    duration: [4, 6],
+    deadline: [2, 4],
+    min_items: { monitor: 2, acoustic_treatment: 3, software_mix_master: 1 }
+  },
+  {
+    type: 'mix',
     room_type: 'mastering_suite',
     unlock_level: 6,
     allowed_genres: ['any'],
@@ -81,6 +116,17 @@ const TEMPLATE_POOL = [
     duration: [3, 5],
     deadline: [2, 4],
     min_items: { monitor: 2, acoustic_treatment: 4, software_daw: 1 }
+  },
+  {
+    type: 'mix',
+    room_type: 'mastering_suite',
+    unlock_level: 7,
+    allowed_genres: ['any'],
+    base_pay: [260, 460],
+    target_quality: [68, 86],
+    duration: [4, 6],
+    deadline: [2, 4],
+    min_items: { monitor: 2, acoustic_treatment: 6, software_mix_master: 1 }
   },
   {
     type: 'master',
@@ -95,6 +141,17 @@ const TEMPLATE_POOL = [
   },
   {
     type: 'master',
+    room_type: 'control_room',
+    unlock_level: 5,
+    allowed_genres: ['any'],
+    base_pay: [220, 400],
+    target_quality: [66, 84],
+    duration: [3, 4],
+    deadline: [1, 3],
+    min_items: { monitor: 2, acoustic_treatment: 5, software_mix_master: 1 }
+  },
+  {
+    type: 'master',
     room_type: 'mastering_suite',
     unlock_level: 7,
     allowed_genres: ['any'],
@@ -103,6 +160,17 @@ const TEMPLATE_POOL = [
     duration: [2, 4],
     deadline: [1, 3],
     min_items: { monitor: 2, acoustic_treatment: 6, software_daw: 1 }
+  },
+  {
+    type: 'master',
+    room_type: 'mastering_suite',
+    unlock_level: 8,
+    allowed_genres: ['any'],
+    base_pay: [300, 540],
+    target_quality: [70, 90],
+    duration: [3, 5],
+    deadline: [1, 3],
+    min_items: { monitor: 2, acoustic_treatment: 8, software_mix_master: 1 }
   },
   {
     type: 'production',
@@ -114,6 +182,17 @@ const TEMPLATE_POOL = [
     duration: [4, 8],
     deadline: [3, 6],
     min_items: { interface: 1, monitor: 2 }
+  },
+  {
+    type: 'production',
+    room_type: 'control_room',
+    unlock_level: 7,
+    allowed_genres: ['pop', 'hiphop', 'film_score'],
+    base_pay: [320, 700],
+    target_quality: [62, 80],
+    duration: [5, 9],
+    deadline: [3, 6],
+    min_items: { interface: 1, monitor: 2, software: 1, midi_controller: 1 }
   },
   {
     type: 'streaming',
@@ -128,14 +207,364 @@ const TEMPLATE_POOL = [
   },
   {
     type: 'streaming',
+    room_type: 'streaming_room',
+    unlock_level: 4,
+    allowed_genres: ['live', 'podcast'],
+    base_pay: [160, 300],
+    target_quality: [58, 74],
+    duration: [3, 5],
+    deadline: [1, 3],
+    min_items: { interface: 1, mic: 1, headphones: 1, monitor: 1 }
+  },
+  {
+    type: 'streaming',
+    room_type: 'streaming_room',
+    unlock_level: 6,
+    allowed_genres: ['live'],
+    base_pay: [220, 380],
+    target_quality: [60, 78],
+    duration: [3, 6],
+    deadline: [1, 3],
+    min_items: { interface: 1, mic: 2, headphones: 2, monitor: 1 }
+  },
+  {
+    type: 'streaming',
     room_type: 'control_room',
-    unlock_level: 3,
-    allowed_genres: ['podcast'],
-    base_pay: [130, 260],
+    unlock_level: 2,
+    allowed_genres: ['podcast', 'live'],
+    base_pay: [140, 260],
     target_quality: [56, 72],
     duration: [2, 4],
     deadline: [1, 3],
-    min_items: { interface: 1, mic: 1, headphones: 1 }
+    min_items: { interface: 1, mic: 1, headphones: 1, monitor: 1 }
+  },
+  {
+    type: 'recording',
+    room_type: 'streaming_room',
+    unlock_level: 4,
+    allowed_genres: ['podcast'],
+    base_pay: [120, 220],
+    target_quality: [55, 70],
+    duration: [2, 4],
+    deadline: [1, 3],
+    min_items: { mic: 2, interface: 1, headphones: 2 }
+  },
+  // Vocal booth expansion
+  {
+    type: 'recording',
+    room_type: 'vocal_booth',
+    unlock_level: 3,
+    allowed_genres: ['rap', 'hiphop'],
+    base_pay: [160, 320],
+    target_quality: [60, 78],
+    duration: [2, 4],
+    deadline: [1, 3],
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, pop_filter: 1, mic_stand: 1 },
+    mic_types: ['vocals']
+  },
+  {
+    type: 'recording',
+    room_type: 'vocal_booth',
+    unlock_level: 4,
+    allowed_genres: ['pop'],
+    base_pay: [180, 340],
+    target_quality: [62, 80],
+    duration: [3, 5],
+    deadline: [1, 3],
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, pop_filter: 1, shock_mount: 1, mic_stand: 1 },
+    mic_types: ['vocals']
+  },
+  {
+    type: 'recording',
+    room_type: 'vocal_booth',
+    unlock_level: 4,
+    allowed_genres: ['podcast'],
+    base_pay: [140, 240],
+    target_quality: [58, 74],
+    duration: [2, 4],
+    deadline: [1, 2],
+    min_items: { mic: 1, interface: 1, headphones: 1, pop_filter: 1, mic_stand: 1 },
+    mic_types: ['vocals']
+  },
+  {
+    type: 'recording',
+    room_type: 'vocal_booth',
+    unlock_level: 6,
+    allowed_genres: ['pop', 'rap', 'hiphop'],
+    base_pay: [200, 380],
+    target_quality: [64, 82],
+    duration: [3, 6],
+    deadline: [2, 4],
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, pop_filter: 1, shock_mount: 1, mic_stand: 1, acoustic_treatment: 2 },
+    mic_types: ['vocals']
+  },
+  {
+    type: 'recording',
+    room_type: 'vocal_booth',
+    unlock_level: 7,
+    allowed_genres: ['any'],
+    base_pay: [220, 420],
+    target_quality: [66, 84],
+    duration: [3, 6],
+    deadline: [2, 4],
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, pop_filter: 1, shock_mount: 1, mic_stand: 1, acoustic_treatment: 4 },
+    mic_types: ['vocals']
+  },
+  {
+    type: 'streaming',
+    room_type: 'vocal_booth',
+    unlock_level: 4,
+    allowed_genres: ['podcast', 'live'],
+    base_pay: [120, 220],
+    target_quality: [56, 72],
+    duration: [2, 4],
+    deadline: [1, 3],
+    min_items: { interface: 1, mic: 1, headphones: 1, pop_filter: 1, mic_stand: 1 }
+  },
+  {
+    type: 'streaming',
+    room_type: 'vocal_booth',
+    unlock_level: 5,
+    allowed_genres: ['podcast'],
+    base_pay: [140, 240],
+    target_quality: [58, 74],
+    duration: [2, 4],
+    deadline: [1, 3],
+    min_items: { interface: 1, mic: 1, headphones: 1, pop_filter: 1, mic_stand: 1, headphone_amp: 1 }
+  },
+  {
+    type: 'streaming',
+    room_type: 'vocal_booth',
+    unlock_level: 6,
+    allowed_genres: ['live'],
+    base_pay: [160, 280],
+    target_quality: [60, 76],
+    duration: [3, 5],
+    deadline: [1, 3],
+    min_items: { interface: 1, mic: 1, headphones: 1, pop_filter: 1, mic_stand: 1, acoustic_treatment: 2 }
+  },
+  // Live room expansion
+  {
+    type: 'recording',
+    room_type: 'live_room',
+    unlock_level: 3,
+    allowed_genres: ['rock'],
+    base_pay: [240, 420],
+    target_quality: [60, 78],
+    duration: [4, 7],
+    deadline: [2, 5],
+    min_items: { mic: 5, preamp_multi: 1, interface: 1, headphones: 3, cable: 8, mic_stand: 5 }
+  },
+  {
+    type: 'recording',
+    room_type: 'live_room',
+    unlock_level: 4,
+    allowed_genres: ['live'],
+    base_pay: [260, 440],
+    target_quality: [62, 80],
+    duration: [4, 7],
+    deadline: [2, 5],
+    min_items: { mic: 6, preamp_multi: 1, interface: 1, headphones: 4, cable: 10, mic_stand: 6, mic_accessory: 2 }
+  },
+  {
+    type: 'recording',
+    room_type: 'live_room',
+    unlock_level: 5,
+    allowed_genres: ['rock', 'live'],
+    base_pay: [300, 520],
+    target_quality: [64, 82],
+    duration: [5, 8],
+    deadline: [2, 5],
+    min_items: { mic: 8, preamp_multi: 1, interface: 1, headphones: 4, cable: 12, mic_stand: 8, multicore: 1 }
+  },
+  {
+    type: 'recording',
+    room_type: 'live_room',
+    unlock_level: 6,
+    allowed_genres: ['rock'],
+    base_pay: [320, 560],
+    target_quality: [66, 84],
+    duration: [5, 9],
+    deadline: [2, 5],
+    min_items: { mic: 10, preamp_multi: 2, interface: 1, headphones: 5, cable: 14, mic_stand: 10, mic_accessory: 4 }
+  },
+  {
+    type: 'recording',
+    room_type: 'live_room',
+    unlock_level: 7,
+    allowed_genres: ['live'],
+    base_pay: [340, 620],
+    target_quality: [66, 86],
+    duration: [6, 9],
+    deadline: [2, 5],
+    min_items: { mic: 12, preamp_multi: 2, interface: 1, headphones: 6, cable: 16, mic_stand: 12, multicore: 1 }
+  },
+  {
+    type: 'recording',
+    room_type: 'live_room',
+    unlock_level: 8,
+    allowed_genres: ['rock', 'live'],
+    base_pay: [380, 700],
+    target_quality: [68, 88],
+    duration: [6, 10],
+    deadline: [3, 6],
+    min_items: { mic: 14, preamp_multi: 2, interface: 2, headphones: 6, cable: 18, mic_stand: 14, mic_accessory: 6, multicore: 1 }
+  },
+  {
+    type: 'streaming',
+    room_type: 'live_room',
+    unlock_level: 4,
+    allowed_genres: ['live'],
+    base_pay: [180, 300],
+    target_quality: [58, 74],
+    duration: [2, 4],
+    deadline: [1, 3],
+    min_items: { interface: 1, mic: 2, headphones: 2, cable: 6 }
+  },
+  {
+    type: 'streaming',
+    room_type: 'live_room',
+    unlock_level: 6,
+    allowed_genres: ['live'],
+    base_pay: [220, 360],
+    target_quality: [60, 76],
+    duration: [3, 5],
+    deadline: [1, 3],
+    min_items: { interface: 1, mic: 3, headphones: 3, cable: 8, mic_stand: 3 }
+  },
+  // Mastering suite expansion
+  {
+    type: 'mix',
+    room_type: 'mastering_suite',
+    unlock_level: 6,
+    allowed_genres: ['any'],
+    base_pay: [240, 420],
+    target_quality: [66, 84],
+    duration: [3, 5],
+    deadline: [2, 4],
+    min_items: { monitor: 2, acoustic_treatment: 6, software: 1 }
+  },
+  {
+    type: 'mix',
+    room_type: 'mastering_suite',
+    unlock_level: 7,
+    allowed_genres: ['any'],
+    base_pay: [260, 460],
+    target_quality: [68, 86],
+    duration: [4, 6],
+    deadline: [2, 4],
+    min_items: { monitor: 2, acoustic_treatment: 6, software: 1, effects: 1 }
+  },
+  {
+    type: 'mix',
+    room_type: 'mastering_suite',
+    unlock_level: 8,
+    allowed_genres: ['any'],
+    base_pay: [280, 520],
+    target_quality: [70, 88],
+    duration: [4, 6],
+    deadline: [2, 4],
+    min_items: { monitor: 3, acoustic_treatment: 8, software: 1, effects: 2 }
+  },
+  {
+    type: 'master',
+    room_type: 'mastering_suite',
+    unlock_level: 7,
+    allowed_genres: ['any'],
+    base_pay: [260, 480],
+    target_quality: [68, 88],
+    duration: [2, 4],
+    deadline: [1, 3],
+    min_items: { monitor: 2, acoustic_treatment: 6, software: 1 }
+  },
+  {
+    type: 'master',
+    room_type: 'mastering_suite',
+    unlock_level: 8,
+    allowed_genres: ['any'],
+    base_pay: [320, 560],
+    target_quality: [72, 92],
+    duration: [3, 5],
+    deadline: [1, 3],
+    min_items: { monitor: 3, acoustic_treatment: 8, software: 1, effects: 2 }
+  },
+  {
+    type: 'mix_master',
+    room_type: 'mastering_suite',
+    unlock_level: 8,
+    allowed_genres: ['any'],
+    base_pay: [360, 640],
+    target_quality: [72, 92],
+    duration: [4, 6],
+    deadline: [2, 4],
+    min_items: { monitor: 3, acoustic_treatment: 8, software: 1, effects: 2 }
+  },
+  // Streaming room expansion
+  {
+    type: 'streaming',
+    room_type: 'streaming_room',
+    unlock_level: 4,
+    allowed_genres: ['podcast'],
+    base_pay: [140, 240],
+    target_quality: [56, 72],
+    duration: [2, 4],
+    deadline: [1, 3],
+    min_items: { interface: 1, mic: 2, headphones: 2, mic_stand: 2 }
+  },
+  {
+    type: 'streaming',
+    room_type: 'streaming_room',
+    unlock_level: 5,
+    allowed_genres: ['live'],
+    base_pay: [180, 320],
+    target_quality: [58, 74],
+    duration: [3, 5],
+    deadline: [1, 3],
+    min_items: { interface: 1, mic: 2, headphones: 2, monitor: 1, mic_stand: 2 }
+  },
+  {
+    type: 'streaming',
+    room_type: 'streaming_room',
+    unlock_level: 6,
+    allowed_genres: ['live'],
+    base_pay: [220, 380],
+    target_quality: [60, 78],
+    duration: [3, 6],
+    deadline: [1, 3],
+    min_items: { interface: 2, mic: 3, headphones: 3, monitor: 1, mic_stand: 3, cable: 6 }
+  },
+  {
+    type: 'streaming',
+    room_type: 'streaming_room',
+    unlock_level: 7,
+    allowed_genres: ['live'],
+    base_pay: [260, 420],
+    target_quality: [62, 80],
+    duration: [4, 6],
+    deadline: [2, 4],
+    min_items: { interface: 2, mic: 3, headphones: 3, monitor: 1, mic_stand: 3, acoustic_treatment: 2 }
+  },
+  {
+    type: 'recording',
+    room_type: 'streaming_room',
+    unlock_level: 4,
+    allowed_genres: ['podcast'],
+    base_pay: [120, 220],
+    target_quality: [55, 70],
+    duration: [2, 4],
+    deadline: [1, 3],
+    min_items: { mic: 2, interface: 1, headphones: 2, mic_stand: 2 }
+  },
+  {
+    type: 'recording',
+    room_type: 'streaming_room',
+    unlock_level: 5,
+    allowed_genres: ['podcast'],
+    base_pay: [150, 260],
+    target_quality: [58, 74],
+    duration: [2, 4],
+    deadline: [1, 3],
+    min_items: { mic: 2, interface: 1, headphones: 2, mic_stand: 2, acoustic_treatment: 2 }
   }
 ];
 
@@ -283,6 +712,28 @@ export function generateDailyOffers(force = false) {
   return offers;
 }
 
+export function ensureRoomOffers(roomType, minCount = 2) {
+  if (!roomType) return [];
+  state.market = state.market || { offers: [], lastDayGenerated: 0 };
+  const day = state.time ? Number(state.time.day || 1) : 1;
+  const repOverall = Number((state.reputation && state.reputation.overall) || 0);
+  const eligibleTemplates = getEligibleTemplates(repOverall).filter(t => t.room_type === roomType);
+  if (!eligibleTemplates.length) return state.market.offers || [];
+  const offers = Array.isArray(state.market.offers) ? state.market.offers : [];
+  const existing = offers.filter(o => {
+    const reqType = o.requirements && o.requirements.room_type;
+    return reqType ? reqType === roomType : false;
+  });
+  const needed = Math.max(0, Number(minCount || 0) - existing.length);
+  if (needed <= 0) return offers;
+  for (let i = 0; i < needed; i++) {
+    offers.push(buildOffer(day, offers.length + 1, eligibleTemplates));
+  }
+  state.market.offers = offers;
+  try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
+  return offers;
+}
+
 export function acceptOffer(offerId) {
   const offers = (state.market && Array.isArray(state.market.offers)) ? state.market.offers : [];
   const offer = offers.find(o => o.id === offerId);
@@ -311,6 +762,7 @@ export function declineOffer(offerId) {
 
 if (typeof window !== 'undefined') {
   window.generateDailyOffers = window.generateDailyOffers || generateDailyOffers;
+  window.ensureRoomOffers = window.ensureRoomOffers || ensureRoomOffers;
   window.acceptOffer = window.acceptOffer || acceptOffer;
   window.declineOffer = window.declineOffer || declineOffer;
 }
