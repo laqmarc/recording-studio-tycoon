@@ -120,6 +120,14 @@ function triggerSnap(el) {
   setTimeout(() => { el.classList.remove('snap'); }, 260);
 }
 
+function highlightZone(category, enable) {
+  if (!category) return;
+  const selector = `.floor-zone[data-category="${category}"]`;
+  document.querySelectorAll(selector).forEach(zone => {
+    zone.classList.toggle('zone-target', Boolean(enable));
+  });
+}
+
 function canDropItem(roomIndex, category, itemId) {
   const eff = getRoomEffective(roomIndex);
   const room = eff.room;
@@ -371,6 +379,7 @@ export function renderRoomDetails(options = {}) {
         card.setAttribute('draggable', 'true');
         card.addEventListener('dragstart', (e) => {
           setDragState(it.id, 'inventory', it.category);
+          highlightZone(it.category, true);
           card.classList.add('dragging');
           if (e.dataTransfer) {
             e.dataTransfer.setData('text/plain', it.id);
@@ -379,6 +388,7 @@ export function renderRoomDetails(options = {}) {
         });
         card.addEventListener('dragend', () => {
           clearDragState();
+          highlightZone(it.category, false);
           card.classList.remove('dragging');
           document.querySelectorAll('.floor-node').forEach(el => {
             el.classList.remove('drag-over');

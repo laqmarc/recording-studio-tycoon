@@ -704,6 +704,11 @@ input, select {
 .floor-zone[data-occupancy="partial"] { border-color: rgba(242, 195, 90, 0.8); }
 .floor-zone[data-occupancy="empty"] { border-color: rgba(35, 217, 160, 0.5); }
 
+.floor-zone.zone-target {
+  border-color: rgba(35, 217, 160, 0.9);
+  box-shadow: 0 0 0 1px rgba(35, 217, 160, 0.35), 0 10px 20px rgba(35, 217, 160, 0.18);
+}
+
 .floor-zone-head {
   display: flex;
   justify-content: space-between;
