@@ -1117,6 +1117,7 @@ input, select {
 .contract-toggle-row {
   display: flex;
   justify-content: flex-end;
+  gap: 6px;
   margin-top: 6px;
 }
 

@@ -9,7 +9,7 @@ function getScheduleUsedHours(roomIndex, day) {
     .reduce((sum, s) => sum + Number(s.hours || 0), 0);
 }
 
-function scheduleContract(contractId, roomIndex, startDay) {
+export function scheduleContract(contractId, roomIndex, startDay) {
   const contract = state.db.contracts.find(c => c.id === contractId);
   if (!contract || contract.completed) return;
   const workHours = Number(state.time.workHoursPerDay || 8);
@@ -28,6 +28,26 @@ function scheduleContract(contractId, roomIndex, startDay) {
     day += 1;
     safety += 1;
   }
+}
+
+function findNextAvailableDay(roomIndex, startDay) {
+  const workHours = Number(state.time.workHoursPerDay || 8);
+  let day = Number(startDay || state.time.day || 1);
+  let safety = 0;
+  while (safety < 60) {
+    const used = getScheduleUsedHours(roomIndex, day);
+    const available = Math.max(0, workHours - used);
+    if (available > 0) return day;
+    day += 1;
+    safety += 1;
+  }
+  return Number(startDay || state.time.day || 1);
+}
+
+export function scheduleContractToNextFree(contractId, roomIndex, startDay) {
+  const day = findNextAvailableDay(roomIndex, startDay);
+  scheduleContract(contractId, roomIndex, day);
+  return day;
 }
 
 export function renderScheduleBoard({ renderAll } = {}) {

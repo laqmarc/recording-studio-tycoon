@@ -1190,7 +1190,8 @@ function buildOffer(day, index, templates) {
       if (micTypes.length) {
         req.mic_types = micTypes;
         if (micTotal > 0) req.mic_type_counts = distributeMicTypeCounts(micTypes, micTotal);
-        req.min_interface_inputs = micTypes.length;
+        const minInputs = Math.max(micTotal, micTypes.length);
+        if (minInputs > 0) req.min_interface_inputs = minInputs;
       }
       return req;
     })(),

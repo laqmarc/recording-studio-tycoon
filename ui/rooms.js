@@ -1,8 +1,9 @@
 import { state, getRoomEffective } from '../state.js';
-import { euro } from '../helpers.js';
+import { euro, log } from '../helpers.js';
 import { getContractETA } from '../actions.js';
 import { assignContractPeople, buildRoleDefs, getPeopleByIdMap, getPeopleOptions } from './people_logic.js';
 import { getRequirementsElement } from './requirements.js';
+import { scheduleContractToNextFree } from './schedule.js';
 import { clearChildren, createArt, createBadge, formatEta, getRiskLevel, getRoomArt } from './shared.js';
 
 export function renderRooms(options = {}) {
@@ -139,6 +140,28 @@ export function renderRooms(options = {}) {
         }
 
         const toggleRow = document.createElement('div'); toggleRow.className = 'contract-toggle-row';
+        const scheduleBtn = document.createElement('button'); scheduleBtn.className = 'btn2 btnSmall'; scheduleBtn.type = 'button';
+        scheduleBtn.textContent = 'Programar';
+        scheduleBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const roomIndex = state.selected.roomIndex;
+          const room = state.db.rooms[roomIndex];
+          const req = c.requirements || {};
+          if (req.room_type && room && room.type !== req.room_type) {
+            if (typeof log === 'function') log('❌ Sala incompatible');
+            return;
+          }
+          try {
+            if (typeof window !== 'undefined' && typeof window.checkContractRequirements === 'function') {
+              const ok = window.checkContractRequirements(c, roomIndex);
+              if (!ok && typeof log === 'function') log('⚠️ Requisits tecnics encara no complerts (pots preparar-ho abans de la sessio)');
+            }
+          } catch (err) {}
+          scheduleContractToNextFree(c.id, roomIndex, state.time.day);
+          if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
+          if (typeof renderAll === 'function') renderAll();
+        });
         const toggleBtn = document.createElement('button'); toggleBtn.className = 'btn2 btnSmall contract-toggle'; toggleBtn.type = 'button';
         toggleBtn.textContent = 'Detalls';
         toggleBtn.addEventListener('click', (e) => {
@@ -147,6 +170,7 @@ export function renderRooms(options = {}) {
           const isCompact = card.classList.toggle('contract-compact') ? true : false;
           toggleBtn.textContent = isCompact ? 'Detalls' : 'Tancar';
         });
+        toggleRow.appendChild(scheduleBtn);
         toggleRow.appendChild(toggleBtn);
 
         const detailsWrap = document.createElement('div'); detailsWrap.className = 'contract-details';
