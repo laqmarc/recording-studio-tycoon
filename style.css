@@ -317,6 +317,10 @@ input, select {
 .inventory-card:active { cursor: grabbing; }
 .inventory-card.dragging { opacity: 0.6; }
 
+.inventory-panel .inventory-maintenance {
+  margin-top: 12px;
+}
+
 .pill {
   font-size: 11px;
   padding: 2px 8px;
@@ -922,18 +926,6 @@ input, select {
 }
 
 .contract-card .badge-row { margin-top: 6px; }
-
-.negotiation-row {
-  margin-top: 8px;
-  display: grid;
-  gap: 6px;
-}
-
-.negotiation-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
 
 .rep-panel {
   margin-top: 12px;

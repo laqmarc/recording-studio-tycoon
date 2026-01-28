@@ -1,9 +1,6 @@
 import { state } from '../state.js';
 import { log } from '../helpers.js';
-
-function clearChildren(el) {
-  while (el && el.firstChild) el.removeChild(el.firstChild);
-}
+import { clearChildren } from './shared.js';
 
 function getScheduleUsedHours(roomIndex, day) {
   const schedule = Array.isArray(state.schedule) ? state.schedule : [];

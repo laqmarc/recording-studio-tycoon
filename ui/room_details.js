@@ -1,13 +1,11 @@
 import { state, installedIds, installToRoom, uninstallItemFromRoom, getRoomEffective, getRoomSlotCapacity } from '../state.js';
 import { euro, xpToNext, invQty, invRemove, invAdd, log, showNotification } from '../helpers.js';
+import { clearChildren, createArt, formatStatKey, getItemArt, getRoomArt, getTopStats } from './shared.js';
+import { renderSignalFlowOverlay } from './room_visuals.js';
+import { calcRoomRepairCost, repairRoomItems } from './room_maintenance.js';
 
 const dragState = { itemId: null, source: null, category: null, index: null };
-let inventoryDropListenerAdded = false;
 let audioCtx = null;
-
-function clearChildren(el) {
-  while (el && el.firstChild) el.removeChild(el.firstChild);
-}
 
 function ensureRoomLayout(roomIndex, category, maxSlots, bagIds) {
   state.ui = state.ui || {};
@@ -179,24 +177,7 @@ function getCompatibility(roomIndex, item) {
 }
 
 export function renderRoomDetails(options = {}) {
-  const {
-    renderRight,
-    renderAll,
-    getRoomArt,
-    getItemArt,
-    createArt,
-    renderSignalFlowOverlay,
-    getStaffLevels,
-    getStaffCosts,
-    trainStaff,
-    getUpgradeMeta,
-    getUpgradeCost,
-    applyRoomUpgrade,
-    calcRoomRepairCost,
-    repairRoomItems,
-    getTopStats,
-    formatStatKey
-  } = options;
+  const { renderRight, renderAll } = options;
 
   const effRoom = getRoomEffective(state.selected.roomIndex);
   const room = effRoom.room;
@@ -369,96 +350,7 @@ export function renderRoomDetails(options = {}) {
 
   canvas.appendChild(floorplan);
   details.appendChild(canvas);
-  if (typeof renderSignalFlowOverlay === 'function') {
-    requestAnimationFrame(() => renderSignalFlowOverlay(canvas, floorplan));
-  }
-
-  const opsGrid = document.createElement('div'); opsGrid.className = 'room-ops-grid';
-
-  const staffCard = document.createElement('div'); staffCard.className = 'ops-card';
-  const staffTitle = document.createElement('div'); staffTitle.className = 'ops-title'; staffTitle.textContent = 'Personal';
-  const staffBody = document.createElement('div'); staffBody.className = 'ops-body';
-  const levels = getStaffLevels();
-  const engSkill = 55 + levels.engineer * 5;
-  const prodSpeed = Math.min(40, Math.round(levels.producer * 3));
-  const engFatigue = Math.min(40, Math.round(levels.engineer * 3));
-  const engLine = document.createElement('div'); engLine.className = 'ops-row';
-  engLine.textContent = `Engineer lvl ${levels.engineer} · Qualitat +${engSkill}`;
-  const prodLine = document.createElement('div'); prodLine.className = 'ops-row';
-  prodLine.textContent = `Producer lvl ${levels.producer} · Velocitat +${prodSpeed}%`;
-  const fatLine = document.createElement('div'); fatLine.className = 'ops-row muted';
-  fatLine.textContent = `Fatiga -${engFatigue}%`;
-  const staffActions = document.createElement('div'); staffActions.className = 'ops-actions';
-  const engCost = getStaffCosts('engineer');
-  const prodCost = getStaffCosts('producer');
-  const btnEng = document.createElement('button'); btnEng.className = 'btn2 btnOk'; btnEng.textContent = `Entrenar Engineer (${euro(engCost.cost)})`;
-  btnEng.addEventListener('click', () => trainStaff('engineer'));
-  const btnProd = document.createElement('button'); btnProd.className = 'btn2'; btnProd.textContent = `Entrenar Producer (${euro(prodCost.cost)})`;
-  btnProd.addEventListener('click', () => trainStaff('producer'));
-  staffActions.appendChild(btnEng); staffActions.appendChild(btnProd);
-  staffBody.appendChild(engLine); staffBody.appendChild(prodLine); staffBody.appendChild(fatLine);
-  staffCard.appendChild(staffTitle); staffCard.appendChild(staffBody); staffCard.appendChild(staffActions);
-
-  const upgradeCard = document.createElement('div'); upgradeCard.className = 'ops-card';
-  const upgradeTitle = document.createElement('div'); upgradeTitle.className = 'ops-title'; upgradeTitle.textContent = 'Upgrades sala';
-  const upgradeBody = document.createElement('div'); upgradeBody.className = 'ops-body';
-  const metaUp = getUpgradeMeta(state.selected.roomIndex);
-  const up = metaUp.upgrades;
-  const acousticNext = effRoom.base_acoustic + 5;
-  const noiseNext = effRoom.noise_floor_db - 2;
-  const slotBonus = Number(up.slots || 0);
-  const acousticLine = document.createElement('div'); acousticLine.className = 'ops-row';
-  acousticLine.textContent = `Acustica: ${effRoom.base_acoustic} -> ${acousticNext}`;
-  const noiseLine = document.createElement('div'); noiseLine.className = 'ops-row';
-  noiseLine.textContent = `Insonor: ${effRoom.noise_floor_db} dB -> ${noiseNext} dB`;
-  const slotsLine = document.createElement('div'); slotsLine.className = 'ops-row';
-  slotsLine.textContent = `Racks: +${slotBonus} per categoria`;
-  const upgradeActions = document.createElement('div'); upgradeActions.className = 'ops-actions';
-  const btnAc = document.createElement('button'); btnAc.className = 'btn2';
-  btnAc.textContent = up.acoustic >= metaUp.limits.acoustic ? 'Acustica MAX' : `Acustica (${euro(getUpgradeCost('acoustic', up.acoustic))})`;
-  btnAc.disabled = up.acoustic >= metaUp.limits.acoustic;
-  btnAc.addEventListener('click', () => applyRoomUpgrade(state.selected.roomIndex, 'acoustic'));
-  const btnIso = document.createElement('button'); btnIso.className = 'btn2';
-  btnIso.textContent = up.isolation >= metaUp.limits.isolation ? 'Insonor MAX' : `Insonor (${euro(getUpgradeCost('isolation', up.isolation))})`;
-  btnIso.disabled = up.isolation >= metaUp.limits.isolation;
-  btnIso.addEventListener('click', () => applyRoomUpgrade(state.selected.roomIndex, 'isolation'));
-  const btnSlots = document.createElement('button'); btnSlots.className = 'btn2 btnOk';
-  btnSlots.textContent = up.slots >= metaUp.limits.slots ? 'Racks MAX' : `Racks (${euro(getUpgradeCost('slots', up.slots))})`;
-  btnSlots.disabled = up.slots >= metaUp.limits.slots;
-  btnSlots.addEventListener('click', () => applyRoomUpgrade(state.selected.roomIndex, 'slots'));
-  upgradeActions.appendChild(btnAc); upgradeActions.appendChild(btnIso); upgradeActions.appendChild(btnSlots);
-  upgradeBody.appendChild(acousticLine); upgradeBody.appendChild(noiseLine); upgradeBody.appendChild(slotsLine);
-  upgradeCard.appendChild(upgradeTitle); upgradeCard.appendChild(upgradeBody); upgradeCard.appendChild(upgradeActions);
-
-  const maintenanceCard = document.createElement('div'); maintenanceCard.className = 'ops-card';
-  const maintenanceTitle = document.createElement('div'); maintenanceTitle.className = 'ops-title'; maintenanceTitle.textContent = 'Manteniment';
-  const maintenanceBody = document.createElement('div'); maintenanceBody.className = 'ops-body';
-  let avgCondition = 100;
-  try {
-    const ids = [].concat(...Object.values(bag));
-    if (ids.length && state.itemCondition) {
-      const total = ids.reduce((sum, id) => sum + Number(state.itemCondition.get(id) || 100), 0);
-      avgCondition = Math.round(total / ids.length);
-    }
-  } catch (e) {}
-  const maintLine = document.createElement('div'); maintLine.className = 'ops-row';
-  maintLine.textContent = `Estat mig equips: ${avgCondition}%`;
-  const repairCost = calcRoomRepairCost(state.selected.roomIndex);
-  const repairLine = document.createElement('div'); repairLine.className = 'ops-row muted';
-  repairLine.textContent = repairCost > 0 ? `Cost reparacio: ${euro(repairCost)}` : 'Tot OK';
-  const repairActions = document.createElement('div'); repairActions.className = 'ops-actions';
-  const btnRepair = document.createElement('button'); btnRepair.className = 'btn2 btnSpecial';
-  btnRepair.textContent = repairCost > 0 ? `Reparar (${euro(repairCost)})` : 'Reparar';
-  btnRepair.disabled = repairCost <= 0;
-  btnRepair.addEventListener('click', () => repairRoomItems(state.selected.roomIndex));
-  repairActions.appendChild(btnRepair);
-  maintenanceBody.appendChild(maintLine); maintenanceBody.appendChild(repairLine);
-  maintenanceCard.appendChild(maintenanceTitle); maintenanceCard.appendChild(maintenanceBody); maintenanceCard.appendChild(repairActions);
-
-  opsGrid.appendChild(staffCard);
-  opsGrid.appendChild(upgradeCard);
-  opsGrid.appendChild(maintenanceCard);
-  details.appendChild(opsGrid);
+  requestAnimationFrame(() => renderSignalFlowOverlay(canvas, floorplan));
 
   const selCat = document.getElementById('selInvCategory');
   if (selCat && selCat.parentElement) selCat.parentElement.style.display = 'none';
@@ -532,7 +424,7 @@ export function renderRoomDetails(options = {}) {
         invList.appendChild(card);
       }
     }
-    if (!inventoryDropListenerAdded) {
+    if (invList.dataset.bound !== '1') {
       invList.addEventListener('dragover', (e) => {
         if (dragState.source !== 'installed') return;
         e.preventDefault();
@@ -551,8 +443,39 @@ export function renderRoomDetails(options = {}) {
         if (res.ok) { triggerSnap(invList); playSnapSound(); }
         clearDragState();
       });
-      inventoryDropListenerAdded = true;
+      invList.dataset.bound = '1';
     }
+  }
+
+  const inventorySection = invList && invList.parentElement ? invList.parentElement : null;
+  if (inventorySection) {
+    const existing = inventorySection.querySelector('.inventory-maintenance');
+    if (existing) existing.remove();
+    const maintenanceCard = document.createElement('div'); maintenanceCard.className = 'ops-card inventory-maintenance';
+    const maintenanceTitle = document.createElement('div'); maintenanceTitle.className = 'ops-title'; maintenanceTitle.textContent = 'Manteniment';
+    const maintenanceBody = document.createElement('div'); maintenanceBody.className = 'ops-body';
+    let avgCondition = 100;
+    try {
+      const ids = [].concat(...Object.values(bag));
+      if (ids.length && state.itemCondition) {
+        const total = ids.reduce((sum, id) => sum + Number(state.itemCondition.get(id) || 100), 0);
+        avgCondition = Math.round(total / ids.length);
+      }
+    } catch (e) {}
+    const maintLine = document.createElement('div'); maintLine.className = 'ops-row';
+    maintLine.textContent = `Estat mig equips: ${avgCondition}%`;
+    const repairCost = calcRoomRepairCost(state.selected.roomIndex);
+    const repairLine = document.createElement('div'); repairLine.className = 'ops-row muted';
+    repairLine.textContent = repairCost > 0 ? `Cost reparacio: ${euro(repairCost)}` : 'Tot OK';
+    const repairActions = document.createElement('div'); repairActions.className = 'ops-actions';
+    const btnRepair = document.createElement('button'); btnRepair.className = 'btn2 btnSpecial';
+    btnRepair.textContent = repairCost > 0 ? `Reparar (${euro(repairCost)})` : 'Reparar';
+    btnRepair.disabled = repairCost <= 0;
+    btnRepair.addEventListener('click', () => repairRoomItems(state.selected.roomIndex));
+    repairActions.appendChild(btnRepair);
+    maintenanceBody.appendChild(maintLine); maintenanceBody.appendChild(repairLine);
+    maintenanceCard.appendChild(maintenanceTitle); maintenanceCard.appendChild(maintenanceBody); maintenanceCard.appendChild(repairActions);
+    inventorySection.appendChild(maintenanceCard);
   }
 
   const k = document.getElementById('kpis');

@@ -1,11 +1,9 @@
 import { state } from '../state.js';
 import { euro } from '../helpers.js';
+import { clearChildren } from './shared.js';
+import { getRequirementsElement } from './requirements.js';
 
-function clearChildren(el) {
-  while (el && el.firstChild) el.removeChild(el.firstChild);
-}
-
-export function renderOffers({ getRequirementsElement } = {}) {
+export function renderOffers() {
   const offersEl = document.getElementById('clientOffers');
   if (!offersEl) return;
   clearChildren(offersEl);
@@ -26,7 +24,7 @@ export function renderOffers({ getRequirementsElement } = {}) {
     row.appendChild(name); row.appendChild(pill);
     const meta = document.createElement('div'); meta.className = 'offer-meta';
     meta.textContent = `${offer.duration_hours}h · ${euro(offer.base_pay)} · Qualitat ${offer.target_quality} · Deadline ${offer.deadline_days}d · Sala ${offer.requirements && offer.requirements.room_type ? offer.requirements.room_type : 'any'}`;
-    const reqEl = typeof getRequirementsElement === 'function' ? getRequirementsElement(offer, state.selected.roomIndex) : null;
+    const reqEl = getRequirementsElement(offer, state.selected.roomIndex);
     const actions = document.createElement('div'); actions.className = 'offer-actions';
     const btnAccept = document.createElement('button'); btnAccept.className = 'btn2 btnOk'; btnAccept.textContent = 'Acceptar';
     btnAccept.addEventListener('click', () => { if (typeof window !== 'undefined' && typeof window.acceptOffer === 'function') window.acceptOffer(offer.id); });

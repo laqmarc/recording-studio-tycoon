@@ -1,11 +1,8 @@
 import { state, installedIds } from '../state.js';
 import { euro, avgStat, invAdd, log, showNotification } from '../helpers.js';
+import { clearChildren, createArt, formatStatKey, getItemArt, getPrimaryStat, getTopStats } from './shared.js';
 
 let micTypeListenerAdded = false;
-
-function clearChildren(el) {
-  while (el && el.firstChild) el.removeChild(el.firstChild);
-}
 
 function getUnlockedItems(cat) {
   return (state.itemsByCategory.get(cat) || []).filter(it => Number(it.unlock_level || 1) <= Number(state.player.level || 1));
@@ -163,7 +160,7 @@ function buyBundle(items, { renderAll } = {}) {
 }
 
 export function renderShop(options = {}) {
-  const { createArt, getItemArt, formatStatKey, getTopStats, getPrimaryStat, renderRight, renderAll } = options;
+  const { renderRight, renderAll } = options;
   const opts = options;
   const cats = Array.from(state.itemsByCategory.keys()).sort();
   const sel = document.getElementById('selCategory');
@@ -265,7 +262,7 @@ export function renderShop(options = {}) {
     });
     const layout = document.createElement('div');
     layout.className = 'card-grid';
-    const art = typeof createArt === 'function' ? createArt(getItemArt(it), `${it.name} art`) : null;
+    const art = createArt(getItemArt(it), `${it.name} art`);
     const body = document.createElement('div');
     body.className = 'card-body';
     const tier = it.tier || 'mid';
@@ -284,7 +281,7 @@ export function renderShop(options = {}) {
     const notes = document.createElement('div'); notes.className = 'shop-notes'; notes.textContent = it.notes ? it.notes : '';
 
     const statWrap = document.createElement('div'); statWrap.className = 'inventory-stats';
-    const topStats = typeof getTopStats === 'function' ? getTopStats(it, 3) : [];
+    const topStats = getTopStats(it, 3);
     for (const st of topStats) {
       const chip = document.createElement('div'); chip.className = 'stat-chip';
       chip.textContent = `${formatStatKey(st.key)} ${st.value}`;
@@ -296,8 +293,8 @@ export function renderShop(options = {}) {
     let compareStats = null;
     if (selected && selected.id !== it.id && selected.category === it.category) {
       compareRow = document.createElement('div'); compareRow.className = 'compare-row';
-      const primary = typeof getPrimaryStat === 'function' ? getPrimaryStat(it) : null;
-      const primarySel = typeof getPrimaryStat === 'function' ? getPrimaryStat(selected) : null;
+      const primary = getPrimaryStat(it);
+      const primarySel = getPrimaryStat(selected);
       const chunks = [];
       if (primary && primarySel && primary.key === primarySel.key) {
         const diff = Number(primary.value) - Number(primarySel.value);

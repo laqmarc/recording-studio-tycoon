@@ -1,28 +1,12 @@
 import { state, getRoomEffective } from '../state.js';
 import { euro } from '../helpers.js';
-
-let contractRoomListenerAdded = false;
-let clientFetchListenerAdded = false;
-
-function clearChildren(el) {
-  while (el && el.firstChild) el.removeChild(el.firstChild);
-}
+import { getContractETA } from '../actions.js';
+import { assignContractPeople, buildRoleDefs, getPeopleByIdMap, getPeopleOptions } from './people_logic.js';
+import { getRequirementsElement } from './requirements.js';
+import { clearChildren, createArt, createBadge, formatEta, getRiskLevel, getRoomArt } from './shared.js';
 
 export function renderRooms(options = {}) {
-  const {
-    createArt,
-    getRoomArt,
-    getContractETA,
-    formatEta,
-    getRiskLevel,
-    createBadge,
-    assignContractPeople,
-    getPeopleByIdMap,
-    buildRoleDefs,
-    getPeopleOptions,
-    getRequirementsElement,
-    renderAll
-  } = options;
+  const { renderAll } = options;
 
   const el = document.getElementById('roomList');
   clearChildren(el);
@@ -51,22 +35,22 @@ export function renderRooms(options = {}) {
     } else if (visibleRooms.length) {
       contractRoomSelect.value = String(visibleRooms[0].idx);
     }
-    if (!contractRoomListenerAdded) {
+    if (contractRoomSelect.dataset.bound !== '1') {
       contractRoomSelect.addEventListener('change', () => {
         state.selected.roomIndex = Number(contractRoomSelect.value);
         if (typeof renderAll === 'function') renderAll();
       });
-      contractRoomListenerAdded = true;
+      contractRoomSelect.dataset.bound = '1';
     }
   }
 
   const btnFetch = document.getElementById('btnFetchClients');
-  if (btnFetch && !clientFetchListenerAdded) {
+  if (btnFetch && btnFetch.dataset.bound !== '1') {
     btnFetch.addEventListener('click', () => {
       if (typeof window !== 'undefined' && typeof window.generateDailyOffers === 'function') window.generateDailyOffers(true);
       if (typeof renderAll === 'function') renderAll();
     });
-    clientFetchListenerAdded = true;
+    btnFetch.dataset.bound = '1';
   }
 
   visibleRooms.forEach(({ r, idx }) => {

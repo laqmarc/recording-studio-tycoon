@@ -1,11 +1,9 @@
 import { state } from '../state.js';
 import { euro } from '../helpers.js';
+import { clearChildren } from './shared.js';
+import { ensurePeopleData } from './people_logic.js';
 
-function clearChildren(el) {
-  while (el && el.firstChild) el.removeChild(el.firstChild);
-}
-
-export function renderPersonnelPanel({ ensurePeopleData, renderAll } = {}) {
+export function renderPersonnelPanel({ renderAll } = {}) {
   const personnelPanel = document.getElementById('personnelPanel');
   if (!personnelPanel) return;
   clearChildren(personnelPanel);

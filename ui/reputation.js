@@ -1,8 +1,5 @@
 import { state } from '../state.js';
-
-function clearChildren(el) {
-  while (el && el.firstChild) el.removeChild(el.firstChild);
-}
+import { clearChildren } from './shared.js';
 
 function renderRepContent(panel) {
   const repHeader = document.createElement('div'); repHeader.className = 'rep-header';

@@ -13,7 +13,9 @@ function installedIds(roomIndex, category) {
 export function getContractETA(c) {
   const state = getState();
   if (!state) return { days:0, hours:0, finishDay:0, finishHour:0 };
-  const producerLevel = (state.staff && state.staff.producer && state.staff.producer.level) ? Number(state.staff.producer.level) : 1;
+  const producerLevel = (state.staff && state.staff.producer && state.staff.producer.level != null)
+    ? Number(state.staff.producer.level)
+    : 0;
   const speedBonus = Math.min(0.4, producerLevel * 0.03);
   const worked = Number(c.worked_hours || 0);
   const total = Number(c.duration_hours || 0);
@@ -50,7 +52,7 @@ export function workOnContract(contractId, hours) {
   const c = state.db.contracts.find(x => x.id === contractId);
   if (!c) return log('Contracte no trobat.');
   if (c.completed) return log('ℹ️ Aquesta feina ja esta completada.');
-  if (!Array.isArray(state.schedule) || !state.schedule.some(s => s.contractId === c.id && s.day === state.time.day)) {
+  if (Array.isArray(state.schedule) && !state.schedule.some(s => s.contractId === c.id && s.day === state.time.day)) {
     return log('ℹ️ Aquesta feina nomes avanca des del calendari.');
   }
   if (assignContractPeople) assignContractPeople(c);
@@ -94,8 +96,12 @@ export function workOnContract(contractId, hours) {
 
   const remaining = (c.duration_hours || 0) - (c.worked_hours || 0);
   const actual_hours = Math.min(Number(hours || 0), remaining);
-  const producerLevel = (state.staff && state.staff.producer && state.staff.producer.level) ? Number(state.staff.producer.level) : 1;
-  const engineerLevel = (state.staff && state.staff.engineer && state.staff.engineer.level) ? Number(state.staff.engineer.level) : 1;
+  const producerLevel = (state.staff && state.staff.producer && state.staff.producer.level != null)
+    ? Number(state.staff.producer.level)
+    : 0;
+  const engineerLevel = (state.staff && state.staff.engineer && state.staff.engineer.level != null)
+    ? Number(state.staff.engineer.level)
+    : 0;
   const speedBonus = Math.min(0.4, producerLevel * 0.03);
   const fatigueReduction = Math.min(0.4, engineerLevel * 0.03);
   const progressHours = Math.min(remaining, actual_hours * (1 + speedBonus));
@@ -150,8 +156,12 @@ export function applyScheduledWork(contractId, hours, roomIndex, day) {
 
   const remaining = (c.duration_hours || 0) - (c.worked_hours || 0);
   const actual_hours = Math.min(Number(hours || 0), remaining);
-  const producerLevel = (state.staff && state.staff.producer && state.staff.producer.level) ? Number(state.staff.producer.level) : 1;
-  const engineerLevel = (state.staff && state.staff.engineer && state.staff.engineer.level) ? Number(state.staff.engineer.level) : 1;
+  const producerLevel = (state.staff && state.staff.producer && state.staff.producer.level != null)
+    ? Number(state.staff.producer.level)
+    : 0;
+  const engineerLevel = (state.staff && state.staff.engineer && state.staff.engineer.level != null)
+    ? Number(state.staff.engineer.level)
+    : 0;
   const speedBonus = Math.min(0.4, producerLevel * 0.03);
   const fatigueReduction = Math.min(0.4, engineerLevel * 0.03);
   const progressHours = Math.min(remaining, actual_hours * (1 + speedBonus));
