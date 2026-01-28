@@ -217,11 +217,18 @@ export function loadFromObject(obj) {
   }
   // Initialize roomBilling array alongside rooms
   state.roomBilling = state.roomBilling || state.db.rooms.map(()=> ({ lastBilledDay: null, weeksBilled: 0, totalCharged: 0, justInstalled: false }));
-  log(`📦 Dades carregades: items=${items.length}, rooms=${rooms.length}, contracts=${contracts.length}`);
   const selCat = document.getElementById("selCategory");
   if (selCat) selCat.options.length = 0;
   if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
   try { if (typeof window !== 'undefined' && typeof window.generateDailyOffers === 'function') window.generateDailyOffers(true); } catch (e) {}
+  try {
+    const offersCount = state.market && Array.isArray(state.market.offers) ? state.market.offers.length : 0;
+    const feinesCount = (state.db.contracts ? state.db.contracts.length : 0);
+    const total = feinesCount + offersCount;
+    log(`📦 Dades carregades: items=${items.length}, rooms=${rooms.length}, feines=${feinesCount}, ofertes=${offersCount}, total=${total}`);
+  } catch (e) {
+    log(`📦 Dades carregades: items=${items.length}, rooms=${rooms.length}, feines=${contracts.length}`);
+  }
 }
 
 export function resetGame() {

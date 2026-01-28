@@ -74,6 +74,24 @@ if (typeof document !== 'undefined') {
     }
   });
 
+  on('btnCheat', 'click', () => {
+    try {
+      if (typeof window === 'undefined' || !window.state) return;
+      window.state.cash = 1000000;
+      if (typeof window.addXp === 'function') {
+        window.addXp(20000);
+      } else if (window.state.player) {
+        window.state.player.xp = 20000;
+      }
+      if (typeof window.log === 'function') window.log('🧪 Cheat activat: cash=1.000.000€ i +20.000 XP');
+      if (typeof window.showNotification === 'function') window.showNotification('🧪 Cheat activat');
+      if (typeof window.renderAll === 'function') window.renderAll();
+      if (typeof window.saveState === 'function') window.saveState();
+    } catch (e) {
+      if (typeof window !== 'undefined' && typeof window.log === 'function') window.log('Error cheat: '+e.message);
+    }
+  });
+
   on('selCategory', 'change', () => { if (typeof window.renderShop === 'function') window.renderShop(); });
   on('txtSearch', 'input', () => { if (typeof window.renderShop === 'function') window.renderShop(); });
   on('selInvCategory', 'change', () => { if (typeof window.renderRight === 'function') window.renderRight(); });
