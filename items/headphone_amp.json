@@ -1,0 +1,344 @@
+{
+  "items": [
+    {
+      "id": "headphone_amp_behringer_ha400_microamp",
+      "name": "Behringer HA400 Microamp",
+      "category": "headphone_amp",
+      "tier": "low",
+      "price": 25.0,
+      "maintenance_weekly": 0.05,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 40,
+        "channels": 4
+      },
+      "io": {},
+      "notes": "Molt econòmic per repartiment de senyal"
+    },
+    {
+      "id": "headphone_amp_mackie_hm_4",
+      "name": "Mackie HM-4",
+      "category": "headphone_amp",
+      "tier": "low",
+      "price": 45.0,
+      "maintenance_weekly": 0.09,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 40,
+        "channels": 4
+      },
+      "io": {},
+      "notes": "Molt compacte i portàtil"
+    },
+    {
+      "id": "headphone_amp_presonus_hp2",
+      "name": "Presonus HP2",
+      "category": "headphone_amp",
+      "tier": "low",
+      "price": 70.0,
+      "maintenance_weekly": 0.14,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 40,
+        "channels": 1
+      },
+      "io": {},
+      "notes": "Amplificador de cinturó per músics"
+    },
+    {
+      "id": "headphone_amp_art_headamp4",
+      "name": "ART HeadAmp4",
+      "category": "headphone_amp",
+      "tier": "low",
+      "price": 80.0,
+      "maintenance_weekly": 0.16,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 40,
+        "channels": 4
+      },
+      "io": {},
+      "notes": "Compacte i fiable"
+    },
+    {
+      "id": "headphone_amp_samson_qh4",
+      "name": "Samson QH4",
+      "category": "headphone_amp",
+      "tier": "low",
+      "price": 90.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 40,
+        "channels": 4
+      },
+      "io": {},
+      "notes": "4 canals amb control independent"
+    },
+    {
+      "id": "headphone_amp_presonus_hp4",
+      "name": "Presonus HP4",
+      "category": "headphone_amp",
+      "tier": "low",
+      "price": 130.0,
+      "maintenance_weekly": 0.26,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 40,
+        "channels": 4
+      },
+      "io": {},
+      "notes": "4 sortides amb volum independent"
+    },
+    {
+      "id": "headphone_amp_behringer_ha8000_powerplay",
+      "name": "Behringer HA8000 Powerplay",
+      "category": "headphone_amp",
+      "tier": "low",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 40,
+        "channels": 8
+      },
+      "io": {},
+      "notes": "8 canals independents per estudi"
+    },
+    {
+      "id": "headphone_amp_behringer_powerplay_p2",
+      "name": "Behringer Powerplay P2",
+      "category": "headphone_amp",
+      "tier": "mid",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 55,
+        "channels": 1
+      },
+      "io": {},
+      "notes": "Amplificador personal de cinturó"
+    },
+    {
+      "id": "headphone_amp_art_headamp6",
+      "name": "ART HeadAmp6",
+      "category": "headphone_amp",
+      "tier": "mid",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 55,
+        "channels": 6
+      },
+      "io": {},
+      "notes": "6 sortides, molt usat en estudis"
+    },
+    {
+      "id": "headphone_amp_mackie_hm_800",
+      "name": "Mackie HM-800",
+      "category": "headphone_amp",
+      "tier": "mid",
+      "price": 250.0,
+      "maintenance_weekly": 0.5,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 55,
+        "channels": 8
+      },
+      "io": {},
+      "notes": "8 sortides per estudi"
+    },
+    {
+      "id": "headphone_amp_behringer_powerplay_p16_hq",
+      "name": "Behringer Powerplay P16-HQ",
+      "category": "headphone_amp",
+      "tier": "mid",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 55,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Sistema de monitoratge personal"
+    },
+    {
+      "id": "headphone_amp_presonus_hp60",
+      "name": "PreSonus HP60",
+      "category": "headphone_amp",
+      "tier": "mid",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 55,
+        "channels": 6
+      },
+      "io": {},
+      "notes": "Entrades A/B, talkback"
+    },
+    {
+      "id": "headphone_amp_focusrite_rednet_am2",
+      "name": "Focusrite RedNet AM2",
+      "category": "headphone_amp",
+      "tier": "mid",
+      "price": 450.0,
+      "maintenance_weekly": 0.9,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 55,
+        "channels": 1
+      },
+      "io": {},
+      "notes": "Per sistemes en xarxa Dante"
+    },
+    {
+      "id": "headphone_amp_furman_hds_6_hrm_6_system",
+      "name": "Furman HDS-6/HRM-6 System",
+      "category": "headphone_amp",
+      "tier": "mid",
+      "price": 700.0,
+      "maintenance_weekly": 1.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 55,
+        "channels": 6
+      },
+      "io": {},
+      "notes": "Sistema modular de monitoratge"
+    },
+    {
+      "id": "headphone_amp_lake_people_g103_s",
+      "name": "Lake People G103-S",
+      "category": "headphone_amp",
+      "tier": "pro",
+      "price": 350.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 70,
+        "channels": 1
+      },
+      "io": {},
+      "notes": "Molt net i potent"
+    },
+    {
+      "id": "headphone_amp_rupert_neve_designs_rnhp",
+      "name": "Rupert Neve Designs RNHP",
+      "category": "headphone_amp",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 70,
+        "channels": 1
+      },
+      "io": {},
+      "notes": "So molt detallat i natural"
+    },
+    {
+      "id": "headphone_amp_spl_phonitor_one",
+      "name": "SPL Phonitor One",
+      "category": "headphone_amp",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 70,
+        "channels": 1
+      },
+      "io": {},
+      "notes": "Crossfeed per mescla amb cascos"
+    },
+    {
+      "id": "headphone_amp_grace_design_m900",
+      "name": "Grace Design m900",
+      "category": "headphone_amp",
+      "tier": "pro",
+      "price": 800.0,
+      "maintenance_weekly": 1.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 70,
+        "channels": 2
+      },
+      "io": {},
+      "notes": "Qualitat audiófila i d’estudi"
+    },
+    {
+      "id": "headphone_amp_grace_design_m902",
+      "name": "Grace Design m902",
+      "category": "headphone_amp",
+      "tier": "pro",
+      "price": 1600.0,
+      "maintenance_weekly": 3.2,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 70,
+        "channels": 2
+      },
+      "io": {},
+      "notes": "Referència en mastering"
+    },
+    {
+      "id": "headphone_amp_spl_phonitor_x",
+      "name": "SPL Phonitor X",
+      "category": "headphone_amp",
+      "tier": "pro",
+      "price": 2300.0,
+      "maintenance_weekly": 4.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "hp_amp_quality": 70,
+        "channels": 2
+      },
+      "io": {},
+      "notes": "Referència absoluta en cascos"
+    }
+  ]
+}

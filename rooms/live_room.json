@@ -1,0 +1,80 @@
+{
+  "rooms": [
+    {
+      "id": "room_live_1",
+      "name": "Live Room (Mitjà)",
+      "type": "live_room",
+      "unlock_level": 3,
+      "size_m2": 28,
+      "max_people": 6,
+      "noise_floor_db": -55,
+      "isolation": 40,
+      "base_acoustic": 40,
+      "slots": {
+        "mic": 12,
+        "preamp_multi": 1,
+        "interface": 1,
+        "headphones": 6,
+        "headphone_amp": 1,
+        "mic_stand": 10,
+        "mic_accessory": 6,
+        "acoustic_treatment": 10,
+        "patchbay": 1,
+        "cable": 20,
+        "multicore": 1
+      },
+      "price_per_week": 300.0
+    },
+    {
+      "id": "room_live_2",
+      "name": "Live Room (Gran)",
+      "type": "live_room",
+      "unlock_level": 6,
+      "size_m2": 60,
+      "max_people": 10,
+      "noise_floor_db": -60,
+      "isolation": 45,
+      "base_acoustic": 50,
+      "slots": {
+        "mic": 16,
+        "preamp_multi": 4,
+        "interface": 2,
+        "headphones": 8,
+        "headphone_amp": 2,
+        "mic_stand": 14,
+        "mic_accessory": 8,
+        "acoustic_treatment": 12,
+        "patchbay": 1,
+        "cable": 30,
+        "multicore": 1
+      },
+      "price_per_week": 600.0
+    },
+    {
+      "id": "room_live_3",
+      "name": "Live Room (Molt Gran)",
+      "type": "live_room",
+      "unlock_level": 5,
+      "size_m2": 120,
+      "max_people": 18,
+      "noise_floor_db": -60,
+      "isolation": 45,
+      "base_acoustic": 50,
+      "slots": {
+        "mic": 32,
+        "preamp_multi": 8,
+        "interface": 4,
+        "headphones": 16,
+        "headphone_amp": 3,
+        "mic_stand": 32,
+        "mic_accessory": 16,
+        "acoustic_treatment": 24,
+        "patchbay": 2,
+        "cable": 40,
+        "multicore": 2,
+        "console_analog": 1
+      },
+      "price_per_week": 1000.0
+    }
+  ]
+}

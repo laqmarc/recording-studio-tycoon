@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "id": "software_daw_protools",
+      "name": "Pro Tools DAW License",
+      "category": "software",
+      "tier": "pro",
+      "price": 800,
+      "maintenance_weekly": 0.0,
+      "reliability": 1.0,
+      "unlock_level": 1,
+      "tags": [
+        "DAW"
+      ],
+      "stats": {
+        "daw_quality": 90
+      },
+      "io": {},
+      "notes": "Estació de treball digital professional"
+    }
+  ]
+}

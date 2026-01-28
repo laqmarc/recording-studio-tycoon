@@ -1,0 +1,324 @@
+{
+  "items": [
+    {
+      "id": "software_vst_spitfire_bbc_symphony_discover",
+      "name": "Spitfire BBC Symphony Discover",
+      "category": "software_vst",
+      "tier": "low",
+      "price": 0.0,
+      "maintenance_weekly": 0.0,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "production_bonus": 2
+      },
+      "io": {},
+      "notes": "Orquestra gratuïta"
+    },
+    {
+      "id": "software_vst_ample_sound_guitar",
+      "name": "Ample Sound Guitar",
+      "category": "software_vst",
+      "tier": "low",
+      "price": 120.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "production_bonus": 2
+      },
+      "io": {},
+      "notes": "Guitarres realistes"
+    },
+    {
+      "id": "software_vst_output_arcade",
+      "name": "Output Arcade",
+      "category": "software_vst",
+      "tier": "low",
+      "price": 120.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "production_bonus": 2
+      },
+      "io": {},
+      "notes": "Loops i textures"
+    },
+    {
+      "id": "software_vst_native_instruments_fm8",
+      "name": "Native Instruments FM8",
+      "category": "software_vst",
+      "tier": "mid",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "production_bonus": 4
+      },
+      "io": {},
+      "notes": "Sintesi FM"
+    },
+    {
+      "id": "software_vst_addictive_drums_2",
+      "name": "Addictive Drums 2",
+      "category": "software_vst",
+      "tier": "mid",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "production_bonus": 4
+      },
+      "io": {},
+      "notes": "Bateries realistes"
+    },
+    {
+      "id": "software_vst_ezdrummer_3",
+      "name": "EZdrummer 3",
+      "category": "software_vst",
+      "tier": "mid",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "production_bonus": 4
+      },
+      "io": {},
+      "notes": "Bateria fàcil d’usar"
+    },
+    {
+      "id": "software_vst_u_he_diva",
+      "name": "U-He Diva",
+      "category": "software_vst",
+      "tier": "mid",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "production_bonus": 4
+      },
+      "io": {},
+      "notes": "Emulació analògica top"
+    },
+    {
+      "id": "software_vst_serum",
+      "name": "Serum",
+      "category": "software_vst",
+      "tier": "mid",
+      "price": 190.0,
+      "maintenance_weekly": 0.38,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "production_bonus": 4
+      },
+      "io": {},
+      "notes": "EDM i disseny sonor"
+    },
+    {
+      "id": "software_vst_arturia_analog_lab",
+      "name": "Arturia Analog Lab",
+      "category": "software_vst",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "production_bonus": 4
+      },
+      "io": {},
+      "notes": "Sons ràpids de sintetitzadors"
+    },
+    {
+      "id": "software_vst_arturia_pigments",
+      "name": "Arturia Pigments",
+      "category": "software_vst",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "production_bonus": 4
+      },
+      "io": {},
+      "notes": "Sintesi híbrida"
+    },
+    {
+      "id": "software_vst_native_instruments_massive_x",
+      "name": "Native Instruments Massive X",
+      "category": "software_vst",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "production_bonus": 4
+      },
+      "io": {},
+      "notes": "Sintesi moderna"
+    },
+    {
+      "id": "software_vst_u_he_zebra_2",
+      "name": "U-He Zebra 2",
+      "category": "software_vst",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "production_bonus": 4
+      },
+      "io": {},
+      "notes": "Molt flexible"
+    },
+    {
+      "id": "software_vst_pianoteq",
+      "name": "Pianoteq",
+      "category": "software_vst",
+      "tier": "mid",
+      "price": 250.0,
+      "maintenance_weekly": 0.5,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "production_bonus": 4
+      },
+      "io": {},
+      "notes": "Modelatge físic de piano"
+    },
+    {
+      "id": "software_vst_keyscape",
+      "name": "Keyscape",
+      "category": "software_vst",
+      "tier": "pro",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "production_bonus": 7
+      },
+      "io": {},
+      "notes": "Teclats realistes"
+    },
+    {
+      "id": "software_vst_native_instruments_kontakt",
+      "name": "Native Instruments Kontakt",
+      "category": "software_vst",
+      "tier": "pro",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "production_bonus": 7
+      },
+      "io": {},
+      "notes": "Base per llibreries"
+    },
+    {
+      "id": "software_vst_superior_drummer_3",
+      "name": "Superior Drummer 3",
+      "category": "software_vst",
+      "tier": "pro",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "production_bonus": 7
+      },
+      "io": {},
+      "notes": "Bateria ultra detallada"
+    },
+    {
+      "id": "software_vst_spitfire_albion_one",
+      "name": "Spitfire Albion One",
+      "category": "software_vst",
+      "tier": "pro",
+      "price": 450.0,
+      "maintenance_weekly": 0.9,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "production_bonus": 7
+      },
+      "io": {},
+      "notes": "Orquestra cinematogràfica"
+    },
+    {
+      "id": "software_vst_eastwest_hollywood_orchestra",
+      "name": "EastWest Hollywood Orchestra",
+      "category": "software_vst",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "production_bonus": 7
+      },
+      "io": {},
+      "notes": "Orquestra professional"
+    },
+    {
+      "id": "software_vst_spectrasonics_omnisphere",
+      "name": "Spectrasonics Omnisphere",
+      "category": "software_vst",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "production_bonus": 7
+      },
+      "io": {},
+      "notes": "Molt potent i versàtil"
+    },
+    {
+      "id": "software_vst_arturia_v_collection",
+      "name": "Arturia V Collection",
+      "category": "software_vst",
+      "tier": "pro",
+      "price": 600.0,
+      "maintenance_weekly": 1.2,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "production_bonus": 7
+      },
+      "io": {},
+      "notes": "Sintetitzadors clàssics"
+    }
+  ]
+}

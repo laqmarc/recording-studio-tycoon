@@ -1,0 +1,27 @@
+{
+  "rooms": [
+    {
+      "id": "room_mastering_1",
+      "name": "Mastering Suite",
+      "type": "mastering_suite",
+      "unlock_level": 7,
+      "size_m2": 12,
+      "max_people": 1,
+      "noise_floor_db": -75,
+      "isolation": 60,
+      "base_acoustic": 65,
+      "slots": {
+        "monitor": 4,
+        "interface": 1,
+        "headphones": 1,
+        "headphone_amp": 1,
+        "desk": 1,
+        "rack": 1,
+        "acoustic_treatment": 8,
+        "effects": 6,
+        "software": 3
+      },
+      "price_per_week": 500.0
+    }
+  ]
+}

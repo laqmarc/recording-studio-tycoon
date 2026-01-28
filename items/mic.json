@@ -1,0 +1,1292 @@
+{
+  "items": [
+    {
+      "id": "mic_the_t_bone_bd_200",
+      "name": "the t.bone BD 200",
+      "category": "mic",
+      "tier": "low",
+      "price": 27.0,
+      "maintenance_weekly": 0.05,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Percussió",
+        "Bombo"
+      ],
+      "type": [
+        "bombo"
+      ],
+      "stats": {
+        "mic_quality": 43,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Bombo molt econòmic"
+    },
+    {
+      "id": "mic_the_t_bone_cc57",
+      "name": "the t.bone CC57",
+      "category": "mic",
+      "tier": "low",
+      "price": 45.0,
+      "maintenance_weekly": 0.09,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Percussió",
+        "Caixa/Tom"
+      ],
+      "type": [
+        "caixa"
+      ],
+      "stats": {
+        "mic_quality": 40,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Caixa"
+    },
+    {
+      "id": "mic_the_t_bone_bd_300",
+      "name": "the t.bone BD 300",
+      "category": "mic",
+      "tier": "low",
+      "price": 53.0,
+      "maintenance_weekly": 0.11,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Percussió",
+        "Bombo"
+      ],
+      "type": [
+        "bombo"
+      ],
+      "stats": {
+        "mic_quality": 43,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Bombo econòmic"
+    },
+    {
+      "id": "mic_behringer_c_2_parell",
+      "name": "Behringer C-2 (parell)",
+      "category": "mic",
+      "tier": "low",
+      "price": 55.0,
+      "maintenance_weekly": 0.11,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Condensador",
+        "Petit"
+      ],
+      "type": [
+        "oh"
+      ],
+      "stats": {
+        "mic_quality": 45,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Overheads econòmic"
+    },
+    {
+      "id": "mic_audio_technica_at2020",
+      "name": "Audio-Technica AT2020",
+      "category": "mic",
+      "tier": "low",
+      "price": 88.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Condensador",
+        "Gran"
+      ],
+      "type": [
+        "vocals"
+      ],
+      "stats": {
+        "mic_quality": 45,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Veus / Percussió"
+    },
+    {
+      "id": "mic_audio_technica_at2021",
+      "name": "Audio-Technica AT2021",
+      "category": "mic",
+      "tier": "low",
+      "price": 89.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Condensador",
+        "Petit"
+      ],
+      "type": [
+        "guitarra",
+        "baix"
+      ],
+      "stats": {
+        "mic_quality": 45,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Instrumental"
+    },
+    {
+      "id": "mic_samson_c02",
+      "name": "Samson C02",
+      "category": "mic",
+      "tier": "low",
+      "price": 89.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Condensador",
+        "Petit"
+      ],
+      "type": [
+        "oh"
+      ],
+      "stats": {
+        "mic_quality": 45,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Overheads econòmic"
+    },
+    {
+      "id": "mic_the_t_bone_mb7_beta",
+      "name": "the t.bone MB7 Beta",
+      "category": "mic",
+      "tier": "low",
+      "price": 90.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Percussió",
+        "Caixa/Tom"
+      ],
+      "type": [
+        "tomb"
+      ],
+      "stats": {
+        "mic_quality": 40,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Toms"
+    },
+    {
+      "id": "mic_behringer_b_1",
+      "name": "Behringer B-1",
+      "category": "mic",
+      "tier": "mid",
+      "price": 99.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Condensador",
+        "Gran"
+      ],
+      "type": [
+        "vocals",
+        "guitarra",
+        "baix"
+      ],
+      "stats": {
+        "mic_quality": 60,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Estudi econòmic"
+    },
+    {
+      "id": "mic_the_t_bone_bd_500_beta",
+      "name": "the t.bone BD 500 Beta",
+      "category": "mic",
+      "tier": "mid",
+      "price": 99.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Bombo"
+      ],
+      "type": [
+        "bombo"
+      ],
+      "stats": {
+        "mic_quality": 58,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Bombo econòmic"
+    },
+    {
+      "id": "mic_the_t_bone_bd500",
+      "name": "the t.bone BD500",
+      "category": "mic",
+      "tier": "mid",
+      "price": 99.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Graves",
+        "Baix"
+      ],
+      "type": [
+        "bombo"
+      ],
+      "stats": {
+        "mic_quality": 58,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Econòmic"
+    },
+    {
+      "id": "mic_the_t_bone_sc140",
+      "name": "the t.bone SC140",
+      "category": "mic",
+      "tier": "mid",
+      "price": 99.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Condensador",
+        "Petit"
+      ],
+      "type": [
+        "oh"
+      ],
+      "stats": {
+        "mic_quality": 60,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Overheads"
+    },
+    {
+      "id": "mic_shure_sm57",
+      "name": "Shure SM57",
+      "category": "mic",
+      "tier": "mid",
+      "price": 109.0,
+      "maintenance_weekly": 0.22,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Caixa/Tom"
+      ],
+      "type": [
+        "caixa",
+        "tomb"
+      ],
+      "stats": {
+        "mic_quality": 55,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Caixa / Guitar cab"
+    },
+    {
+      "id": "mic_se_electronics_v7_x",
+      "name": "SE Electronics V7 X",
+      "category": "mic",
+      "tier": "mid",
+      "price": 119.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Cordes",
+        "Guitarra"
+      ],
+      "type": [
+        "guitarra"
+      ],
+      "stats": {
+        "mic_quality": 55,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Amp elèctrica"
+    },
+    {
+      "id": "mic_sennheiser_e904",
+      "name": "Sennheiser e904",
+      "category": "mic",
+      "tier": "mid",
+      "price": 125.0,
+      "maintenance_weekly": 0.25,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Caixa/Tom"
+      ],
+      "type": [
+        "caixa",
+        "tomb"
+      ],
+      "stats": {
+        "mic_quality": 55,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Toms / Caixa"
+    },
+    {
+      "id": "mic_universal_audio_sd_7",
+      "name": "Universal Audio SD-7",
+      "category": "mic",
+      "tier": "mid",
+      "price": 129.0,
+      "maintenance_weekly": 0.26,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Caixa/Tom"
+      ],
+      "type": [
+        "tomb",
+        "caixa"
+      ],
+      "stats": {
+        "mic_quality": 55,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Toms / Guitar"
+    },
+    {
+      "id": "mic_rode_nt5",
+      "name": "Rode NT5",
+      "category": "mic",
+      "tier": "mid",
+      "price": 149.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Condensador",
+        "Petit"
+      ],
+      "type": [
+        "oh"
+      ],
+      "stats": {
+        "mic_quality": 60,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Overheads / Cordes"
+    },
+    {
+      "id": "mic_the_t_bone_dc1500",
+      "name": "the t.bone DC1500",
+      "category": "mic",
+      "tier": "mid",
+      "price": 159.0,
+      "maintenance_weekly": 0.32,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Bombo"
+      ],
+      "type": [
+        "bombo"
+      ],
+      "stats": {
+        "mic_quality": 58,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Bombo / percussió"
+    },
+    {
+      "id": "mic_lewitt_lct_140_air",
+      "name": "Lewitt LCT 140 Air",
+      "category": "mic",
+      "tier": "mid",
+      "price": 164.0,
+      "maintenance_weekly": 0.33,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Condensador",
+        "Petit"
+      ],
+      "type": [
+        "oh"
+      ],
+      "stats": {
+        "mic_quality": 60,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Overheads"
+    },
+    {
+      "id": "mic_audix_d2",
+      "name": "Audix D2",
+      "category": "mic",
+      "tier": "mid",
+      "price": 169.0,
+      "maintenance_weekly": 0.34,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Caixa/Tom"
+      ],
+      "type": [
+        "tomb"
+      ],
+      "stats": {
+        "mic_quality": 55,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Toms"
+    },
+    {
+      "id": "mic_akg_d112_mkii",
+      "name": "AKG D112 MKII",
+      "category": "mic",
+      "tier": "mid",
+      "price": 172.0,
+      "maintenance_weekly": 0.34,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Bombo"
+      ],
+      "type": [
+        "bombo",
+        "baix"
+      ],
+      "stats": {
+        "mic_quality": 58,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Bombo / Baix amp"
+    },
+    {
+      "id": "mic_audix_d4",
+      "name": "Audix D4",
+      "category": "mic",
+      "tier": "mid",
+      "price": 179.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Caixa/Tom"
+      ],
+      "type": [
+        "tomb"
+      ],
+      "stats": {
+        "mic_quality": 55,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Toms"
+    },
+    {
+      "id": "mic_se_electronics_v_beat",
+      "name": "SE Electronics V Beat",
+      "category": "mic",
+      "tier": "mid",
+      "price": 186.0,
+      "maintenance_weekly": 0.37,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Caixa/Tom"
+      ],
+      "type": [
+        "tomb"
+      ],
+      "stats": {
+        "mic_quality": 55,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Toms"
+    },
+    {
+      "id": "mic_shure_beta_52a",
+      "name": "Shure Beta 52A",
+      "category": "mic",
+      "tier": "mid",
+      "price": 188.0,
+      "maintenance_weekly": 0.38,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Bombo"
+      ],
+      "type": [
+        "bombo",
+        "baix"
+      ],
+      "stats": {
+        "mic_quality": 58,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Bombo / Baix amp"
+    },
+    {
+      "id": "mic_akg_c451b",
+      "name": "AKG C451B",
+      "category": "mic",
+      "tier": "mid",
+      "price": 199.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Condensador",
+        "Petit"
+      ],
+      "type": [
+        "hh",
+        "guitarra"
+      ],
+      "stats": {
+        "mic_quality": 60,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Plats / Guitar acústica"
+    },
+    {
+      "id": "mic_rode_nt1_a",
+      "name": "Rode NT1-A",
+      "category": "mic",
+      "tier": "mid",
+      "price": 199.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Condensador",
+        "Gran"
+      ],
+      "type": [
+        "vocals",
+        "oh"
+      ],
+      "stats": {
+        "mic_quality": 60,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Veus / Overheads"
+    },
+    {
+      "id": "mic_se_electronics_x1_s",
+      "name": "SE Electronics X1 S",
+      "category": "mic",
+      "tier": "mid",
+      "price": 199.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Condensador",
+        "Gran"
+      ],
+      "type": [
+        "vocals",
+        "guitarra",
+        "baix"
+      ],
+      "stats": {
+        "mic_quality": 60,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Multiús"
+    },
+    {
+      "id": "mic_se_electronics_se8",
+      "name": "SE Electronics sE8",
+      "category": "mic",
+      "tier": "mid",
+      "price": 199.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Condensador",
+        "Petit"
+      ],
+      "type": [
+        "oh"
+      ],
+      "stats": {
+        "mic_quality": 60,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Overheads"
+    },
+    {
+      "id": "mic_se_electronics_v_kick",
+      "name": "SE Electronics V Kick",
+      "category": "mic",
+      "tier": "mid",
+      "price": 229.0,
+      "maintenance_weekly": 0.46,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Bombo"
+      ],
+      "type": [
+        "bombo"
+      ],
+      "stats": {
+        "mic_quality": 58,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Bombo"
+    },
+    {
+      "id": "mic_audix_d6",
+      "name": "Audix D6",
+      "category": "mic",
+      "tier": "mid",
+      "price": 243.0,
+      "maintenance_weekly": 0.49,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Bombo"
+      ],
+      "type": [
+        "bombo"
+      ],
+      "stats": {
+        "mic_quality": 58,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Bombo modern"
+    },
+    {
+      "id": "mic_sennheiser_md421",
+      "name": "Sennheiser MD421",
+      "category": "mic",
+      "tier": "mid",
+      "price": 258.0,
+      "maintenance_weekly": 0.52,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Percussió",
+        "Caixa/Tom"
+      ],
+      "type": [
+        "tomb",
+        "guitarra"
+      ],
+      "stats": {
+        "mic_quality": 55,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Toms / Guitar cab"
+    },
+    {
+      "id": "mic_lewitt_lct_440_pure",
+      "name": "Lewitt LCT 440 Pure",
+      "category": "mic",
+      "tier": "mid",
+      "price": 269.0,
+      "maintenance_weekly": 0.54,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Condensador",
+        "Gran"
+      ],
+      "type": [
+        "vocals"
+      ],
+      "stats": {
+        "mic_quality": 60,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Veus"
+    },
+    {
+      "id": "mic_aston_origin",
+      "name": "Aston Origin",
+      "category": "mic",
+      "tier": "mid",
+      "price": 299.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Condensador",
+        "Gran"
+      ],
+      "type": [
+        "vocals"
+      ],
+      "stats": {
+        "mic_quality": 60,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Veus"
+    },
+    {
+      "id": "mic_rode_nt5_stereo_pair",
+      "name": "Rode NT5 Stereo Pair",
+      "category": "mic",
+      "tier": "mid",
+      "price": 299.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Estèreo",
+        "Parell"
+      ],
+      "type": [
+        "oh"
+      ],
+      "stats": {
+        "mic_quality": 55,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Cordes / Overheads"
+    },
+    {
+      "id": "mic_warm_audio_wa_47jr",
+      "name": "Warm Audio WA-47jr",
+      "category": "mic",
+      "tier": "mid",
+      "price": 299.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Condensador",
+        "Gran"
+      ],
+      "type": [
+        "vocals",
+        "guitarra",
+        "baix"
+      ],
+      "stats": {
+        "mic_quality": 60,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Estudi"
+    },
+    {
+      "id": "mic_akg_c214",
+      "name": "AKG C214",
+      "category": "mic",
+      "tier": "pro",
+      "price": 349.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Condensador",
+        "Gran"
+      ],
+      "type": [
+        "vocals",
+        "guitarra",
+        "baix"
+      ],
+      "stats": {
+        "mic_quality": 75,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Estudi"
+    },
+    {
+      "id": "mic_shure_sm7b",
+      "name": "Shure SM7B",
+      "category": "mic",
+      "tier": "pro",
+      "price": 389.0,
+      "maintenance_weekly": 0.78,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Graves",
+        "Baix"
+      ],
+      "type": [
+        "vocals",
+        "baix"
+      ],
+      "stats": {
+        "mic_quality": 73,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Estudi"
+    },
+    {
+      "id": "mic_akg_c451_pair",
+      "name": "AKG C451 Pair",
+      "category": "mic",
+      "tier": "pro",
+      "price": 399.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Estèreo",
+        "Parell"
+      ],
+      "type": [
+        "guitarra"
+      ],
+      "stats": {
+        "mic_quality": 70,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Cordes"
+    },
+    {
+      "id": "mic_aston_spirit",
+      "name": "Aston Spirit",
+      "category": "mic",
+      "tier": "pro",
+      "price": 399.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Cordes",
+        "Guitarra"
+      ],
+      "type": [
+        "guitarra"
+      ],
+      "stats": {
+        "mic_quality": 70,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Acústica"
+    },
+    {
+      "id": "mic_rode_nt2_a",
+      "name": "Rode NT2-A",
+      "category": "mic",
+      "tier": "pro",
+      "price": 399.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Condensador",
+        "Gran"
+      ],
+      "type": [
+        "vocals",
+        "guitarra",
+        "baix"
+      ],
+      "stats": {
+        "mic_quality": 75,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Multi patró"
+    },
+    {
+      "id": "mic_se_electronics_se8_pair",
+      "name": "SE Electronics sE8 Pair",
+      "category": "mic",
+      "tier": "pro",
+      "price": 399.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Estèreo",
+        "Parell"
+      ],
+      "type": [
+        "oh"
+      ],
+      "stats": {
+        "mic_quality": 70,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Cordes"
+    },
+    {
+      "id": "mic_sontronics_dm_1b",
+      "name": "Sontronics DM-1B",
+      "category": "mic",
+      "tier": "pro",
+      "price": 409.0,
+      "maintenance_weekly": 0.82,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Percussió",
+        "Caixa/Tom"
+      ],
+      "type": [
+        "caixa"
+      ],
+      "stats": {
+        "mic_quality": 70,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Caixa premium"
+    },
+    {
+      "id": "mic_electro_voice_re20",
+      "name": "Electro-Voice RE20",
+      "category": "mic",
+      "tier": "pro",
+      "price": 449.0,
+      "maintenance_weekly": 0.9,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Graves",
+        "Baix"
+      ],
+      "type": [
+        "vocals",
+        "baix"
+      ],
+      "stats": {
+        "mic_quality": 73,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Estudi"
+    },
+    {
+      "id": "mic_lauten_audio_kick_mic",
+      "name": "Lauten Audio Kick Mic",
+      "category": "mic",
+      "tier": "pro",
+      "price": 485.0,
+      "maintenance_weekly": 0.97,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Percussió",
+        "Bombo"
+      ],
+      "type": [
+        "bombo"
+      ],
+      "stats": {
+        "mic_quality": 73,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Bombo estudi"
+    },
+    {
+      "id": "mic_royer_r_10",
+      "name": "Royer R-10",
+      "category": "mic",
+      "tier": "pro",
+      "price": 499.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Cordes",
+        "Guitarra"
+      ],
+      "type": [
+        "guitarra"
+      ],
+      "stats": {
+        "mic_quality": 70,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Ribbon amp"
+    },
+    {
+      "id": "mic_beyerdynamic_mc930",
+      "name": "Beyerdynamic MC930",
+      "category": "mic",
+      "tier": "pro",
+      "price": 555.0,
+      "maintenance_weekly": 1.11,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Condensador",
+        "Petit"
+      ],
+      "type": [
+        "guitarra"
+      ],
+      "stats": {
+        "mic_quality": 75,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Cordes"
+    },
+    {
+      "id": "mic_dpa_4055",
+      "name": "DPA 4055",
+      "category": "mic",
+      "tier": "pro",
+      "price": 649.0,
+      "maintenance_weekly": 1.3,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Percussió",
+        "Bombo"
+      ],
+      "type": [
+        "bombo"
+      ],
+      "stats": {
+        "mic_quality": 73,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Bombo premium"
+    },
+    {
+      "id": "mic_beyerdynamic_m160",
+      "name": "Beyerdynamic M160",
+      "category": "mic",
+      "tier": "pro",
+      "price": 699.0,
+      "maintenance_weekly": 1.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Cordes",
+        "Guitarra"
+      ],
+      "type": [
+        "guitarra"
+      ],
+      "stats": {
+        "mic_quality": 70,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Ribbon amp"
+    },
+    {
+      "id": "mic_neumann_km184",
+      "name": "Neumann KM184",
+      "category": "mic",
+      "tier": "pro",
+      "price": 699.0,
+      "maintenance_weekly": 1.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Condensador",
+        "Petit"
+      ],
+      "type": [
+        "guitarra"
+      ],
+      "stats": {
+        "mic_quality": 75,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Cordes premium"
+    },
+    {
+      "id": "mic_neumann_tlm102",
+      "name": "Neumann TLM102",
+      "category": "mic",
+      "tier": "pro",
+      "price": 699.0,
+      "maintenance_weekly": 1.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Condensador",
+        "Gran"
+      ],
+      "type": [
+        "vocals"
+      ],
+      "stats": {
+        "mic_quality": 75,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Veus premium"
+    },
+    {
+      "id": "mic_beyerdynamic_mc930_pair",
+      "name": "Beyerdynamic MC930 Pair",
+      "category": "mic",
+      "tier": "pro",
+      "price": 999.0,
+      "maintenance_weekly": 2.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Estèreo",
+        "Parell"
+      ],
+      "type": [
+        "guitarra"
+      ],
+      "stats": {
+        "mic_quality": 70,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Cordes premium"
+    },
+    {
+      "id": "mic_neumann_km184_pair",
+      "name": "Neumann KM184 Pair",
+      "category": "mic",
+      "tier": "pro",
+      "price": 1399.0,
+      "maintenance_weekly": 2.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Estèreo",
+        "Parell"
+      ],
+      "type": [
+        "guitarra"
+      ],
+      "stats": {
+        "mic_quality": 70,
+        "self_noise": 0
+      },
+      "io": {},
+      "notes": "Cordes premium"
+    },
+    {
+      "id": "mic_condenser_vocal",
+      "name": "Micròfon Condensador Vocal",
+      "category": "mic",
+      "tier": "low",
+      "price": 100,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Condensador",
+        "Vocals"
+      ],
+      "stats": {
+        "mic_quality": 50
+      },
+      "type": [
+        "vocals"
+      ],
+      "io": {},
+      "notes": "Micròfon condensador per vocals"
+    },
+    {
+      "id": "mic_dynamic_instrument",
+      "name": "Micròfon Dinàmic Instrumental",
+      "category": "mic",
+      "tier": "low",
+      "price": 80,
+      "maintenance_weekly": 0.16,
+      "reliability": 0.95,
+      "unlock_level": 1,
+      "tags": [
+        "Dinàmic",
+        "Instrumental"
+      ],
+      "stats": {
+        "mic_quality": 45
+      },
+      "type": [
+        "guitarra",
+        "baix",
+        "bombo",
+        "caixa"
+      ],
+      "io": {},
+      "notes": "Micròfon dinàmic versàtil per instruments"
+    },
+    {
+      "id": "mic_condenser_overhead",
+      "name": "Micròfon Condensador Overhead",
+      "category": "mic",
+      "tier": "mid",
+      "price": 150,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.9,
+      "unlock_level": 2,
+      "tags": [
+        "Condensador",
+        "Overhead"
+      ],
+      "stats": {
+        "mic_quality": 55
+      },
+      "type": [
+        "tomb",
+        "hh",
+        "oh"
+      ],
+      "io": {},
+      "notes": "Micròfon condensador per overheads de bateria"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "items": [
+    {
+      "id": "accessory_cabling_neutrik_xlr_panel_connectors_set",
+      "name": "Neutrik XLR Panel Connectors Set",
+      "category": "cable",
+      "tier": "mid",
+      "price": 25.0,
+      "maintenance_weekly": 0.05,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 65
+      },
+      "io": {},
+      "notes": "Per caixes i racks personalitzats"
+    },
+    {
+      "id": "accessory_cabling_patch_cables_tt_bantam_mogami_set",
+      "name": "Patch Cables TT Bantam Mogami Set",
+      "category": "cable",
+      "tier": "pro",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 75
+      },
+      "io": {},
+      "notes": "Per patchbays TT professionals"
+    },
+    {
+      "id": "cable_the_sssnake_patch_cable_trs",
+      "name": "the sssnake Patch Cable TRS",
+      "category": "cable",
+      "tier": "low",
+      "price": 5.0,
+      "maintenance_weekly": 0.01,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 55
+      },
+      "io": {},
+      "notes": "Per patchbay"
+    },
+    {
+      "id": "cable_the_sssnake_xlr3_basic",
+      "name": "the sssnake XLR3 Basic",
+      "category": "cable",
+      "tier": "low",
+      "price": 10.0,
+      "maintenance_weekly": 0.02,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 55
+      },
+      "io": {},
+      "notes": "Cable bàsic de micro"
+    },
+    {
+      "id": "cable_cordial_cfm_trs",
+      "name": "Cordial CFM TRS",
+      "category": "cable",
+      "tier": "mid",
+      "price": 12.0,
+      "maintenance_weekly": 0.02,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 65
+      },
+      "io": {},
+      "notes": "Connexions de rack"
+    },
+    {
+      "id": "cable_cordial_ccm_fm",
+      "name": "Cordial CCM FM",
+      "category": "cable",
+      "tier": "mid",
+      "price": 18.0,
+      "maintenance_weekly": 0.04,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 65
+      },
+      "io": {},
+      "notes": "Molt fiable"
+    },
+    {
+      "id": "cable_mogami_gold_trs",
+      "name": "Mogami Gold TRS",
+      "category": "cable",
+      "tier": "pro",
+      "price": 35.0,
+      "maintenance_weekly": 0.07,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 75
+      },
+      "io": {},
+      "notes": "Baix soroll, molt durador"
+    },
+    {
+      "id": "cable_mogami_gold_xlr",
+      "name": "Mogami Gold XLR",
+      "category": "cable",
+      "tier": "pro",
+      "price": 40.0,
+      "maintenance_weekly": 0.08,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 75
+      },
+      "io": {},
+      "notes": "Estàndard professional"
+    }
+  ]
+}

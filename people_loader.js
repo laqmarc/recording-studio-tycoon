@@ -5,8 +5,10 @@ function maybeLoadDemo() {
   try {
     if (typeof window === 'undefined') return;
     if (window.__demoLoaded) return;
+    const hasItems = window.__itemsLoaded || (Array.isArray(window.ITEMS) && window.ITEMS.length);
+    const hasRooms = window.__roomsLoaded || (Array.isArray(window.ROOMS) && window.ROOMS.length);
     if (window.DEMO && window.PEOPLE) window.DEMO.people = window.PEOPLE;
-    if (window.DEMO && typeof window.loadFromObject === 'function') {
+    if (window.DEMO && hasItems && hasRooms && typeof window.loadFromObject === 'function') {
       window.__demoLoaded = true;
       window.loadFromObject(window.DEMO);
     }
@@ -54,6 +56,8 @@ async function loadPeople() {
 
 if (typeof window !== 'undefined') {
   window.addEventListener('demo-ready', maybeLoadDemo, { once: true });
+  window.addEventListener('items-ready', maybeLoadDemo, { once: true });
+  window.addEventListener('rooms-ready', maybeLoadDemo, { once: true });
 }
 
 loadPeople();

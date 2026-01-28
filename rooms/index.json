@@ -1,0 +1,9 @@
+{
+  "types": [
+    "control_room",
+    "live_room",
+    "mastering_suite",
+    "streaming_room",
+    "vocal_booth"
+  ]
+}

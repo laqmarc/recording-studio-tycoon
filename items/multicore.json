@@ -1,0 +1,84 @@
+{
+  "items": [
+    {
+      "id": "multicore_the_sssnake_sm10",
+      "name": "the sssnake SM10",
+      "category": "multicore",
+      "tier": "low",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 55
+      },
+      "io": {},
+      "notes": "Per connexions fixes"
+    },
+    {
+      "id": "multicore_behringer_ms8000",
+      "name": "Behringer MS8000",
+      "category": "multicore",
+      "tier": "low",
+      "price": 90.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 55
+      },
+      "io": {},
+      "notes": "Amb retorns"
+    },
+    {
+      "id": "multicore_sommer_multicore_stage_8",
+      "name": "Sommer Multicore Stage 8",
+      "category": "multicore",
+      "tier": "mid",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 65
+      },
+      "io": {},
+      "notes": "Molt robust"
+    },
+    {
+      "id": "multicore_cordial_cyb_multicore_12_4",
+      "name": "Cordial CYB Multicore 12/4",
+      "category": "multicore",
+      "tier": "mid",
+      "price": 220.0,
+      "maintenance_weekly": 0.44,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 65
+      },
+      "io": {},
+      "notes": "Qualitat de cable professional"
+    },
+    {
+      "id": "multicore_cordial_cse_multicore_custom",
+      "name": "Cordial CSE Multicore Custom",
+      "category": "multicore",
+      "tier": "pro",
+      "price": 600.0,
+      "maintenance_weekly": 1.2,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 75
+      },
+      "io": {},
+      "notes": "Instal·lacions fixes"
+    }
+  ]
+}

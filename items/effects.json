@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "id": "effect_reverb_plate",
+      "name": "Plate Reverb",
+      "category": "effects",
+      "tier": "mid",
+      "price": 200,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.9,
+      "unlock_level": 2,
+      "tags": [
+        "Reverb"
+      ],
+      "stats": {
+        "reverb_quality": 75
+      },
+      "io": {},
+      "notes": "Reverb de placa clàssica"
+    }
+  ]
+}

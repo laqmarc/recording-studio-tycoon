@@ -1,0 +1,29 @@
+{
+  "rooms": [
+    {
+      "id": "room_streaming_1",
+      "name": "Live Streaming Room",
+      "type": "streaming_room",
+      "unlock_level": 4,
+      "size_m2": 18,
+      "max_people": 3,
+      "noise_floor_db": -50,
+      "isolation": 35,
+      "base_acoustic": 35,
+      "slots": {
+        "interface": 2,
+        "mic": 3,
+        "preamp": 2,
+        "headphones": 3,
+        "headphone_amp": 1,
+        "desk": 1,
+        "acoustic_treatment": 4,
+        "cable": 8,
+        "software": 2,
+        "instruments": 1,
+        "mic_stand": 3
+      },
+      "price_per_week": 250.0
+    }
+  ]
+}

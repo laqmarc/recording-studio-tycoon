@@ -1,0 +1,484 @@
+{
+  "items": [
+    {
+      "id": "midi_controller_m_audio_keystation_mini_32",
+      "name": "M-Audio Keystation Mini 32",
+      "category": "midi_controller",
+      "tier": "low",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 49.6
+      },
+      "io": {},
+      "notes": "Molt lleuger i simple"
+    },
+    {
+      "id": "midi_controller_akai_lpk25_wireless",
+      "name": "Akai LPK25 Wireless",
+      "category": "midi_controller",
+      "tier": "low",
+      "price": 70.0,
+      "maintenance_weekly": 0.14,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 47.5
+      },
+      "io": {},
+      "notes": "Bluetooth, molt portàtil"
+    },
+    {
+      "id": "midi_controller_behringer_umx250",
+      "name": "Behringer UMX250",
+      "category": "midi_controller",
+      "tier": "low",
+      "price": 90.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 47.5
+      },
+      "io": {},
+      "notes": "Opció molt econòmica"
+    },
+    {
+      "id": "midi_controller_akai_mpk_mini_mk3",
+      "name": "Akai MPK Mini Mk3",
+      "category": "midi_controller",
+      "tier": "low",
+      "price": 100.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 47.5
+      },
+      "io": {},
+      "notes": "Molt popular i portàtil"
+    },
+    {
+      "id": "midi_controller_novation_launchkey_mini_mk3",
+      "name": "Novation Launchkey Mini Mk3",
+      "category": "midi_controller",
+      "tier": "low",
+      "price": 100.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 47.5
+      },
+      "io": {},
+      "notes": "Ideal per Ableton Live"
+    },
+    {
+      "id": "midi_controller_arturia_minilab_3",
+      "name": "Arturia MiniLab 3",
+      "category": "midi_controller",
+      "tier": "low",
+      "price": 110.0,
+      "maintenance_weekly": 0.22,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 47.5
+      },
+      "io": {},
+      "notes": "Bona integració amb DAWs"
+    },
+    {
+      "id": "midi_controller_korg_microkey2_37",
+      "name": "Korg microKEY2-37",
+      "category": "midi_controller",
+      "tier": "low",
+      "price": 110.0,
+      "maintenance_weekly": 0.22,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 51.1
+      },
+      "io": {},
+      "notes": "Tecles tipus mini, molt fi"
+    },
+    {
+      "id": "midi_controller_m_audio_keystation_49_mk3",
+      "name": "M-Audio Keystation 49 MK3",
+      "category": "midi_controller",
+      "tier": "low",
+      "price": 110.0,
+      "maintenance_weekly": 0.22,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 54.7
+      },
+      "io": {},
+      "notes": "Clàssic per estudiar"
+    },
+    {
+      "id": "midi_controller_nektar_impact_lx25",
+      "name": "Nektar Impact LX25+",
+      "category": "midi_controller",
+      "tier": "low",
+      "price": 120.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 47.5
+      },
+      "io": {},
+      "notes": "Control directe de DAW"
+    },
+    {
+      "id": "midi_controller_nektar_impact_lx49",
+      "name": "Nektar Impact LX49+",
+      "category": "midi_controller",
+      "tier": "low",
+      "price": 160.0,
+      "maintenance_weekly": 0.32,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 54.7
+      },
+      "io": {},
+      "notes": "Més tecles i controls"
+    },
+    {
+      "id": "midi_controller_novation_launchkey_49_mk3",
+      "name": "Novation Launchkey 49 Mk3",
+      "category": "midi_controller",
+      "tier": "mid",
+      "price": 220.0,
+      "maintenance_weekly": 0.44,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 54.7
+      },
+      "io": {},
+      "notes": "Control profund d’Ableton"
+    },
+    {
+      "id": "midi_controller_native_instruments_komplete_kontrol_a49",
+      "name": "Native Instruments Komplete Kontrol A49",
+      "category": "midi_controller",
+      "tier": "mid",
+      "price": 230.0,
+      "maintenance_weekly": 0.46,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 54.7
+      },
+      "io": {},
+      "notes": "Control directe Kontakt/Komplete"
+    },
+    {
+      "id": "midi_controller_arturia_keylab_essential_49_mk3",
+      "name": "Arturia KeyLab Essential 49 Mk3",
+      "category": "midi_controller",
+      "tier": "mid",
+      "price": 240.0,
+      "maintenance_weekly": 0.48,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 54.7
+      },
+      "io": {},
+      "notes": "Bona integració Arturia"
+    },
+    {
+      "id": "midi_controller_novation_launchkey_61_mk3",
+      "name": "Novation Launchkey 61 Mk3",
+      "category": "midi_controller",
+      "tier": "mid",
+      "price": 260.0,
+      "maintenance_weekly": 0.52,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 58.3
+      },
+      "io": {},
+      "notes": "Per producció completa"
+    },
+    {
+      "id": "midi_controller_native_instruments_komplete_kontrol_a61",
+      "name": "Native Instruments Komplete Kontrol A61",
+      "category": "midi_controller",
+      "tier": "mid",
+      "price": 280.0,
+      "maintenance_weekly": 0.56,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 58.3
+      },
+      "io": {},
+      "notes": "Tecles grans i còmodes"
+    },
+    {
+      "id": "midi_controller_arturia_keylab_essential_61_mk3",
+      "name": "Arturia KeyLab Essential 61 Mk3",
+      "category": "midi_controller",
+      "tier": "mid",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 58.3
+      },
+      "io": {},
+      "notes": "Més rang per tocar"
+    },
+    {
+      "id": "midi_controller_akai_mpk249",
+      "name": "Akai MPK249",
+      "category": "midi_controller",
+      "tier": "mid",
+      "price": 350.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 54.7
+      },
+      "io": {},
+      "notes": "Pads professionals"
+    },
+    {
+      "id": "midi_controller_nektar_panorama_p4",
+      "name": "Nektar Panorama P4",
+      "category": "midi_controller",
+      "tier": "mid",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 54.7
+      },
+      "io": {},
+      "notes": "Integració DAW molt profunda"
+    },
+    {
+      "id": "midi_controller_akai_mpk261",
+      "name": "Akai MPK261",
+      "category": "midi_controller",
+      "tier": "mid",
+      "price": 450.0,
+      "maintenance_weekly": 0.9,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 58.3
+      },
+      "io": {},
+      "notes": "Control complet per estudi"
+    },
+    {
+      "id": "midi_controller_korg_keystage_49",
+      "name": "Korg Keystage 49",
+      "category": "midi_controller",
+      "tier": "mid",
+      "price": 550.0,
+      "maintenance_weekly": 1.1,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 54.7
+      },
+      "io": {},
+      "notes": "Aftertouch polifònic"
+    },
+    {
+      "id": "midi_controller_arturia_keylab_49_mkii",
+      "name": "Arturia KeyLab 49 MkII",
+      "category": "midi_controller",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 74.7
+      },
+      "io": {},
+      "notes": "Construcció metàl·lica"
+    },
+    {
+      "id": "midi_controller_arturia_keylab_61_mkii",
+      "name": "Arturia KeyLab 61 MkII",
+      "category": "midi_controller",
+      "tier": "pro",
+      "price": 650.0,
+      "maintenance_weekly": 1.3,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 78.3
+      },
+      "io": {},
+      "notes": "Control avançat"
+    },
+    {
+      "id": "midi_controller_novation_sl_mkiii_61",
+      "name": "Novation SL MkIII 61",
+      "category": "midi_controller",
+      "tier": "pro",
+      "price": 700.0,
+      "maintenance_weekly": 1.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 78.3
+      },
+      "io": {},
+      "notes": "Control hardware i software"
+    },
+    {
+      "id": "midi_controller_native_instruments_komplete_kontrol_s49_mk3",
+      "name": "Native Instruments Komplete Kontrol S49 Mk3",
+      "category": "midi_controller",
+      "tier": "pro",
+      "price": 750.0,
+      "maintenance_weekly": 1.5,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 74.7
+      },
+      "io": {},
+      "notes": "Pantalles i aftertouch"
+    },
+    {
+      "id": "midi_controller_akai_mpc_key_37",
+      "name": "Akai MPC Key 37",
+      "category": "midi_controller",
+      "tier": "pro",
+      "price": 900.0,
+      "maintenance_weekly": 1.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 71.1
+      },
+      "io": {},
+      "notes": "MPC + teclat integrats"
+    },
+    {
+      "id": "midi_controller_native_instruments_komplete_kontrol_s61_mk3",
+      "name": "Native Instruments Komplete Kontrol S61 Mk3",
+      "category": "midi_controller",
+      "tier": "pro",
+      "price": 900.0,
+      "maintenance_weekly": 1.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 78.3
+      },
+      "io": {},
+      "notes": "Alta integració i qualitat"
+    },
+    {
+      "id": "midi_controller_native_instruments_komplete_kontrol_s88_mk3",
+      "name": "Native Instruments Komplete Kontrol S88 Mk3",
+      "category": "midi_controller",
+      "tier": "pro",
+      "price": 1200.0,
+      "maintenance_weekly": 2.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 86.4
+      },
+      "io": {},
+      "notes": "Tecles contrapesades"
+    },
+    {
+      "id": "midi_controller_roli_seaboard_rise_2",
+      "name": "Roli Seaboard Rise 2",
+      "category": "midi_controller",
+      "tier": "pro",
+      "price": 1400.0,
+      "maintenance_weekly": 2.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 74.7
+      },
+      "io": {},
+      "notes": "Expressió multidimensional"
+    },
+    {
+      "id": "midi_controller_akai_mpc_key_61",
+      "name": "Akai MPC Key 61",
+      "category": "midi_controller",
+      "tier": "pro",
+      "price": 1700.0,
+      "maintenance_weekly": 3.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 78.3
+      },
+      "io": {},
+      "notes": "Producció sense ordinador"
+    },
+    {
+      "id": "midi_controller_osmose_by_expressive_e",
+      "name": "Osmose by Expressive E",
+      "category": "midi_controller",
+      "tier": "pro",
+      "price": 1800.0,
+      "maintenance_weekly": 3.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 74.7
+      },
+      "io": {},
+      "notes": "Control físic molt avançat"
+    }
+  ]
+}

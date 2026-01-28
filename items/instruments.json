@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "id": "instrument_guitar_electric",
+      "name": "Guitarra Elèctrica Fender",
+      "category": "instruments",
+      "tier": "mid",
+      "price": 500,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Guitarra"
+      ],
+      "stats": {
+        "instrument_quality": 70
+      },
+      "io": {},
+      "notes": "Guitarra per sessions de gravació"
+    }
+  ]
+}

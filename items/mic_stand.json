@@ -1,0 +1,100 @@
+{
+  "items": [
+    {
+      "id": "mic_stand_millenium_ms2003",
+      "name": "Millenium MS2003",
+      "category": "mic_stand",
+      "tier": "low",
+      "price": 20.0,
+      "maintenance_weekly": 0.04,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 1
+      },
+      "io": {},
+      "notes": "Bàsic per veu i instruments"
+    },
+    {
+      "id": "mic_stand_millenium_ms3003",
+      "name": "Millenium MS3003",
+      "category": "mic_stand",
+      "tier": "low",
+      "price": 25.0,
+      "maintenance_weekly": 0.05,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 1
+      },
+      "io": {},
+      "notes": "Versàtil per instruments"
+    },
+    {
+      "id": "mic_stand_k_m_210_9",
+      "name": "K&M 210/9",
+      "category": "mic_stand",
+      "tier": "mid",
+      "price": 55.0,
+      "maintenance_weekly": 0.11,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 2
+      },
+      "io": {},
+      "notes": "Molt robust, estàndard d’estudi"
+    },
+    {
+      "id": "mic_stand_k_m_25950_low_profile",
+      "name": "K&M 25950 Low Profile",
+      "category": "mic_stand",
+      "tier": "mid",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 2
+      },
+      "io": {},
+      "notes": "Ideal per bombo i amplis"
+    },
+    {
+      "id": "mic_stand_k_m_21090_heavy_duty",
+      "name": "K&M 21090 Heavy Duty",
+      "category": "mic_stand",
+      "tier": "pro",
+      "price": 85.0,
+      "maintenance_weekly": 0.17,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 3
+      },
+      "io": {},
+      "notes": "Per micros pesants"
+    },
+    {
+      "id": "mic_stand_triad_orbit_t2_boom",
+      "name": "Triad-Orbit T2 + BOOM",
+      "category": "mic_stand",
+      "tier": "pro",
+      "price": 350.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 3
+      },
+      "io": {},
+      "notes": "Sistema professional modular"
+    }
+  ]
+}

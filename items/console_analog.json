@@ -1,0 +1,544 @@
+{
+  "items": [
+    {
+      "id": "console_analog_mackie_802vlz4",
+      "name": "Mackie 802VLZ4",
+      "category": "console_analog",
+      "tier": "low",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 43.2,
+        "headroom": 60,
+        "channels": 8
+      },
+      "io": {},
+      "notes": "Compacta, robusta, bona per submix i home-studio"
+    },
+    {
+      "id": "console_analog_soundcraft_notepad_12fx",
+      "name": "Soundcraft Notepad-12FX",
+      "category": "console_analog",
+      "tier": "low",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 44.8,
+        "headroom": 60,
+        "channels": 12
+      },
+      "io": {},
+      "notes": "USB + FX, ideal per streaming/podcast"
+    },
+    {
+      "id": "console_analog_allen_heath_zed_10",
+      "name": "Allen & Heath ZED-10",
+      "category": "console_analog",
+      "tier": "low",
+      "price": 250.0,
+      "maintenance_weekly": 0.5,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 44.0,
+        "headroom": 60,
+        "channels": 10
+      },
+      "io": {},
+      "notes": "USB estèreo, fiable per home-studio"
+    },
+    {
+      "id": "console_analog_mackie_1202vlz4",
+      "name": "Mackie 1202VLZ4",
+      "category": "console_analog",
+      "tier": "low",
+      "price": 320.0,
+      "maintenance_weekly": 0.64,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 44.8,
+        "headroom": 60,
+        "channels": 12
+      },
+      "io": {},
+      "notes": "Previs Onyx, molt típica per estudi petit"
+    },
+    {
+      "id": "console_analog_allen_heath_zed_14",
+      "name": "Allen & Heath ZED-14",
+      "category": "console_analog",
+      "tier": "low",
+      "price": 380.0,
+      "maintenance_weekly": 0.76,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 45.6,
+        "headroom": 60,
+        "channels": 14
+      },
+      "io": {},
+      "notes": "14 canals, bon EQ"
+    },
+    {
+      "id": "console_analog_soundcraft_signature_12mtk",
+      "name": "Soundcraft Signature 12MTK",
+      "category": "console_analog",
+      "tier": "low",
+      "price": 420.0,
+      "maintenance_weekly": 0.84,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 44.8,
+        "headroom": 60,
+        "channels": 12
+      },
+      "io": {},
+      "notes": "USB multitrack, molt útil per gravar maquetes"
+    },
+    {
+      "id": "console_analog_yamaha_mg16xu",
+      "name": "Yamaha MG16XU",
+      "category": "console_analog",
+      "tier": "low",
+      "price": 430.0,
+      "maintenance_weekly": 0.86,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 60,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "USB, FX, pràctica per gravar i directe"
+    },
+    {
+      "id": "console_analog_tascam_model_12",
+      "name": "Tascam Model 12",
+      "category": "console_analog",
+      "tier": "low",
+      "price": 620.0,
+      "maintenance_weekly": 1.24,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 44.8,
+        "headroom": 60,
+        "channels": 12
+      },
+      "io": {},
+      "notes": "Analògica + gravador/USB multitrack"
+    },
+    {
+      "id": "console_analog_soundcraft_signature_22mtk",
+      "name": "Soundcraft Signature 22MTK",
+      "category": "console_analog",
+      "tier": "low",
+      "price": 650.0,
+      "maintenance_weekly": 1.3,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 48.8,
+        "headroom": 60,
+        "channels": 22
+      },
+      "io": {},
+      "notes": "USB multitrack, moltes entrades"
+    },
+    {
+      "id": "console_analog_mackie_1604vlz4",
+      "name": "Mackie 1604VLZ4",
+      "category": "console_analog",
+      "tier": "low",
+      "price": 750.0,
+      "maintenance_weekly": 1.5,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 60,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "16 canals, clàssica per assaig/estudi project"
+    },
+    {
+      "id": "console_analog_tascam_model_16",
+      "name": "Tascam Model 16",
+      "category": "console_analog",
+      "tier": "mid",
+      "price": 880.0,
+      "maintenance_weekly": 1.76,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 60,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Analògica + USB multitrack"
+    },
+    {
+      "id": "console_analog_allen_heath_zed_24",
+      "name": "Allen & Heath ZED-24",
+      "category": "console_analog",
+      "tier": "mid",
+      "price": 950.0,
+      "maintenance_weekly": 1.9,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 49.6,
+        "headroom": 60,
+        "channels": 24
+      },
+      "io": {},
+      "notes": "Bon EQ i routing per estudi project"
+    },
+    {
+      "id": "console_analog_tascam_model_24",
+      "name": "Tascam Model 24",
+      "category": "console_analog",
+      "tier": "mid",
+      "price": 1150.0,
+      "maintenance_weekly": 2.3,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 49.6,
+        "headroom": 60,
+        "channels": 24
+      },
+      "io": {},
+      "notes": "Analògica + USB multitrack, molt completa"
+    },
+    {
+      "id": "console_analog_allen_heath_mixwizard_wz4_16_2",
+      "name": "Allen & Heath MixWizard WZ4 16:2",
+      "category": "console_analog",
+      "tier": "mid",
+      "price": 1200.0,
+      "maintenance_weekly": 2.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 60,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Routing molt flexible, previ bo"
+    },
+    {
+      "id": "console_analog_ssl_six",
+      "name": "SSL SiX",
+      "category": "console_analog",
+      "tier": "mid",
+      "price": 1200.0,
+      "maintenance_weekly": 2.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 42.4,
+        "headroom": 60,
+        "channels": 6
+      },
+      "io": {},
+      "notes": "Summing/mini consola pro; bus compressor SSL"
+    },
+    {
+      "id": "console_analog_allen_heath_zed_436",
+      "name": "Allen & Heath ZED-436",
+      "category": "console_analog",
+      "tier": "mid",
+      "price": 2200.0,
+      "maintenance_weekly": 4.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 54.4,
+        "headroom": 60,
+        "channels": 36
+      },
+      "io": {},
+      "notes": "Format gran, molta connectivitat"
+    },
+    {
+      "id": "console_analog_midas_venice_f16",
+      "name": "Midas Venice F16",
+      "category": "console_analog",
+      "tier": "mid",
+      "price": 2200.0,
+      "maintenance_weekly": 4.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 60,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "So Midas, molt musical"
+    },
+    {
+      "id": "console_analog_soundcraft_gb2_16",
+      "name": "Soundcraft GB2-16",
+      "category": "console_analog",
+      "tier": "mid",
+      "price": 2400.0,
+      "maintenance_weekly": 4.8,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 60,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Consola analògica de qualitat per racks i patchbay"
+    },
+    {
+      "id": "console_analog_midas_venice_f24",
+      "name": "Midas Venice F24",
+      "category": "console_analog",
+      "tier": "mid",
+      "price": 3200.0,
+      "maintenance_weekly": 6.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 49.6,
+        "headroom": 60,
+        "channels": 24
+      },
+      "io": {},
+      "notes": "Més canals, bon headroom"
+    },
+    {
+      "id": "console_analog_soundcraft_gb2_24",
+      "name": "Soundcraft GB2-24",
+      "category": "console_analog",
+      "tier": "mid",
+      "price": 3200.0,
+      "maintenance_weekly": 6.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 49.6,
+        "headroom": 60,
+        "channels": 24
+      },
+      "io": {},
+      "notes": "Més canals, so Soundcraft clàssic"
+    },
+    {
+      "id": "console_analog_ssl_big_six",
+      "name": "SSL Big SiX",
+      "category": "console_analog",
+      "tier": "pro",
+      "price": 3000.0,
+      "maintenance_weekly": 6.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 75,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Consola compacta pro, USB, so SSL"
+    },
+    {
+      "id": "console_analog_toft_audio_atb_16",
+      "name": "Toft Audio ATB-16",
+      "category": "console_analog",
+      "tier": "pro",
+      "price": 5200.0,
+      "maintenance_weekly": 10.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 75,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Estil Trident, bon EQ"
+    },
+    {
+      "id": "console_analog_toft_audio_atb_24",
+      "name": "Toft Audio ATB-24",
+      "category": "console_analog",
+      "tier": "pro",
+      "price": 7200.0,
+      "maintenance_weekly": 14.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 49.6,
+        "headroom": 75,
+        "channels": 24
+      },
+      "io": {},
+      "notes": "Més canals, mateix caràcter"
+    },
+    {
+      "id": "console_analog_audient_asp4816",
+      "name": "Audient ASP4816",
+      "category": "console_analog",
+      "tier": "pro",
+      "price": 17000.0,
+      "maintenance_weekly": 34.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 75,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Consola d’estudi amb bon routing"
+    },
+    {
+      "id": "console_analog_api_the_box_2",
+      "name": "API The Box 2",
+      "category": "console_analog",
+      "tier": "pro",
+      "price": 23000.0,
+      "maintenance_weekly": 46.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 75,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Consola/summing amb caràcter API"
+    },
+    {
+      "id": "console_analog_neve_8424",
+      "name": "Neve 8424",
+      "category": "console_analog",
+      "tier": "pro",
+      "price": 26000.0,
+      "maintenance_weekly": 52.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 49.6,
+        "headroom": 75,
+        "channels": 24
+      },
+      "io": {},
+      "notes": "Summing + monitor + control; molt d’estudi modern"
+    },
+    {
+      "id": "console_analog_ssl_origin_16",
+      "name": "SSL Origin 16",
+      "category": "console_analog",
+      "tier": "pro",
+      "price": 32000.0,
+      "maintenance_weekly": 64.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 75,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Consola d’estudi analògica moderna"
+    },
+    {
+      "id": "console_analog_trident_88_24ch",
+      "name": "Trident 88 24ch",
+      "category": "console_analog",
+      "tier": "pro",
+      "price": 65000.0,
+      "maintenance_weekly": 130.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 49.6,
+        "headroom": 75,
+        "channels": 24
+      },
+      "io": {},
+      "notes": "Consola analògica premium (format gran)"
+    },
+    {
+      "id": "console_analog_api_1608_ii",
+      "name": "API 1608-II",
+      "category": "console_analog",
+      "tier": "pro",
+      "price": 70000.0,
+      "maintenance_weekly": 140.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 75,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Consola analògica clàssica API"
+    },
+    {
+      "id": "console_analog_neve_genesys_black_configurable",
+      "name": "Neve Genesys Black (configurable)",
+      "category": "console_analog",
+      "tier": "pro",
+      "price": 90000.0,
+      "maintenance_weekly": 180.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 75,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Consola híbrida/analògica pro (depèn configuració)"
+    }
+  ]
+}

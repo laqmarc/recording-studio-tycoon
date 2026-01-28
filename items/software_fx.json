@@ -1,0 +1,324 @@
+{
+  "items": [
+    {
+      "id": "software_fx_valhalla_delay",
+      "name": "Valhalla Delay",
+      "category": "software_fx",
+      "tier": "low",
+      "price": 50.0,
+      "maintenance_weekly": 0.1,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 2
+      },
+      "io": {},
+      "notes": "Delay versàtil"
+    },
+    {
+      "id": "software_fx_valhalla_room",
+      "name": "Valhalla Room",
+      "category": "software_fx",
+      "tier": "low",
+      "price": 50.0,
+      "maintenance_weekly": 0.1,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 2
+      },
+      "io": {},
+      "notes": "Reverb clàssica"
+    },
+    {
+      "id": "software_fx_waves_h_delay",
+      "name": "Waves H-Delay",
+      "category": "software_fx",
+      "tier": "low",
+      "price": 50.0,
+      "maintenance_weekly": 0.1,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 2
+      },
+      "io": {},
+      "notes": "Delay clàssic"
+    },
+    {
+      "id": "software_fx_baby_audio_comeback_kid",
+      "name": "Baby Audio Comeback Kid",
+      "category": "software_fx",
+      "tier": "low",
+      "price": 80.0,
+      "maintenance_weekly": 0.16,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 2
+      },
+      "io": {},
+      "notes": "Delay creatiu"
+    },
+    {
+      "id": "software_fx_baby_audio_crystalline",
+      "name": "Baby Audio Crystalline",
+      "category": "software_fx",
+      "tier": "low",
+      "price": 80.0,
+      "maintenance_weekly": 0.16,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 2
+      },
+      "io": {},
+      "notes": "Reverb moderna"
+    },
+    {
+      "id": "software_fx_cableguys_shaperbox",
+      "name": "Cableguys ShaperBox",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 100.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Sidechain i efectes rítmics"
+    },
+    {
+      "id": "software_fx_izotope_trash_2",
+      "name": "Izotope Trash 2",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 100.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Distorsió creativa"
+    },
+    {
+      "id": "software_fx_little_alterboy",
+      "name": "Little AlterBoy",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 100.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Canvi de veu creatiu"
+    },
+    {
+      "id": "software_fx_rc_20_retro_color",
+      "name": "RC-20 Retro Color",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 100.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Efecte lo-fi i textura"
+    },
+    {
+      "id": "software_fx_waves_r_verb",
+      "name": "Waves R-Verb",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 100.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Reverb digital clàssica"
+    },
+    {
+      "id": "software_fx_fabfilter_pro_c_2",
+      "name": "FabFilter Pro-C 2",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Compressor molt flexible"
+    },
+    {
+      "id": "software_fx_fabfilter_pro_r",
+      "name": "FabFilter Pro-R",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Reverb musical"
+    },
+    {
+      "id": "software_fx_oxford_inflator",
+      "name": "Oxford Inflator",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Augment percepció volum"
+    },
+    {
+      "id": "software_fx_decapitator",
+      "name": "Decapitator",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Distorsió analògica"
+    },
+    {
+      "id": "software_fx_echoboy",
+      "name": "EchoBoy",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Delay professional"
+    },
+    {
+      "id": "software_fx_gullfoss",
+      "name": "Gullfoss",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Correcció tonal automàtica"
+    },
+    {
+      "id": "software_fx_soothe2",
+      "name": "Soothe2",
+      "category": "software_fx",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Reducció ressonàncies automàtica"
+    },
+    {
+      "id": "software_fx_uadx_1176_collection",
+      "name": "UADx 1176 Collection",
+      "category": "software_fx",
+      "tier": "pro",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 7
+      },
+      "io": {},
+      "notes": "Compressors FET clàssics"
+    },
+    {
+      "id": "software_fx_eventide_h3000_factory",
+      "name": "Eventide H3000 Factory",
+      "category": "software_fx",
+      "tier": "pro",
+      "price": 350.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 7
+      },
+      "io": {},
+      "notes": "Pitch i efectes clàssics"
+    },
+    {
+      "id": "software_fx_soundtoys_5",
+      "name": "Soundtoys 5",
+      "category": "software_fx",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 7
+      },
+      "io": {},
+      "notes": "Delay, saturació, mod"
+    }
+  ]
+}

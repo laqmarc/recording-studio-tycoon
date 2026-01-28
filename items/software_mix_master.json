@@ -1,0 +1,324 @@
+{
+  "items": [
+    {
+      "id": "software_mix_master_valhalla_vintageverb",
+      "name": "Valhalla VintageVerb",
+      "category": "software_mix_master",
+      "tier": "low",
+      "price": 50.0,
+      "maintenance_weekly": 0.1,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 2
+      },
+      "io": {},
+      "notes": "Reverb molt popular"
+    },
+    {
+      "id": "software_mix_master_tokyo_dawn_labs_slickeq_ge",
+      "name": "Tokyo Dawn Labs SlickEQ GE",
+      "category": "software_mix_master",
+      "tier": "low",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 2
+      },
+      "io": {},
+      "notes": "EQ musical"
+    },
+    {
+      "id": "software_mix_master_brainworx_bx_masterdesk",
+      "name": "Brainworx bx_masterdesk",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 100.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Mastering ràpid i musical"
+    },
+    {
+      "id": "software_mix_master_waves_ssl_g_master_buss_comp",
+      "name": "Waves SSL G-Master Buss Comp",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 120.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Bus compressor estil SSL"
+    },
+    {
+      "id": "software_mix_master_sonible_smart_eq_3",
+      "name": "Sonible smart:EQ 3",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 130.0,
+      "maintenance_weekly": 0.26,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "EQ automàtic"
+    },
+    {
+      "id": "software_mix_master_sonible_smart_comp_2",
+      "name": "Sonible smart:comp 2",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 130.0,
+      "maintenance_weekly": 0.26,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Compressor amb IA"
+    },
+    {
+      "id": "software_mix_master_acustica_audio_sand",
+      "name": "Acustica Audio Sand",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Emulació consola SSL"
+    },
+    {
+      "id": "software_mix_master_slate_digital_virtual_mix_rack",
+      "name": "Slate Digital Virtual Mix Rack",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Rack modular de processament"
+    },
+    {
+      "id": "software_mix_master_uadx_studer_a800",
+      "name": "UADx Studer A800",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Emulació de cinta"
+    },
+    {
+      "id": "software_mix_master_fabfilter_pro_l_2",
+      "name": "FabFilter Pro-L 2",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Limiter de mastering molt transparent"
+    },
+    {
+      "id": "software_mix_master_fabfilter_pro_q_3",
+      "name": "FabFilter Pro-Q 3",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "EQ paramètric professional"
+    },
+    {
+      "id": "software_mix_master_dmg_audio_limitless",
+      "name": "DMG Audio Limitless",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Limiter multibanda"
+    },
+    {
+      "id": "software_mix_master_eventide_blackhole",
+      "name": "Eventide Blackhole",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Reverbs espacials"
+    },
+    {
+      "id": "software_mix_master_waves_gold_bundle",
+      "name": "Waves Gold Bundle",
+      "category": "software_mix_master",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 4
+      },
+      "io": {},
+      "notes": "Pack clàssic d’efectes"
+    },
+    {
+      "id": "software_mix_master_plugin_alliance_mastering_bundle",
+      "name": "Plugin Alliance Mastering Bundle",
+      "category": "software_mix_master",
+      "tier": "pro",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 7
+      },
+      "io": {},
+      "notes": "Eines de mastering professionals"
+    },
+    {
+      "id": "software_mix_master_uadx_la_2a_collection",
+      "name": "UADx LA-2A Collection",
+      "category": "software_mix_master",
+      "tier": "pro",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 7
+      },
+      "io": {},
+      "notes": "Compressors òptics clàssics"
+    },
+    {
+      "id": "software_mix_master_t_racks_5_max",
+      "name": "T-Racks 5 Max",
+      "category": "software_mix_master",
+      "tier": "pro",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 7
+      },
+      "io": {},
+      "notes": "Mastering i processament"
+    },
+    {
+      "id": "software_mix_master_izotope_neutron_advanced",
+      "name": "iZotope Neutron Advanced",
+      "category": "software_mix_master",
+      "tier": "pro",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 7
+      },
+      "io": {},
+      "notes": "Assistent de mix amb EQ i comp intel·ligent"
+    },
+    {
+      "id": "software_mix_master_izotope_ozone_advanced",
+      "name": "iZotope Ozone Advanced",
+      "category": "software_mix_master",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 7
+      },
+      "io": {},
+      "notes": "Suite completa de mastering"
+    },
+    {
+      "id": "software_mix_master_softube_weiss_ds1_mk3",
+      "name": "Softube Weiss DS1-MK3",
+      "category": "software_mix_master",
+      "tier": "pro",
+      "price": 600.0,
+      "maintenance_weekly": 1.2,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "mix_bonus": 7
+      },
+      "io": {},
+      "notes": "Processador mastering premium"
+    }
+  ]
+}

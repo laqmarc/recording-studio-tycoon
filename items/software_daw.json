@@ -1,0 +1,484 @@
+{
+  "items": [
+    {
+      "id": "software_daw_ardour",
+      "name": "Ardour",
+      "category": "software_daw",
+      "tier": "low",
+      "price": 0.0,
+      "maintenance_weekly": 0.0,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 50
+      },
+      "io": {},
+      "notes": "Multipista seriós, molt bé en Linux"
+    },
+    {
+      "id": "software_daw_audacity",
+      "name": "Audacity",
+      "category": "software_daw",
+      "tier": "low",
+      "price": 0.0,
+      "maintenance_weekly": 0.0,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 50
+      },
+      "io": {},
+      "notes": "Edició i gravació bàsica, molt popular"
+    },
+    {
+      "id": "software_daw_cakewalk_by_bandlab",
+      "name": "Cakewalk by BandLab",
+      "category": "software_daw",
+      "tier": "low",
+      "price": 0.0,
+      "maintenance_weekly": 0.0,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 50
+      },
+      "io": {},
+      "notes": "DAW complet gratuït per Windows"
+    },
+    {
+      "id": "software_daw_davinci_resolve_fairlight",
+      "name": "DaVinci Resolve Fairlight",
+      "category": "software_daw",
+      "tier": "low",
+      "price": 0.0,
+      "maintenance_weekly": 0.0,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 50
+      },
+      "io": {},
+      "notes": "Fairlight integrat a Resolve (ed. gratuïta)"
+    },
+    {
+      "id": "software_daw_garageband",
+      "name": "GarageBand",
+      "category": "software_daw",
+      "tier": "low",
+      "price": 0.0,
+      "maintenance_weekly": 0.0,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 50
+      },
+      "io": {},
+      "notes": "Ideal per començar en Mac"
+    },
+    {
+      "id": "software_daw_lmms",
+      "name": "LMMS",
+      "category": "software_daw",
+      "tier": "low",
+      "price": 0.0,
+      "maintenance_weekly": 0.0,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 50
+      },
+      "io": {},
+      "notes": "Producció musical; menys orientat a gravació multipista real"
+    },
+    {
+      "id": "software_daw_ocenaudio",
+      "name": "Ocenaudio",
+      "category": "software_daw",
+      "tier": "low",
+      "price": 0.0,
+      "maintenance_weekly": 0.0,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "workflow": 50
+      },
+      "io": {},
+      "notes": "Editor lleuger per gravació/edició ràpida"
+    },
+    {
+      "id": "software_daw_reaper",
+      "name": "REAPER",
+      "category": "software_daw",
+      "tier": "mid",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 55
+      },
+      "io": {},
+      "notes": "Molt potent i lleuger; gran comunitat"
+    },
+    {
+      "id": "software_daw_harrison_mixbus",
+      "name": "Harrison Mixbus",
+      "category": "software_daw",
+      "tier": "mid",
+      "price": 90.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 55
+      },
+      "io": {},
+      "notes": "Versió més econòmica, bon so"
+    },
+    {
+      "id": "software_daw_fl_studio_producer_edition",
+      "name": "FL Studio Producer Edition",
+      "category": "software_daw",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 55
+      },
+      "io": {},
+      "notes": "Molt popular per beats i música urbana"
+    },
+    {
+      "id": "software_daw_reason_subscripci",
+      "name": "Reason+ (subscripció)",
+      "category": "software_daw",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 55
+      },
+      "io": {},
+      "notes": "Model subscription amb contingut extra"
+    },
+    {
+      "id": "software_daw_logic_pro",
+      "name": "Logic Pro",
+      "category": "software_daw",
+      "tier": "mid",
+      "price": 230.0,
+      "maintenance_weekly": 0.46,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 55
+      },
+      "io": {},
+      "notes": "Molt complet per gravació i producció"
+    },
+    {
+      "id": "software_daw_adobe_audition",
+      "name": "Adobe Audition",
+      "category": "software_daw",
+      "tier": "mid",
+      "price": 240.0,
+      "maintenance_weekly": 0.48,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 55
+      },
+      "io": {},
+      "notes": "Edició d’àudio i post; integració Adobe"
+    },
+    {
+      "id": "software_daw_avid_media_composer_audio_post",
+      "name": "Avid Media Composer (Audio post)",
+      "category": "software_daw",
+      "tier": "mid",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 55
+      },
+      "io": {},
+      "notes": "Edició vídeo amb fluxos d’àudio (no és DAW pur)"
+    },
+    {
+      "id": "software_daw_fl_studio_signature_bundle",
+      "name": "FL Studio Signature Bundle",
+      "category": "software_daw",
+      "tier": "mid",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 55
+      },
+      "io": {},
+      "notes": "Més plugins i instruments"
+    },
+    {
+      "id": "software_daw_pro_tools_studio",
+      "name": "Pro Tools Studio",
+      "category": "software_daw",
+      "tier": "mid",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 55
+      },
+      "io": {},
+      "notes": "Estàndard d’estudi per edició i gravació"
+    },
+    {
+      "id": "software_daw_sound_forge_pro",
+      "name": "Sound Forge Pro",
+      "category": "software_daw",
+      "tier": "mid",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "workflow": 55
+      },
+      "io": {},
+      "notes": "Editor clàssic de mastering/edició"
+    },
+    {
+      "id": "software_daw_final_cut_pro_udio_b_sic",
+      "name": "Final Cut Pro (àudio bàsic)",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 350.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Eines d’àudio dins l’edició de vídeo"
+    },
+    {
+      "id": "software_daw_bitwig_studio",
+      "name": "Bitwig Studio",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Modular, excel·lent per creativitat"
+    },
+    {
+      "id": "software_daw_harrison_mixbus_32c",
+      "name": "Harrison Mixbus 32C",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "So ‘console-style’, orientat a mix"
+    },
+    {
+      "id": "software_daw_magix_samplitude_pro_x",
+      "name": "MAGIX Samplitude Pro X",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Molt fort en edició i mastering"
+    },
+    {
+      "id": "software_daw_studio_one_professional",
+      "name": "Studio One Professional",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Workflow ràpid, molt bo per gravar i mesclar"
+    },
+    {
+      "id": "software_daw_izotope_rx_standard",
+      "name": "iZotope RX (Standard)",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Restauració/neteja d’àudio (complement)"
+    },
+    {
+      "id": "software_daw_reason_13",
+      "name": "Reason 13",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Rack virtual, molt característic"
+    },
+    {
+      "id": "software_daw_steinberg_wavelab_pro",
+      "name": "Steinberg WaveLab Pro",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Mastering i edició (no multipista pur)"
+    },
+    {
+      "id": "software_daw_steinberg_cubase_pro",
+      "name": "Steinberg Cubase Pro",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 580.0,
+      "maintenance_weekly": 1.16,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Molt fort en MIDI i producció"
+    },
+    {
+      "id": "software_daw_ableton_live_suite",
+      "name": "Ableton Live Suite",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 750.0,
+      "maintenance_weekly": 1.5,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Producció i directe; molt creatiu"
+    },
+    {
+      "id": "software_daw_pro_tools_ultimate",
+      "name": "Pro Tools Ultimate",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 800.0,
+      "maintenance_weekly": 1.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Gama alta per post i estudis grans (subscr.)"
+    },
+    {
+      "id": "software_daw_steinberg_nuendo",
+      "name": "Steinberg Nuendo",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 1000.0,
+      "maintenance_weekly": 2.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Orientat a postproducció i àudio per vídeo"
+    },
+    {
+      "id": "software_daw_magix_sequoia",
+      "name": "MAGIX Sequoia",
+      "category": "software_daw",
+      "tier": "pro",
+      "price": 3000.0,
+      "maintenance_weekly": 6.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "workflow": 65
+      },
+      "io": {},
+      "notes": "Broadcast/mastering d’alta gamma"
+    }
+  ]
+}

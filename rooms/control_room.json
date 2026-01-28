@@ -1,0 +1,64 @@
+{
+  "rooms": [
+    {
+      "id": "room_control_1",
+      "name": "Control Room (Petit)",
+      "type": "control_room",
+      "unlock_level": 1,
+      "size_m2": 14,
+      "max_people": 2,
+      "noise_floor_db": -65,
+      "isolation": 45,
+      "base_acoustic": 45,
+      "slots": {
+        "monitor": 2,
+        "interface": 1,
+        "console_analog": 1,
+        "console_digital": 1,
+        "headphones": 2,
+        "headphone_amp": 1,
+        "desk": 1,
+        "rack": 1,
+        "acoustic_treatment": 6,
+        "patchbay": 1,
+        "cable": 4,
+        "mic": 2,
+        "preamp": 2,
+        "mic_stand": 2,
+        "mic_accessory": 2,
+        "effects": 2,
+        "instruments": 1,
+        "software_daw": 1
+      },
+      "price_per_week": 150.0
+    },
+    {
+      "id": "room_control_2",
+      "name": "Control Room (Gran)",
+      "type": "control_room",
+      "unlock_level": 5,
+      "size_m2": 25,
+      "max_people": 4,
+      "noise_floor_db": -70,
+      "isolation": 50,
+      "base_acoustic": 55,
+      "slots": {
+        "monitor": 4,
+        "interface": 2,
+        "console_analog": 1,
+        "console_digital": 1,
+        "headphones": 4,
+        "headphone_amp": 2,
+        "desk": 1,
+        "rack": 2,
+        "acoustic_treatment": 10,
+        "patchbay": 1,
+        "cable": 15,
+        "effects": 4,
+        "instruments": 2,
+        "software": 2
+      },
+      "price_per_week": 400.0
+    }
+  ]
+}

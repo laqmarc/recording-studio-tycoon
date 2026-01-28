@@ -1,0 +1,694 @@
+{
+  "items": [
+    {
+      "id": "preamp_the_t_bone_micplug_usb",
+      "name": "the t.bone MicPlug USB",
+      "category": "preamp",
+      "tier": "low",
+      "price": 40.0,
+      "maintenance_weekly": 0.08,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_behringer_mic100_tube_ultragain",
+      "name": "Behringer MIC100 Tube Ultragain",
+      "category": "preamp",
+      "tier": "low",
+      "price": 45.0,
+      "maintenance_weekly": 0.09,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Vàlvula"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_behringer_umc22_previ_integrat",
+      "name": "Behringer UMC22 (previ integrat)",
+      "category": "preamp",
+      "tier": "low",
+      "price": 50.0,
+      "maintenance_weekly": 0.1,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_m_audio_m_track_solo_previ_integrat",
+      "name": "M-Audio M-Track Solo (previ integrat)",
+      "category": "preamp",
+      "tier": "low",
+      "price": 50.0,
+      "maintenance_weekly": 0.1,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_art_tube_mp",
+      "name": "ART Tube MP",
+      "category": "preamp",
+      "tier": "low",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Vàlvula"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_behringer_mic200_tube_ultragain",
+      "name": "Behringer MIC200 Tube Ultragain",
+      "category": "preamp",
+      "tier": "low",
+      "price": 65.0,
+      "maintenance_weekly": 0.13,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Vàlvula"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_art_tube_mp_studio_v3",
+      "name": "ART Tube MP Studio V3",
+      "category": "preamp",
+      "tier": "low",
+      "price": 90.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Vàlvula"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_presonus_tubepre_v2",
+      "name": "Presonus TubePre V2",
+      "category": "preamp",
+      "tier": "low",
+      "price": 120.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Vàlvula"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_art_usb_dual_pre",
+      "name": "ART USB Dual Pre",
+      "category": "preamp",
+      "tier": "low",
+      "price": 140.0,
+      "maintenance_weekly": 0.28,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 2
+      },
+      "io": {
+        "inputs_xlr": 2,
+        "outputs_line": 2
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_behringer_ada8200",
+      "name": "Behringer ADA8200",
+      "category": "preamp",
+      "tier": "low",
+      "price": 230.0,
+      "maintenance_weekly": 0.46,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_dbx_286s",
+      "name": "DBX 286s",
+      "category": "preamp",
+      "tier": "mid",
+      "price": 230.0,
+      "maintenance_weekly": 0.46,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Transistor + processador"
+      ],
+      "stats": {
+        "preamp_quality": 50,
+        "gain_db": 60,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_audient_id14_previs_integrats",
+      "name": "Audient iD14 (previs integrats)",
+      "category": "preamp",
+      "tier": "mid",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 50,
+        "gain_db": 60,
+        "channels": 2
+      },
+      "io": {
+        "inputs_xlr": 2,
+        "outputs_line": 2
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_golden_age_project_pre_73_jr",
+      "name": "Golden Age Project Pre-73 Jr",
+      "category": "preamp",
+      "tier": "mid",
+      "price": 360.0,
+      "maintenance_weekly": 0.72,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Transistor (Neve style)"
+      ],
+      "stats": {
+        "preamp_quality": 50,
+        "gain_db": 60,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_art_pro_mpa_ii",
+      "name": "ART Pro MPA II",
+      "category": "preamp",
+      "tier": "mid",
+      "price": 420.0,
+      "maintenance_weekly": 0.84,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Vàlvula"
+      ],
+      "stats": {
+        "preamp_quality": 50,
+        "gain_db": 60,
+        "channels": 2
+      },
+      "io": {
+        "inputs_xlr": 2,
+        "outputs_line": 2
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_focusrite_scarlett_octopre",
+      "name": "Focusrite Scarlett OctoPre",
+      "category": "preamp",
+      "tier": "mid",
+      "price": 480.0,
+      "maintenance_weekly": 0.96,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 50,
+        "gain_db": 60,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_warm_audio_wa12_mkii",
+      "name": "Warm Audio WA12 MKII",
+      "category": "preamp",
+      "tier": "mid",
+      "price": 480.0,
+      "maintenance_weekly": 0.96,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Transistor (API style)"
+      ],
+      "stats": {
+        "preamp_quality": 50,
+        "gain_db": 60,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_black_lion_audio_auteur",
+      "name": "Black Lion Audio Auteur",
+      "category": "preamp",
+      "tier": "mid",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 50,
+        "gain_db": 60,
+        "channels": 2
+      },
+      "io": {
+        "inputs_xlr": 2,
+        "outputs_line": 2
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_focusrite_isa_one",
+      "name": "Focusrite ISA One",
+      "category": "preamp",
+      "tier": "mid",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.95,
+      "unlock_level": 1,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 50,
+        "gain_db": 60,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_ssl_alpha_channel",
+      "name": "SSL Alpha Channel",
+      "category": "preamp",
+      "tier": "mid",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 50,
+        "gain_db": 60,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_presonus_digimax_dp88",
+      "name": "Presonus DigiMax DP88",
+      "category": "preamp",
+      "tier": "mid",
+      "price": 700.0,
+      "maintenance_weekly": 1.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 50,
+        "gain_db": 60,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_grace_design_m101",
+      "name": "Grace Design m101",
+      "category": "preamp",
+      "tier": "pro",
+      "price": 750.0,
+      "maintenance_weekly": 1.5,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Transistor ultra net"
+      ],
+      "stats": {
+        "preamp_quality": 70,
+        "gain_db": 60,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_api_512c",
+      "name": "API 512c",
+      "category": "preamp",
+      "tier": "pro",
+      "price": 900.0,
+      "maintenance_weekly": 1.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Transistor (API style)"
+      ],
+      "stats": {
+        "preamp_quality": 70,
+        "gain_db": 60,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_neve_1073spx",
+      "name": "Neve 1073SPX",
+      "category": "preamp",
+      "tier": "pro",
+      "price": 1500.0,
+      "maintenance_weekly": 3.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Transistor (Class A)"
+      ],
+      "stats": {
+        "preamp_quality": 70,
+        "gain_db": 60,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_rupert_neve_designs_portico_5012",
+      "name": "Rupert Neve Designs Portico 5012",
+      "category": "preamp",
+      "tier": "pro",
+      "price": 1700.0,
+      "maintenance_weekly": 3.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 70,
+        "gain_db": 60,
+        "channels": 2
+      },
+      "io": {
+        "inputs_xlr": 2,
+        "outputs_line": 2
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_focusrite_isa_828",
+      "name": "Focusrite ISA 828",
+      "category": "preamp",
+      "tier": "pro",
+      "price": 2300.0,
+      "maintenance_weekly": 4.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Transistor"
+      ],
+      "stats": {
+        "preamp_quality": 70,
+        "gain_db": 60,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_universal_audio_4_710d",
+      "name": "Universal Audio 4-710d",
+      "category": "preamp",
+      "tier": "pro",
+      "price": 2400.0,
+      "maintenance_weekly": 4.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Híbrid vàlvula/transistor"
+      ],
+      "stats": {
+        "preamp_quality": 70,
+        "gain_db": 60,
+        "channels": 4
+      },
+      "io": {
+        "inputs_xlr": 4,
+        "outputs_line": 4
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_avalon_vt_737sp",
+      "name": "Avalon VT-737sp",
+      "category": "preamp",
+      "tier": "pro",
+      "price": 2800.0,
+      "maintenance_weekly": 5.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Vàlvula + channel strip"
+      ],
+      "stats": {
+        "preamp_quality": 70,
+        "gain_db": 60,
+        "channels": 1
+      },
+      "io": {
+        "inputs_xlr": 1,
+        "outputs_line": 1
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_chandler_limited_tg2",
+      "name": "Chandler Limited TG2",
+      "category": "preamp",
+      "tier": "pro",
+      "price": 2800.0,
+      "maintenance_weekly": 5.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Transistor (Abbey Road style)"
+      ],
+      "stats": {
+        "preamp_quality": 70,
+        "gain_db": 60,
+        "channels": 2
+      },
+      "io": {
+        "inputs_xlr": 2,
+        "outputs_line": 2
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_neve_1073dpx",
+      "name": "Neve 1073DPX",
+      "category": "preamp",
+      "tier": "pro",
+      "price": 3200.0,
+      "maintenance_weekly": 6.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Transistor (Class A)"
+      ],
+      "stats": {
+        "preamp_quality": 70,
+        "gain_db": 60,
+        "channels": 2
+      },
+      "io": {
+        "inputs_xlr": 2,
+        "outputs_line": 2
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_millennia_hv_3d",
+      "name": "Millennia HV-3D",
+      "category": "preamp",
+      "tier": "pro",
+      "price": 4200.0,
+      "maintenance_weekly": 8.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Transistor ultra net"
+      ],
+      "stats": {
+        "preamp_quality": 70,
+        "gain_db": 60,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    }
+  ]
+}

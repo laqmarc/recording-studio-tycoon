@@ -1,0 +1,514 @@
+{
+  "items": [
+    {
+      "id": "monitor_mackie_cr3_x",
+      "name": "Mackie CR3-X",
+      "category": "monitor",
+      "tier": "low",
+      "price": 100.0,
+      "maintenance_weekly": 0.2,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 45,
+        "bass_extension": 47.0
+      },
+      "io": {},
+      "notes": "Molt compactes per escriptori"
+    },
+    {
+      "id": "monitor_presonus_eris_e3_5",
+      "name": "Presonus Eris E3.5",
+      "category": "monitor",
+      "tier": "low",
+      "price": 110.0,
+      "maintenance_weekly": 0.22,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 45,
+        "bass_extension": 49.0
+      },
+      "io": {},
+      "notes": "Home studio bàsic"
+    },
+    {
+      "id": "monitor_mackie_cr4_x",
+      "name": "Mackie CR4-X",
+      "category": "monitor",
+      "tier": "low",
+      "price": 140.0,
+      "maintenance_weekly": 0.28,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 45,
+        "bass_extension": 51.0
+      },
+      "io": {},
+      "notes": "Millor greus que CR3"
+    },
+    {
+      "id": "monitor_behringer_studio_50usb",
+      "name": "Behringer Studio 50USB",
+      "category": "monitor",
+      "tier": "low",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 45,
+        "bass_extension": 55.0
+      },
+      "io": {},
+      "notes": "USB directe, molt econòmic"
+    },
+    {
+      "id": "monitor_presonus_eris_e4_5",
+      "name": "Presonus Eris E4.5",
+      "category": "monitor",
+      "tier": "low",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 45,
+        "bass_extension": 53.0
+      },
+      "io": {},
+      "notes": "Més potència i claredat"
+    },
+    {
+      "id": "monitor_jbl_305p_mkii",
+      "name": "JBL 305P MkII",
+      "category": "monitor",
+      "tier": "low",
+      "price": 260.0,
+      "maintenance_weekly": 0.52,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 45,
+        "bass_extension": 55.0
+      },
+      "io": {},
+      "notes": "Molt popular en project studios"
+    },
+    {
+      "id": "monitor_behringer_truth_b2030a",
+      "name": "Behringer Truth B2030A",
+      "category": "monitor",
+      "tier": "low",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 45,
+        "bass_extension": 62.0
+      },
+      "io": {},
+      "notes": "Bona potència, menys precís"
+    },
+    {
+      "id": "monitor_krk_rokit_5_g4",
+      "name": "KRK Rokit 5 G4",
+      "category": "monitor",
+      "tier": "low",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 45,
+        "bass_extension": 55.0
+      },
+      "io": {},
+      "notes": "So potent, DSP integrat"
+    },
+    {
+      "id": "monitor_jbl_306p_mkii",
+      "name": "JBL 306P MkII",
+      "category": "monitor",
+      "tier": "low",
+      "price": 340.0,
+      "maintenance_weekly": 0.68,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 45,
+        "bass_extension": 59.0
+      },
+      "io": {},
+      "notes": "Més greus, mateix caràcter"
+    },
+    {
+      "id": "monitor_krk_rokit_7_g4",
+      "name": "KRK Rokit 7 G4",
+      "category": "monitor",
+      "tier": "low",
+      "price": 420.0,
+      "maintenance_weekly": 0.84,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 45,
+        "bass_extension": 63.0
+      },
+      "io": {},
+      "notes": "Més cos en greus"
+    },
+    {
+      "id": "monitor_adam_t5v",
+      "name": "Adam T5V",
+      "category": "monitor",
+      "tier": "mid",
+      "price": 350.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 63,
+        "bass_extension": 55.0
+      },
+      "io": {},
+      "notes": "Tweeter de cinta, molt detall"
+    },
+    {
+      "id": "monitor_kali_audio_lp_6_v2",
+      "name": "Kali Audio LP-6 V2",
+      "category": "monitor",
+      "tier": "mid",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 63,
+        "bass_extension": 61.0
+      },
+      "io": {},
+      "notes": "Resposta molt plana"
+    },
+    {
+      "id": "monitor_yamaha_hs5",
+      "name": "Yamaha HS5",
+      "category": "monitor",
+      "tier": "mid",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 63,
+        "bass_extension": 55.0
+      },
+      "io": {},
+      "notes": "So molt neutre"
+    },
+    {
+      "id": "monitor_adam_t7v",
+      "name": "Adam T7V",
+      "category": "monitor",
+      "tier": "mid",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 63,
+        "bass_extension": 63.0
+      },
+      "io": {},
+      "notes": "Molt bon balanç qualitat/preu"
+    },
+    {
+      "id": "monitor_yamaha_hs7",
+      "name": "Yamaha HS7",
+      "category": "monitor",
+      "tier": "mid",
+      "price": 520.0,
+      "maintenance_weekly": 1.04,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 63,
+        "bass_extension": 61.0
+      },
+      "io": {},
+      "notes": "Més resposta en greus"
+    },
+    {
+      "id": "monitor_focal_alpha_50_evo",
+      "name": "Focal Alpha 50 Evo",
+      "category": "monitor",
+      "tier": "mid",
+      "price": 550.0,
+      "maintenance_weekly": 1.1,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 63,
+        "bass_extension": 55.0
+      },
+      "io": {},
+      "notes": "So càlid i controlat"
+    },
+    {
+      "id": "monitor_genelec_8010a",
+      "name": "Genelec 8010A",
+      "category": "monitor",
+      "tier": "mid",
+      "price": 700.0,
+      "maintenance_weekly": 1.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 63,
+        "bass_extension": 47.0
+      },
+      "io": {},
+      "notes": "Ultra compactes i precises"
+    },
+    {
+      "id": "monitor_kali_audio_in_5",
+      "name": "Kali Audio IN-5",
+      "category": "monitor",
+      "tier": "mid",
+      "price": 700.0,
+      "maintenance_weekly": 1.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 63,
+        "bass_extension": 55.0
+      },
+      "io": {},
+      "notes": "Coaxial, imatge molt precisa"
+    },
+    {
+      "id": "monitor_yamaha_hs8",
+      "name": "Yamaha HS8",
+      "category": "monitor",
+      "tier": "mid",
+      "price": 700.0,
+      "maintenance_weekly": 1.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 63,
+        "bass_extension": 67.0
+      },
+      "io": {},
+      "notes": "Per sales mitjanes"
+    },
+    {
+      "id": "monitor_focal_alpha_65_evo",
+      "name": "Focal Alpha 65 Evo",
+      "category": "monitor",
+      "tier": "mid",
+      "price": 750.0,
+      "maintenance_weekly": 1.5,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 63,
+        "bass_extension": 61.0
+      },
+      "io": {},
+      "notes": "Més detall en greus"
+    },
+    {
+      "id": "monitor_genelec_8030c",
+      "name": "Genelec 8030C",
+      "category": "monitor",
+      "tier": "pro",
+      "price": 1200.0,
+      "maintenance_weekly": 2.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 80,
+        "bass_extension": 55.0
+      },
+      "io": {},
+      "notes": "Molt precises i fiables"
+    },
+    {
+      "id": "monitor_adam_a7v",
+      "name": "Adam A7V",
+      "category": "monitor",
+      "tier": "pro",
+      "price": 1500.0,
+      "maintenance_weekly": 3.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 80,
+        "bass_extension": 63.0
+      },
+      "io": {},
+      "notes": "Nova generació Adam"
+    },
+    {
+      "id": "monitor_neumann_kh120_ii",
+      "name": "Neumann KH120 II",
+      "category": "monitor",
+      "tier": "pro",
+      "price": 1600.0,
+      "maintenance_weekly": 3.2,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 80,
+        "bass_extension": 56.0
+      },
+      "io": {},
+      "notes": "Estàndard professional"
+    },
+    {
+      "id": "monitor_focal_shape_65",
+      "name": "Focal Shape 65",
+      "category": "monitor",
+      "tier": "pro",
+      "price": 2000.0,
+      "maintenance_weekly": 4.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 80,
+        "bass_extension": 61.0
+      },
+      "io": {},
+      "notes": "Sense port bass-reflex"
+    },
+    {
+      "id": "monitor_genelec_8040b",
+      "name": "Genelec 8040B",
+      "category": "monitor",
+      "tier": "pro",
+      "price": 2000.0,
+      "maintenance_weekly": 4.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 80,
+        "bass_extension": 61.0
+      },
+      "io": {},
+      "notes": "Més potència i rang"
+    },
+    {
+      "id": "monitor_adam_a8h",
+      "name": "Adam A8H",
+      "category": "monitor",
+      "tier": "pro",
+      "price": 2500.0,
+      "maintenance_weekly": 5.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 80,
+        "bass_extension": 67.0
+      },
+      "io": {},
+      "notes": "Molt detall i headroom"
+    },
+    {
+      "id": "monitor_pmc_result6",
+      "name": "PMC Result6",
+      "category": "monitor",
+      "tier": "pro",
+      "price": 2600.0,
+      "maintenance_weekly": 5.2,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 80,
+        "bass_extension": 61.0
+      },
+      "io": {},
+      "notes": "Transmissió lineal, molt natural"
+    },
+    {
+      "id": "monitor_neumann_kh310",
+      "name": "Neumann KH310",
+      "category": "monitor",
+      "tier": "pro",
+      "price": 4200.0,
+      "maintenance_weekly": 8.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 80,
+        "bass_extension": 68.0
+      },
+      "io": {},
+      "notes": "Referència d’estudi gran"
+    },
+    {
+      "id": "monitor_barefoot_footprint01",
+      "name": "Barefoot Footprint01",
+      "category": "monitor",
+      "tier": "pro",
+      "price": 5000.0,
+      "maintenance_weekly": 10.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 80,
+        "bass_extension": 67.0
+      },
+      "io": {},
+      "notes": "Referència moderna"
+    },
+    {
+      "id": "monitor_focal_trio6_st6",
+      "name": "Focal Trio6 ST6",
+      "category": "monitor",
+      "tier": "pro",
+      "price": 5000.0,
+      "maintenance_weekly": 10.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "monitor_accuracy": 80,
+        "bass_extension": 67.0
+      },
+      "io": {},
+      "notes": "Convertible 2/3 vies"
+    }
+  ]
+}

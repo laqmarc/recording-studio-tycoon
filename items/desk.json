@@ -1,0 +1,106 @@
+{
+  "items": [
+    {
+      "id": "desk_millenium_sd_120_b",
+      "name": "Millenium SD-120 B",
+      "category": "desk",
+      "tier": "low",
+      "price": 120.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 0,
+        "space_bonus": 1
+      },
+      "io": {},
+      "notes": "Compacta per home studio"
+    },
+    {
+      "id": "desk_thomann_studio_desk_basic",
+      "name": "Thomann Studio Desk Basic",
+      "category": "desk",
+      "tier": "low",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 0,
+        "space_bonus": 1
+      },
+      "io": {},
+      "notes": "Espai per monitors petits"
+    },
+    {
+      "id": "desk_zaor_miza_junior",
+      "name": "Zaor Miza Junior",
+      "category": "desk",
+      "tier": "mid",
+      "price": 350.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 0,
+        "space_bonus": 2
+      },
+      "io": {},
+      "notes": "Disseny i ergonomia"
+    },
+    {
+      "id": "desk_zaor_miza_z",
+      "name": "Zaor Miza Z",
+      "category": "desk",
+      "tier": "mid",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 0,
+        "space_bonus": 2
+      },
+      "io": {},
+      "notes": "Espai per racks i pantalles"
+    },
+    {
+      "id": "desk_zaor_miza_x2_flex",
+      "name": "Zaor Miza X2 Flex",
+      "category": "desk",
+      "tier": "pro",
+      "price": 1400.0,
+      "maintenance_weekly": 2.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 0,
+        "space_bonus": 2
+      },
+      "io": {},
+      "notes": "Per estudis grans"
+    },
+    {
+      "id": "desk_argosy_halo",
+      "name": "Argosy Halo",
+      "category": "desk",
+      "tier": "pro",
+      "price": 6000.0,
+      "maintenance_weekly": 12.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 0,
+        "space_bonus": 2
+      },
+      "io": {},
+      "notes": "Mobiliari premium per consoles"
+    }
+  ]
+}

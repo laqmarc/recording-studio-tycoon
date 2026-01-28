@@ -1,0 +1,424 @@
+{
+  "items": [
+    {
+      "id": "acoustic_treatment_t_akustik_highline_absorber",
+      "name": "t.akustik Highline Absorber",
+      "category": "acoustic_treatment",
+      "tier": "low",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Panell absorbent",
+        "Absorbent"
+      ],
+      "stats": {
+        "room_acoustic_add": 4,
+        "bass_control_add": 2.0,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Panell individual, fàcil instal·lació"
+    },
+    {
+      "id": "acoustic_treatment_the_t_bone_micscreen",
+      "name": "the t.bone Micscreen",
+      "category": "acoustic_treatment",
+      "tier": "low",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Mixte",
+        "Reflexion Filter"
+      ],
+      "stats": {
+        "room_acoustic_add": 4,
+        "bass_control_add": 2.0,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Redueix reflexions en gravació de veu"
+    },
+    {
+      "id": "acoustic_treatment_t_akustik_qrd_diffusor",
+      "name": "t.akustik QRD Diffusor",
+      "category": "acoustic_treatment",
+      "tier": "low",
+      "price": 90.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Difusor",
+        "Difusió 1D"
+      ],
+      "stats": {
+        "room_acoustic_add": 4,
+        "bass_control_add": 2.0,
+        "diffusion_add": 4
+      },
+      "io": {},
+      "notes": "Millora espai sense matar el so"
+    },
+    {
+      "id": "acoustic_treatment_auralex_studiofoam_wedges_2_pack",
+      "name": "Auralex Studiofoam Wedges 2\" (pack)",
+      "category": "acoustic_treatment",
+      "tier": "low",
+      "price": 120.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Panell absorbent",
+        "Absorbent"
+      ],
+      "stats": {
+        "room_acoustic_add": 4,
+        "bass_control_add": 2.0,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Redueix reflexions altes freqüències"
+    },
+    {
+      "id": "acoustic_treatment_auralex_lenrd_bass_traps_pack",
+      "name": "Auralex LENRD Bass Traps (pack)",
+      "category": "acoustic_treatment",
+      "tier": "low",
+      "price": 140.0,
+      "maintenance_weekly": 0.28,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Bass Trap",
+        "Trampa de greus"
+      ],
+      "stats": {
+        "room_acoustic_add": 4,
+        "bass_control_add": 4,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Per cantonades, escuma"
+    },
+    {
+      "id": "acoustic_treatment_vicoustic_flexi_a50",
+      "name": "Vicoustic Flexi A50",
+      "category": "acoustic_treatment",
+      "tier": "mid",
+      "price": 90.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Panell absorbent",
+        "Absorbent"
+      ],
+      "stats": {
+        "room_acoustic_add": 7,
+        "bass_control_add": 3.5,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Bona absorció mitjanes-altes"
+    },
+    {
+      "id": "acoustic_treatment_t_akustik_bass_trap_corner",
+      "name": "t.akustik Bass Trap Corner",
+      "category": "acoustic_treatment",
+      "tier": "mid",
+      "price": 120.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Bass Trap",
+        "Trampa de greus"
+      ],
+      "stats": {
+        "room_acoustic_add": 7,
+        "bass_control_add": 7,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Format triangular, tela"
+    },
+    {
+      "id": "acoustic_treatment_vicoustic_cinema_round_ultra",
+      "name": "Vicoustic Cinema Round Ultra",
+      "category": "acoustic_treatment",
+      "tier": "mid",
+      "price": 130.0,
+      "maintenance_weekly": 0.26,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Panell absorbent",
+        "Absorbent decoratiu"
+      ],
+      "stats": {
+        "room_acoustic_add": 7,
+        "bass_control_add": 3.5,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Disseny + absorció"
+    },
+    {
+      "id": "acoustic_treatment_vicoustic_multifuser_dc2",
+      "name": "Vicoustic Multifuser DC2",
+      "category": "acoustic_treatment",
+      "tier": "mid",
+      "price": 160.0,
+      "maintenance_weekly": 0.32,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Difusor",
+        "Difusió 2D"
+      ],
+      "stats": {
+        "room_acoustic_add": 7,
+        "bass_control_add": 3.5,
+        "diffusion_add": 7
+      },
+      "io": {},
+      "notes": "Difusió i absorció combinades"
+    },
+    {
+      "id": "acoustic_treatment_auralex_tfusor",
+      "name": "Auralex T'Fusor",
+      "category": "acoustic_treatment",
+      "tier": "mid",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Difusor",
+        "Difusió"
+      ],
+      "stats": {
+        "room_acoustic_add": 7,
+        "bass_control_add": 3.5,
+        "diffusion_add": 7
+      },
+      "io": {},
+      "notes": "Difusió per parets posteriors"
+    },
+    {
+      "id": "acoustic_treatment_gik_acoustics_tri_trap",
+      "name": "GIK Acoustics Tri-Trap",
+      "category": "acoustic_treatment",
+      "tier": "mid",
+      "price": 190.0,
+      "maintenance_weekly": 0.38,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Bass Trap",
+        "Trampa de greus"
+      ],
+      "stats": {
+        "room_acoustic_add": 7,
+        "bass_control_add": 7,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Alta absorció en cantonades"
+    },
+    {
+      "id": "acoustic_treatment_se_electronics_reflexion_filter_pro",
+      "name": "SE Electronics Reflexion Filter Pro",
+      "category": "acoustic_treatment",
+      "tier": "mid",
+      "price": 200.0,
+      "maintenance_weekly": 0.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Mixte",
+        "Cabina vocal portàtil"
+      ],
+      "stats": {
+        "room_acoustic_add": 7,
+        "bass_control_add": 3.5,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Molt usat per vocals"
+    },
+    {
+      "id": "acoustic_treatment_gik_acoustics_244_bass_trap_panel",
+      "name": "GIK Acoustics 244 Bass Trap Panel",
+      "category": "acoustic_treatment",
+      "tier": "pro",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Panell absorbent",
+        "Absorbent ample banda"
+      ],
+      "stats": {
+        "room_acoustic_add": 10,
+        "bass_control_add": 5.0,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Funciona també com bass trap lleu"
+    },
+    {
+      "id": "acoustic_treatment_vicoustic_vicpanel_premium",
+      "name": "Vicoustic VicPanel Premium",
+      "category": "acoustic_treatment",
+      "tier": "pro",
+      "price": 160.0,
+      "maintenance_weekly": 0.32,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Panell absorbent",
+        "Absorbent"
+      ],
+      "stats": {
+        "room_acoustic_add": 10,
+        "bass_control_add": 5.0,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Alta absorció i acabat premium"
+    },
+    {
+      "id": "acoustic_treatment_vicoustic_flexi_screen_ultra_mkii",
+      "name": "Vicoustic Flexi Screen Ultra MKII",
+      "category": "acoustic_treatment",
+      "tier": "pro",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Mixte",
+        "Cabina vocal portàtil"
+      ],
+      "stats": {
+        "room_acoustic_add": 10,
+        "bass_control_add": 5.0,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Alta absorció al voltant del micro"
+    },
+    {
+      "id": "acoustic_treatment_vicoustic_super_bass_extreme_ultra",
+      "name": "Vicoustic Super Bass Extreme Ultra",
+      "category": "acoustic_treatment",
+      "tier": "pro",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Bass Trap",
+        "Trampa de greus"
+      ],
+      "stats": {
+        "room_acoustic_add": 10,
+        "bass_control_add": 10,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Greus profunds, alt rendiment"
+    },
+    {
+      "id": "acoustic_treatment_gik_acoustics_soffit_bass_trap",
+      "name": "GIK Acoustics Soffit Bass Trap",
+      "category": "acoustic_treatment",
+      "tier": "pro",
+      "price": 350.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Bass Trap",
+        "Trampa de greus"
+      ],
+      "stats": {
+        "room_acoustic_add": 10,
+        "bass_control_add": 10,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Per unions paret-sostre"
+    },
+    {
+      "id": "acoustic_treatment_vicoustic_multifuser_wood_36",
+      "name": "Vicoustic Multifuser Wood 36",
+      "category": "acoustic_treatment",
+      "tier": "pro",
+      "price": 350.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Difusor",
+        "Difusió fusta 2D"
+      ],
+      "stats": {
+        "room_acoustic_add": 10,
+        "bass_control_add": 5.0,
+        "diffusion_add": 10
+      },
+      "io": {},
+      "notes": "Difusió d’alta qualitat"
+    },
+    {
+      "id": "acoustic_treatment_gik_acoustics_portable_vocal_booth",
+      "name": "GIK Acoustics Portable Vocal Booth",
+      "category": "acoustic_treatment",
+      "tier": "pro",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Mixte",
+        "Cabina portàtil"
+      ],
+      "stats": {
+        "room_acoustic_add": 10,
+        "bass_control_add": 5.0,
+        "diffusion_add": 0
+      },
+      "io": {},
+      "notes": "Solució completa per vocals"
+    },
+    {
+      "id": "acoustic_treatment_rpg_skyline_diffuser",
+      "name": "RPG Skyline Diffuser",
+      "category": "acoustic_treatment",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Difusor",
+        "Difusió 2D"
+      ],
+      "stats": {
+        "room_acoustic_add": 10,
+        "bass_control_add": 5.0,
+        "diffusion_add": 10
+      },
+      "io": {},
+      "notes": "Referència en estudis professionals"
+    }
+  ]
+}

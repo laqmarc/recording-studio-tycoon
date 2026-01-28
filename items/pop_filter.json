@@ -1,0 +1,84 @@
+{
+  "items": [
+    {
+      "id": "pop_filter_millenium_pf_10",
+      "name": "Millenium PF-10",
+      "category": "pop_filter",
+      "tier": "low",
+      "price": 8.0,
+      "maintenance_weekly": 0.02,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 1
+      },
+      "io": {},
+      "notes": "Solució econòmica"
+    },
+    {
+      "id": "pop_filter_the_t_bone_ms60_pop_filter",
+      "name": "the t.bone MS60 Pop Filter",
+      "category": "pop_filter",
+      "tier": "low",
+      "price": 10.0,
+      "maintenance_weekly": 0.02,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 1
+      },
+      "io": {},
+      "notes": "Redueix plosives en veu"
+    },
+    {
+      "id": "pop_filter_k_m_23956",
+      "name": "K&M 23956",
+      "category": "pop_filter",
+      "tier": "mid",
+      "price": 35.0,
+      "maintenance_weekly": 0.07,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 2
+      },
+      "io": {},
+      "notes": "Braç flexible, molt durador"
+    },
+    {
+      "id": "pop_filter_stedman_proscreen_ps101",
+      "name": "Stedman Proscreen PS101",
+      "category": "pop_filter",
+      "tier": "mid",
+      "price": 45.0,
+      "maintenance_weekly": 0.09,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 2
+      },
+      "io": {},
+      "notes": "No mata aguts"
+    },
+    {
+      "id": "pop_filter_aston_shield_gn",
+      "name": "Aston Shield GN",
+      "category": "pop_filter",
+      "tier": "pro",
+      "price": 80.0,
+      "maintenance_weekly": 0.16,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 3
+      },
+      "io": {},
+      "notes": "Molt robust, qualitat pro"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "items": [
+    {
+      "id": "rack_millenium_steel_box_4u",
+      "name": "Millenium Steel Box 4U",
+      "category": "rack",
+      "tier": "low",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 0,
+        "space_bonus": 1
+      },
+      "io": {},
+      "notes": "Per transportar outboard"
+    },
+    {
+      "id": "rack_millenium_sr_2012",
+      "name": "Millenium SR-2012",
+      "category": "rack",
+      "tier": "low",
+      "price": 80.0,
+      "maintenance_weekly": 0.16,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 0,
+        "space_bonus": 1
+      },
+      "io": {},
+      "notes": "Rack metàl·lic bàsic"
+    },
+    {
+      "id": "rack_thon_studio_rack_12u",
+      "name": "Thon Studio Rack 12U",
+      "category": "rack",
+      "tier": "mid",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 0,
+        "space_bonus": 2
+      },
+      "io": {},
+      "notes": "Més estable i estètic"
+    },
+    {
+      "id": "rack_zaor_onda_angled_rack_10u",
+      "name": "Zaor Onda Angled Rack 10U",
+      "category": "rack",
+      "tier": "mid",
+      "price": 350.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 0,
+        "space_bonus": 2
+      },
+      "io": {},
+      "notes": "Ideal per patchbays"
+    },
+    {
+      "id": "rack_argosy_spire_rack",
+      "name": "Argosy Spire Rack",
+      "category": "rack",
+      "tier": "pro",
+      "price": 1200.0,
+      "maintenance_weekly": 2.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 0,
+        "space_bonus": 2
+      },
+      "io": {},
+      "notes": "Integració amb taules Argosy"
+    }
+  ]
+}

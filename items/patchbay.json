@@ -1,0 +1,132 @@
+{
+  "items": [
+    {
+      "id": "patchbay_the_sssnake_ppa48",
+      "name": "the sssnake PPA48",
+      "category": "patchbay",
+      "tier": "low",
+      "price": 80.0,
+      "maintenance_weekly": 0.16,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 55
+      },
+      "io": {},
+      "notes": "Molt econòmic"
+    },
+    {
+      "id": "patchbay_behringer_px3000_ultrapatch_pro",
+      "name": "Behringer PX3000 Ultrapatch Pro",
+      "category": "patchbay",
+      "tier": "low",
+      "price": 90.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 55
+      },
+      "io": {},
+      "notes": "Normalització completa/mitja/lliure"
+    },
+    {
+      "id": "patchbay_samson_s_patch_plus",
+      "name": "Samson S-Patch Plus",
+      "category": "patchbay",
+      "tier": "low",
+      "price": 110.0,
+      "maintenance_weekly": 0.22,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 55
+      },
+      "io": {},
+      "notes": "Canvi de mode frontal"
+    },
+    {
+      "id": "patchbay_art_p48",
+      "name": "ART P48",
+      "category": "patchbay",
+      "tier": "mid",
+      "price": 120.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 65
+      },
+      "io": {},
+      "notes": "Robust i fiable"
+    },
+    {
+      "id": "patchbay_neutrik_nys_spp_l1",
+      "name": "Neutrik NYS-SPP-L1",
+      "category": "patchbay",
+      "tier": "mid",
+      "price": 140.0,
+      "maintenance_weekly": 0.28,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 65
+      },
+      "io": {},
+      "notes": "Qualitat professional"
+    },
+    {
+      "id": "patchbay_samson_s_patch_q",
+      "name": "Samson S-Patch Q",
+      "category": "patchbay",
+      "tier": "mid",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 65
+      },
+      "io": {},
+      "notes": "Contactes daurats"
+    },
+    {
+      "id": "patchbay_neutrik_nys_spp_l1_2",
+      "name": "Neutrik NYS-SPP-L1-2",
+      "category": "patchbay",
+      "tier": "pro",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 75
+      },
+      "io": {},
+      "notes": "Connexions d’alta durabilitat"
+    },
+    {
+      "id": "patchbay_switchcraft_studiopatch_9625",
+      "name": "Switchcraft StudioPatch 9625",
+      "category": "patchbay",
+      "tier": "pro",
+      "price": 900.0,
+      "maintenance_weekly": 1.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "signal_integrity": 75
+      },
+      "io": {},
+      "notes": "Estàndard d’estudi professional"
+    }
+  ]
+}

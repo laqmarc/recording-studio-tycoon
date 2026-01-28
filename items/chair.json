@@ -1,0 +1,72 @@
+{
+  "items": [
+    {
+      "id": "chair_ikea_markus",
+      "name": "IKEA Markus",
+      "category": "chair",
+      "tier": "low",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 1,
+        "space_bonus": 1
+      },
+      "io": {},
+      "notes": "Còmoda per sessions llargues"
+    },
+    {
+      "id": "chair_topstar_open_point_sy",
+      "name": "Topstar Open Point SY",
+      "category": "chair",
+      "tier": "mid",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 1,
+        "space_bonus": 1
+      },
+      "io": {},
+      "notes": "Bona postura per treball"
+    },
+    {
+      "id": "chair_secretlab_titan_evo",
+      "name": "Secretlab Titan Evo",
+      "category": "chair",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 3,
+        "space_bonus": 1
+      },
+      "io": {},
+      "notes": "Molt usada en estudis moderns"
+    },
+    {
+      "id": "chair_herman_miller_aeron",
+      "name": "Herman Miller Aeron",
+      "category": "chair",
+      "tier": "pro",
+      "price": 1200.0,
+      "maintenance_weekly": 2.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "comfort_bonus": 3,
+        "space_bonus": 1
+      },
+      "io": {},
+      "notes": "Referència en ergonomia"
+    }
+  ]
+}

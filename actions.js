@@ -90,7 +90,19 @@ if (typeof document !== 'undefined') {
   // Boot actions
   const bootLoad = () => {
     if (typeof window !== 'undefined' && window.__demoLoaded) return;
-    if (typeof loadFromObject === 'function' && typeof DEMO !== 'undefined') {
+    const hasItems = (typeof window !== 'undefined')
+      ? (window.__itemsLoaded || (Array.isArray(window.ITEMS) && window.ITEMS.length) || (typeof DEMO !== 'undefined' && Array.isArray(DEMO.items) && DEMO.items.length))
+      : (typeof DEMO !== 'undefined' && Array.isArray(DEMO.items) && DEMO.items.length);
+    const hasRooms = (typeof window !== 'undefined')
+      ? (window.__roomsLoaded || (Array.isArray(window.ROOMS) && window.ROOMS.length) || (typeof DEMO !== 'undefined' && Array.isArray(DEMO.rooms) && DEMO.rooms.length))
+      : (typeof DEMO !== 'undefined' && Array.isArray(DEMO.rooms) && DEMO.rooms.length);
+    if (typeof DEMO !== 'undefined' && typeof window !== 'undefined' && window.ITEMS && (!Array.isArray(DEMO.items) || !DEMO.items.length)) {
+      DEMO.items = window.ITEMS;
+    }
+    if (typeof DEMO !== 'undefined' && typeof window !== 'undefined' && window.ROOMS && (!Array.isArray(DEMO.rooms) || !DEMO.rooms.length)) {
+      DEMO.rooms = window.ROOMS;
+    }
+    if (hasItems && hasRooms && typeof loadFromObject === 'function' && typeof DEMO !== 'undefined') {
       if (typeof window !== 'undefined') window.__demoLoaded = true;
       loadFromObject(DEMO);
     }
@@ -101,6 +113,8 @@ if (typeof document !== 'undefined') {
     } else {
       window.addEventListener('people-ready', bootLoad, { once: true });
       window.addEventListener('demo-ready', bootLoad, { once: true });
+      window.addEventListener('items-ready', bootLoad, { once: true });
+      window.addEventListener('rooms-ready', bootLoad, { once: true });
     }
   } else {
     bootLoad();

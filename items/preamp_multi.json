@@ -1,0 +1,737 @@
+{
+  "items": [
+    {
+      "id": "preamp_multi_behringer_ada8000",
+      "name": "Behringer ADA8000",
+      "category": "preamp_multi",
+      "tier": "low",
+      "price": 180.0,
+      "maintenance_weekly": 0.36,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "XLR",
+        "ADAT"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_behringer_ada8200_ultragain",
+      "name": "Behringer ADA8200 Ultragain",
+      "category": "preamp_multi",
+      "tier": "low",
+      "price": 230.0,
+      "maintenance_weekly": 0.46,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "XLR",
+        "ADAT"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_presonus_digimax_d8",
+      "name": "Presonus Digimax D8",
+      "category": "preamp_multi",
+      "tier": "low",
+      "price": 250.0,
+      "maintenance_weekly": 0.5,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "XLR",
+        "ADAT"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_behringer_umc1820",
+      "name": "Behringer UMC1820",
+      "category": "preamp_multi",
+      "tier": "low",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "XLR/Jack",
+        "USB/ADAT"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_mackie_onyx_800r",
+      "name": "Mackie Onyx 800R",
+      "category": "preamp_multi",
+      "tier": "low",
+      "price": 400.0,
+      "maintenance_weekly": 0.8,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "XLR",
+        "ADAT/Analog"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_tascam_series_8p_dyna",
+      "name": "Tascam Series 8p Dyna",
+      "category": "preamp_multi",
+      "tier": "low",
+      "price": 450.0,
+      "maintenance_weekly": 0.9,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "XLR/Jack",
+        "ADAT/USB"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_presonus_studio_1824c_previs_integrats",
+      "name": "Presonus Studio 1824c (previs integrats)",
+      "category": "preamp_multi",
+      "tier": "low",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "XLR/Jack",
+        "USB"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_focusrite_scarlett_octopre_dynamic",
+      "name": "Focusrite Scarlett OctoPre Dynamic",
+      "category": "preamp_multi",
+      "tier": "low",
+      "price": 520.0,
+      "maintenance_weekly": 1.04,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "XLR",
+        "ADAT"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_art_tubeopto_8",
+      "name": "ART TubeOpto 8",
+      "category": "preamp_multi",
+      "tier": "low",
+      "price": 550.0,
+      "maintenance_weekly": 1.1,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "XLR",
+        "ADAT"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_zoom_f8n_previs_integrats",
+      "name": "Zoom F8n (previs integrats)",
+      "category": "preamp_multi",
+      "tier": "low",
+      "price": 900.0,
+      "maintenance_weekly": 1.8,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "XLR",
+        "Digital"
+      ],
+      "stats": {
+        "preamp_quality": 35,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_art_pro_mpa_ii_2_canals",
+      "name": "ART Pro MPA II (2 canals)",
+      "category": "preamp_multi",
+      "tier": "mid",
+      "price": 420.0,
+      "maintenance_weekly": 0.84,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "XLR/Jack",
+        "Analog"
+      ],
+      "stats": {
+        "preamp_quality": 53,
+        "gain_db": 55,
+        "channels": 2
+      },
+      "io": {
+        "inputs_xlr": 2,
+        "outputs_line": 2
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_presonus_digimax_dp88",
+      "name": "Presonus DigiMax DP88",
+      "category": "preamp_multi",
+      "tier": "mid",
+      "price": 700.0,
+      "maintenance_weekly": 1.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "XLR",
+        "ADAT/Analog"
+      ],
+      "stats": {
+        "preamp_quality": 53,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_audient_asp800",
+      "name": "Audient ASP800",
+      "category": "preamp_multi",
+      "tier": "mid",
+      "price": 750.0,
+      "maintenance_weekly": 1.5,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "XLR",
+        "ADAT"
+      ],
+      "stats": {
+        "preamp_quality": 53,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_focusrite_clarett_octopre",
+      "name": "Focusrite Clarett+ OctoPre",
+      "category": "preamp_multi",
+      "tier": "mid",
+      "price": 750.0,
+      "maintenance_weekly": 1.5,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "XLR",
+        "ADAT/Analog"
+      ],
+      "stats": {
+        "preamp_quality": 53,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_golden_age_project_pre_573_500_rack_x2",
+      "name": "Golden Age Project Pre-573 (500 rack x2)",
+      "category": "preamp_multi",
+      "tier": "mid",
+      "price": 900.0,
+      "maintenance_weekly": 1.8,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "XLR",
+        "Analog"
+      ],
+      "stats": {
+        "preamp_quality": 53,
+        "gain_db": 55,
+        "channels": 2
+      },
+      "io": {
+        "inputs_xlr": 2,
+        "outputs_line": 2
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_rme_quadmic_ii",
+      "name": "RME QuadMic II",
+      "category": "preamp_multi",
+      "tier": "mid",
+      "price": 900.0,
+      "maintenance_weekly": 1.8,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "XLR",
+        "Analog"
+      ],
+      "stats": {
+        "preamp_quality": 53,
+        "gain_db": 55,
+        "channels": 4
+      },
+      "io": {
+        "inputs_xlr": 4,
+        "outputs_line": 4
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_audient_asp880",
+      "name": "Audient ASP880",
+      "category": "preamp_multi",
+      "tier": "mid",
+      "price": 950.0,
+      "maintenance_weekly": 1.9,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "XLR",
+        "ADAT/Analog"
+      ],
+      "stats": {
+        "preamp_quality": 53,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_motu_8pre_es_previs_integrats",
+      "name": "MOTU 8pre-es (previs integrats)",
+      "category": "preamp_multi",
+      "tier": "mid",
+      "price": 1100.0,
+      "maintenance_weekly": 2.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "XLR/Jack",
+        "Thunderbolt/USB/AVB"
+      ],
+      "stats": {
+        "preamp_quality": 53,
+        "gain_db": 55,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_warm_audio_wa412",
+      "name": "Warm Audio WA412",
+      "category": "preamp_multi",
+      "tier": "mid",
+      "price": 1300.0,
+      "maintenance_weekly": 2.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "XLR",
+        "Analog"
+      ],
+      "stats": {
+        "preamp_quality": 53,
+        "gain_db": 55,
+        "channels": 4
+      },
+      "io": {
+        "inputs_xlr": 4,
+        "outputs_line": 4
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_ssl_xlogic_alpha_vhd_pre",
+      "name": "SSL XLogic Alpha VHD Pre",
+      "category": "preamp_multi",
+      "tier": "mid",
+      "price": 1400.0,
+      "maintenance_weekly": 2.8,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "XLR",
+        "Analog"
+      ],
+      "stats": {
+        "preamp_quality": 53,
+        "gain_db": 55,
+        "channels": 4
+      },
+      "io": {
+        "inputs_xlr": 4,
+        "outputs_line": 4
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_focusrite_isa_828_mkii",
+      "name": "Focusrite ISA 828 MkII",
+      "category": "preamp_multi",
+      "tier": "pro",
+      "price": 2300.0,
+      "maintenance_weekly": 4.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "XLR",
+        "Analog/ADAT opcional"
+      ],
+      "stats": {
+        "preamp_quality": 73,
+        "gain_db": 63,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8,
+        "adat_out": true
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_chandler_limited_tg_microphone_cassette_x2",
+      "name": "Chandler Limited TG Microphone Cassette x2",
+      "category": "preamp_multi",
+      "tier": "pro",
+      "price": 2400.0,
+      "maintenance_weekly": 4.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "XLR",
+        "Analog"
+      ],
+      "stats": {
+        "preamp_quality": 73,
+        "gain_db": 63,
+        "channels": 2
+      },
+      "io": {
+        "inputs_xlr": 2,
+        "outputs_line": 2
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_rupert_neve_designs_5088_shelford_5057_x2",
+      "name": "Rupert Neve Designs 5088 Shelford 5057 x2",
+      "category": "preamp_multi",
+      "tier": "pro",
+      "price": 2500.0,
+      "maintenance_weekly": 5.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "XLR",
+        "Analog"
+      ],
+      "stats": {
+        "preamp_quality": 73,
+        "gain_db": 63,
+        "channels": 2
+      },
+      "io": {
+        "inputs_xlr": 2,
+        "outputs_line": 2
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_daking_mic_pre_iv",
+      "name": "Daking Mic Pre IV",
+      "category": "preamp_multi",
+      "tier": "pro",
+      "price": 2800.0,
+      "maintenance_weekly": 5.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "XLR",
+        "Analog"
+      ],
+      "stats": {
+        "preamp_quality": 73,
+        "gain_db": 63,
+        "channels": 4
+      },
+      "io": {
+        "inputs_xlr": 4,
+        "outputs_line": 4
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_ssl_puredrive_quad",
+      "name": "SSL PureDrive Quad",
+      "category": "preamp_multi",
+      "tier": "pro",
+      "price": 3000.0,
+      "maintenance_weekly": 6.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "XLR",
+        "Analog/Digital"
+      ],
+      "stats": {
+        "preamp_quality": 73,
+        "gain_db": 63,
+        "channels": 4
+      },
+      "io": {
+        "inputs_xlr": 4,
+        "outputs_line": 4
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_api_3124v",
+      "name": "API 3124V",
+      "category": "preamp_multi",
+      "tier": "pro",
+      "price": 3200.0,
+      "maintenance_weekly": 6.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "XLR",
+        "Analog"
+      ],
+      "stats": {
+        "preamp_quality": 73,
+        "gain_db": 63,
+        "channels": 4
+      },
+      "io": {
+        "inputs_xlr": 4,
+        "outputs_line": 4
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_grace_design_m108",
+      "name": "Grace Design m108",
+      "category": "preamp_multi",
+      "tier": "pro",
+      "price": 3500.0,
+      "maintenance_weekly": 7.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "XLR",
+        "Analog/Digital"
+      ],
+      "stats": {
+        "preamp_quality": 73,
+        "gain_db": 63,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_millennia_hv_3d",
+      "name": "Millennia HV-3D",
+      "category": "preamp_multi",
+      "tier": "pro",
+      "price": 4200.0,
+      "maintenance_weekly": 8.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "XLR",
+        "Analog"
+      ],
+      "stats": {
+        "preamp_quality": 73,
+        "gain_db": 63,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_neve_1073opx",
+      "name": "Neve 1073OPX",
+      "category": "preamp_multi",
+      "tier": "pro",
+      "price": 4500.0,
+      "maintenance_weekly": 9.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "XLR",
+        "Analog/Digital"
+      ],
+      "stats": {
+        "preamp_quality": 73,
+        "gain_db": 63,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    },
+    {
+      "id": "preamp_multi_focusrite_red_8pre_previs_integrats",
+      "name": "Focusrite Red 8Pre (previs integrats)",
+      "category": "preamp_multi",
+      "tier": "pro",
+      "price": 5000.0,
+      "maintenance_weekly": 10.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "XLR/Jack",
+        "Thunderbolt/Pro Tools"
+      ],
+      "stats": {
+        "preamp_quality": 73,
+        "gain_db": 63,
+        "channels": 8
+      },
+      "io": {
+        "inputs_xlr": 8,
+        "outputs_line": 8
+      },
+      "notes": ""
+    }
+  ]
+}

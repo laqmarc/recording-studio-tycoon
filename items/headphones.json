@@ -1,0 +1,574 @@
+{
+  "items": [
+    {
+      "id": "headphones_behringer_hpm1000",
+      "name": "Behringer HPM1000",
+      "category": "headphones",
+      "tier": "low",
+      "price": 20.0,
+      "maintenance_weekly": 0.04,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 40,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Útils per músics en gravació"
+    },
+    {
+      "id": "headphones_behringer_bh470",
+      "name": "Behringer BH470",
+      "category": "headphones",
+      "tier": "low",
+      "price": 25.0,
+      "maintenance_weekly": 0.05,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 40,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Molt econòmics per gravació bàsica"
+    },
+    {
+      "id": "headphones_superlux_hd681",
+      "name": "Superlux HD681",
+      "category": "headphones",
+      "tier": "low",
+      "price": 35.0,
+      "maintenance_weekly": 0.07,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Semi-obert"
+      ],
+      "stats": {
+        "hp_accuracy": 40,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Sorprenentment bons pel preu"
+    },
+    {
+      "id": "headphones_tascam_th_02",
+      "name": "Tascam TH-02",
+      "category": "headphones",
+      "tier": "low",
+      "price": 35.0,
+      "maintenance_weekly": 0.07,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 40,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Bàsics per estudi casolà"
+    },
+    {
+      "id": "headphones_akg_k52",
+      "name": "AKG K52",
+      "category": "headphones",
+      "tier": "low",
+      "price": 40.0,
+      "maintenance_weekly": 0.08,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 40,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Confortables i lleugers"
+    },
+    {
+      "id": "headphones_presonus_hd7",
+      "name": "Presonus HD7",
+      "category": "headphones",
+      "tier": "low",
+      "price": 45.0,
+      "maintenance_weekly": 0.09,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Semi-obert"
+      ],
+      "stats": {
+        "hp_accuracy": 40,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Bona imatge estèreo"
+    },
+    {
+      "id": "headphones_samson_sr850",
+      "name": "Samson SR850",
+      "category": "headphones",
+      "tier": "low",
+      "price": 45.0,
+      "maintenance_weekly": 0.09,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Semi-obert"
+      ],
+      "stats": {
+        "hp_accuracy": 40,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Bona relació qualitat/preu"
+    },
+    {
+      "id": "headphones_superlux_hd662_evo",
+      "name": "Superlux HD662 EVO",
+      "category": "headphones",
+      "tier": "low",
+      "price": 45.0,
+      "maintenance_weekly": 0.09,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 40,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Més aïllament per tracking"
+    },
+    {
+      "id": "headphones_akg_k72",
+      "name": "AKG K72",
+      "category": "headphones",
+      "tier": "low",
+      "price": 55.0,
+      "maintenance_weekly": 0.11,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 40,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Millor resposta en greus"
+    },
+    {
+      "id": "headphones_audio_technica_ath_m20x",
+      "name": "Audio-Technica ATH-M20x",
+      "category": "headphones",
+      "tier": "low",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 40,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Seguiment i edició bàsica"
+    },
+    {
+      "id": "headphones_akg_k240_studio",
+      "name": "AKG K240 Studio",
+      "category": "headphones",
+      "tier": "mid",
+      "price": 90.0,
+      "maintenance_weekly": 0.18,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Semi-obert"
+      ],
+      "stats": {
+        "hp_accuracy": 55,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Clàssics d’estudi"
+    },
+    {
+      "id": "headphones_audio_technica_ath_m40x",
+      "name": "Audio-Technica ATH-M40x",
+      "category": "headphones",
+      "tier": "mid",
+      "price": 110.0,
+      "maintenance_weekly": 0.22,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 55,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Resposta bastant plana"
+    },
+    {
+      "id": "headphones_sennheiser_hd280_pro",
+      "name": "Sennheiser HD280 Pro",
+      "category": "headphones",
+      "tier": "mid",
+      "price": 110.0,
+      "maintenance_weekly": 0.22,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 55,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Molt bon aïllament"
+    },
+    {
+      "id": "headphones_sony_mdr_7506",
+      "name": "Sony MDR-7506",
+      "category": "headphones",
+      "tier": "mid",
+      "price": 120.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 55,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Estàndard en broadcast"
+    },
+    {
+      "id": "headphones_beyerdynamic_dt_770_pro_80",
+      "name": "Beyerdynamic DT 770 Pro 80Ω",
+      "category": "headphones",
+      "tier": "mid",
+      "price": 150.0,
+      "maintenance_weekly": 0.3,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 55,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Molt usats per gravació"
+    },
+    {
+      "id": "headphones_audio_technica_ath_m50x",
+      "name": "Audio-Technica ATH-M50x",
+      "category": "headphones",
+      "tier": "mid",
+      "price": 160.0,
+      "maintenance_weekly": 0.32,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 55,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Molt popular, bons greus"
+    },
+    {
+      "id": "headphones_beyerdynamic_dt_990_pro_250",
+      "name": "Beyerdynamic DT 990 Pro 250Ω",
+      "category": "headphones",
+      "tier": "mid",
+      "price": 160.0,
+      "maintenance_weekly": 0.32,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Obert"
+      ],
+      "stats": {
+        "hp_accuracy": 55,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Molt bons per mescla"
+    },
+    {
+      "id": "headphones_akg_k702",
+      "name": "AKG K702",
+      "category": "headphones",
+      "tier": "mid",
+      "price": 170.0,
+      "maintenance_weekly": 0.34,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Obert"
+      ],
+      "stats": {
+        "hp_accuracy": 55,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Molt detall en mescla"
+    },
+    {
+      "id": "headphones_beyerdynamic_dt_880_pro",
+      "name": "Beyerdynamic DT 880 Pro",
+      "category": "headphones",
+      "tier": "mid",
+      "price": 190.0,
+      "maintenance_weekly": 0.38,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Semi-obert"
+      ],
+      "stats": {
+        "hp_accuracy": 55,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Equilibri entre tracking i mixing"
+    },
+    {
+      "id": "headphones_sennheiser_hd560s",
+      "name": "Sennheiser HD560S",
+      "category": "headphones",
+      "tier": "mid",
+      "price": 190.0,
+      "maintenance_weekly": 0.38,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [
+        "Obert"
+      ],
+      "stats": {
+        "hp_accuracy": 55,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Resposta molt neutra"
+    },
+    {
+      "id": "headphones_sennheiser_hd600",
+      "name": "Sennheiser HD600",
+      "category": "headphones",
+      "tier": "pro",
+      "price": 300.0,
+      "maintenance_weekly": 0.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Obert"
+      ],
+      "stats": {
+        "hp_accuracy": 70,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Referència per mescla"
+    },
+    {
+      "id": "headphones_sennheiser_hd650",
+      "name": "Sennheiser HD650",
+      "category": "headphones",
+      "tier": "pro",
+      "price": 350.0,
+      "maintenance_weekly": 0.7,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Obert"
+      ],
+      "stats": {
+        "hp_accuracy": 70,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Més càlids que HD600"
+    },
+    {
+      "id": "headphones_beyerdynamic_dt_1990_pro",
+      "name": "Beyerdynamic DT 1990 Pro",
+      "category": "headphones",
+      "tier": "pro",
+      "price": 450.0,
+      "maintenance_weekly": 0.9,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Obert"
+      ],
+      "stats": {
+        "hp_accuracy": 70,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Detall extrem per mixing"
+    },
+    {
+      "id": "headphones_neumann_ndh_20",
+      "name": "Neumann NDH 20",
+      "category": "headphones",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 70,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Tracking pro amb molt aïllament"
+    },
+    {
+      "id": "headphones_shure_srh1540",
+      "name": "Shure SRH1540",
+      "category": "headphones",
+      "tier": "pro",
+      "price": 500.0,
+      "maintenance_weekly": 1.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Tancat"
+      ],
+      "stats": {
+        "hp_accuracy": 70,
+        "isolation": 70
+      },
+      "io": {},
+      "notes": "Tancats d’alta gamma"
+    },
+    {
+      "id": "headphones_neumann_ndh_30",
+      "name": "Neumann NDH 30",
+      "category": "headphones",
+      "tier": "pro",
+      "price": 650.0,
+      "maintenance_weekly": 1.3,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Obert"
+      ],
+      "stats": {
+        "hp_accuracy": 70,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Resposta molt precisa"
+    },
+    {
+      "id": "headphones_audeze_lcd_2_classic",
+      "name": "Audeze LCD-2 Classic",
+      "category": "headphones",
+      "tier": "pro",
+      "price": 800.0,
+      "maintenance_weekly": 1.6,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Obert planar"
+      ],
+      "stats": {
+        "hp_accuracy": 75,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "So molt natural"
+    },
+    {
+      "id": "headphones_dan_clark_audio_aeon_2",
+      "name": "Dan Clark Audio AEON 2",
+      "category": "headphones",
+      "tier": "pro",
+      "price": 900.0,
+      "maintenance_weekly": 1.8,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Obert planar"
+      ],
+      "stats": {
+        "hp_accuracy": 75,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Planars lleugers i molt detallats"
+    },
+    {
+      "id": "headphones_audeze_lcd_x",
+      "name": "Audeze LCD-X",
+      "category": "headphones",
+      "tier": "pro",
+      "price": 1200.0,
+      "maintenance_weekly": 2.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Obert planar"
+      ],
+      "stats": {
+        "hp_accuracy": 75,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Planars per mastering"
+    },
+    {
+      "id": "headphones_focal_clear_mg_professional",
+      "name": "Focal Clear Mg Professional",
+      "category": "headphones",
+      "tier": "pro",
+      "price": 1500.0,
+      "maintenance_weekly": 3.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [
+        "Obert"
+      ],
+      "stats": {
+        "hp_accuracy": 70,
+        "isolation": 30
+      },
+      "io": {},
+      "notes": "Alta gamma d’estudi"
+    }
+  ]
+}

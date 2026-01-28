@@ -1,0 +1,274 @@
+{
+  "items": [
+    {
+      "id": "console_digital_behringer_x32_rack",
+      "name": "Behringer X32 Rack",
+      "category": "console_digital",
+      "tier": "low",
+      "price": 1300.0,
+      "maintenance_weekly": 2.6,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 46.4,
+        "headroom": 55,
+        "channels": 16
+      },
+      "io": {},
+      "notes": "Digital, molt comú; ideal per gravació via USB/expansions"
+    },
+    {
+      "id": "console_digital_behringer_x32_compact",
+      "name": "Behringer X32 Compact",
+      "category": "console_digital",
+      "tier": "low",
+      "price": 1800.0,
+      "maintenance_weekly": 3.6,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "routing": 52.8,
+        "headroom": 55,
+        "channels": 32
+      },
+      "io": {},
+      "notes": "32 canals, ecosistema molt estès"
+    },
+    {
+      "id": "console_digital_soundcraft_ui24r",
+      "name": "Soundcraft Ui24R",
+      "category": "console_digital",
+      "tier": "mid",
+      "price": 1200.0,
+      "maintenance_weekly": 2.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 49.6,
+        "headroom": 55,
+        "channels": 24
+      },
+      "io": {},
+      "notes": "Stagebox/mixer controlat per app; gravació multipista"
+    },
+    {
+      "id": "console_digital_yamaha_tf1",
+      "name": "Yamaha TF1",
+      "category": "console_digital",
+      "tier": "mid",
+      "price": 1900.0,
+      "maintenance_weekly": 3.8,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 52.8,
+        "headroom": 55,
+        "channels": 32
+      },
+      "io": {},
+      "notes": "Molt popular; gravació USB"
+    },
+    {
+      "id": "console_digital_allen_heath_sq_5",
+      "name": "Allen & Heath SQ-5",
+      "category": "console_digital",
+      "tier": "mid",
+      "price": 2600.0,
+      "maintenance_weekly": 5.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 59.2,
+        "headroom": 55,
+        "channels": 48
+      },
+      "io": {},
+      "notes": "Molt bon so, opcions d’expansió, USB multitrack"
+    },
+    {
+      "id": "console_digital_midas_m32r",
+      "name": "Midas M32R",
+      "category": "console_digital",
+      "tier": "mid",
+      "price": 2600.0,
+      "maintenance_weekly": 5.2,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 52.8,
+        "headroom": 55,
+        "channels": 32
+      },
+      "io": {},
+      "notes": "So/previs Midas, workflow pro"
+    },
+    {
+      "id": "console_digital_yamaha_tf3",
+      "name": "Yamaha TF3",
+      "category": "console_digital",
+      "tier": "mid",
+      "price": 3200.0,
+      "maintenance_weekly": 6.4,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 59.2,
+        "headroom": 55,
+        "channels": 48
+      },
+      "io": {},
+      "notes": "Més canals i faders"
+    },
+    {
+      "id": "console_digital_allen_heath_sq_6",
+      "name": "Allen & Heath SQ-6",
+      "category": "console_digital",
+      "tier": "mid",
+      "price": 3300.0,
+      "maintenance_weekly": 6.6,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "routing": 59.2,
+        "headroom": 55,
+        "channels": 48
+      },
+      "io": {},
+      "notes": "Més control físic; molt completa"
+    },
+    {
+      "id": "console_digital_yamaha_dm3s",
+      "name": "Yamaha DM3S",
+      "category": "console_digital",
+      "tier": "pro",
+      "price": 2000.0,
+      "maintenance_weekly": 4.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 48.8,
+        "headroom": 70,
+        "channels": 22
+      },
+      "io": {},
+      "notes": "Compacta pro; molt bona per estudi petit/FOH"
+    },
+    {
+      "id": "console_digital_yamaha_ql1",
+      "name": "Yamaha QL1",
+      "category": "console_digital",
+      "tier": "pro",
+      "price": 7200.0,
+      "maintenance_weekly": 14.4,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 52.8,
+        "headroom": 70,
+        "channels": 32
+      },
+      "io": {},
+      "notes": "Gama pro Yamaha, molt fiable"
+    },
+    {
+      "id": "console_digital_yamaha_cl1",
+      "name": "Yamaha CL1",
+      "category": "console_digital",
+      "tier": "pro",
+      "price": 14000.0,
+      "maintenance_weekly": 28.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 59.2,
+        "headroom": 70,
+        "channels": 48
+      },
+      "io": {},
+      "notes": "Consola pro gran; estàndard en directe"
+    },
+    {
+      "id": "console_digital_allen_heath_dlive_c1500_surface_dm0",
+      "name": "Allen & Heath dLive C1500 (Surface) + DM0",
+      "category": "console_digital",
+      "tier": "pro",
+      "price": 16000.0,
+      "maintenance_weekly": 32.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 91.2,
+        "headroom": 70,
+        "channels": 128
+      },
+      "io": {},
+      "notes": "Sistema modular pro; depèn del mixrack"
+    },
+    {
+      "id": "console_digital_digico_sd11",
+      "name": "DiGiCo SD11",
+      "category": "console_digital",
+      "tier": "pro",
+      "price": 18000.0,
+      "maintenance_weekly": 36.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 78.4,
+        "headroom": 70,
+        "channels": 96
+      },
+      "io": {},
+      "notes": "Molt pro; so i routing top"
+    },
+    {
+      "id": "console_digital_midas_heritage_d_hd96_24",
+      "name": "Midas Heritage-D HD96-24",
+      "category": "console_digital",
+      "tier": "pro",
+      "price": 35000.0,
+      "maintenance_weekly": 70.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 95,
+        "headroom": 70,
+        "channels": 144
+      },
+      "io": {},
+      "notes": "Gama alta Midas; workflow pro"
+    },
+    {
+      "id": "console_digital_avid_s6l_sistema",
+      "name": "Avid S6L (sistema)",
+      "category": "console_digital",
+      "tier": "pro",
+      "price": 40000.0,
+      "maintenance_weekly": 80.0,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "routing": 91.2,
+        "headroom": 70,
+        "channels": 128
+      },
+      "io": {},
+      "notes": "Estàndard touring; preu depèn configuració"
+    }
+  ]
+}

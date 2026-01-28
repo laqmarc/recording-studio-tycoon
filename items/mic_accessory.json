@@ -1,0 +1,68 @@
+{
+  "items": [
+    {
+      "id": "mic_accessory_the_t_bone_drum_clip",
+      "name": "the t.bone Drum Clip",
+      "category": "mic_accessory",
+      "tier": "low",
+      "price": 12.0,
+      "maintenance_weekly": 0.02,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 1
+      },
+      "io": {},
+      "notes": "Per muntar micro a bateria"
+    },
+    {
+      "id": "mic_accessory_k_m_24030_universal_clamp",
+      "name": "K&M 24030 Universal Clamp",
+      "category": "mic_accessory",
+      "tier": "mid",
+      "price": 30.0,
+      "maintenance_weekly": 0.06,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 2
+      },
+      "io": {},
+      "notes": "Per barres i tubs"
+    },
+    {
+      "id": "mic_accessory_sennheiser_mzh_drum_clamp",
+      "name": "Sennheiser MZH Drum Clamp",
+      "category": "mic_accessory",
+      "tier": "mid",
+      "price": 35.0,
+      "maintenance_weekly": 0.07,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 2
+      },
+      "io": {},
+      "notes": "Molt estable per toms"
+    },
+    {
+      "id": "mic_accessory_triad_orbit_io_equipped_micro_adapters_set",
+      "name": "Triad-Orbit IO-Equipped Micro Adapters Set",
+      "category": "mic_accessory",
+      "tier": "pro",
+      "price": 120.0,
+      "maintenance_weekly": 0.24,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 3
+      },
+      "io": {},
+      "notes": "Canvi ràpid de micros"
+    }
+  ]
+}

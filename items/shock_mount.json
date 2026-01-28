@@ -1,0 +1,84 @@
+{
+  "items": [
+    {
+      "id": "shock_mount_the_t_bone_ssm_5",
+      "name": "the t.bone SSM-5",
+      "category": "shock_mount",
+      "tier": "low",
+      "price": 15.0,
+      "maintenance_weekly": 0.03,
+      "reliability": 0.9,
+      "unlock_level": 1,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 1
+      },
+      "io": {},
+      "notes": "Compatible amb molts micros"
+    },
+    {
+      "id": "shock_mount_audio_technica_at8449",
+      "name": "Audio-Technica AT8449",
+      "category": "shock_mount",
+      "tier": "mid",
+      "price": 45.0,
+      "maintenance_weekly": 0.09,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 2
+      },
+      "io": {},
+      "notes": "Per sèrie AT2020/2035"
+    },
+    {
+      "id": "shock_mount_rode_sm6",
+      "name": "Rode SM6",
+      "category": "shock_mount",
+      "tier": "mid",
+      "price": 60.0,
+      "maintenance_weekly": 0.12,
+      "reliability": 0.95,
+      "unlock_level": 3,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 2
+      },
+      "io": {},
+      "notes": "Per micros Rode grans"
+    },
+    {
+      "id": "shock_mount_rycote_invision_usm",
+      "name": "Rycote InVision USM",
+      "category": "shock_mount",
+      "tier": "pro",
+      "price": 75.0,
+      "maintenance_weekly": 0.15,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 3
+      },
+      "io": {},
+      "notes": "Aïllament excel·lent"
+    },
+    {
+      "id": "shock_mount_neumann_ea_87",
+      "name": "Neumann EA 87",
+      "category": "shock_mount",
+      "tier": "pro",
+      "price": 250.0,
+      "maintenance_weekly": 0.5,
+      "reliability": 0.97,
+      "unlock_level": 6,
+      "tags": [],
+      "stats": {
+        "setup_speed_bonus": 3
+      },
+      "io": {},
+      "notes": "Per micros Neumann U87"
+    }
+  ]
+}
