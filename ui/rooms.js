@@ -131,6 +131,26 @@ export function renderRooms(options = {}) {
         const typ = document.createElement('span'); typ.className = 'pill'; typ.textContent = c.type;
         row.appendChild(bt); row.appendChild(typ);
 
+        const meta = document.createElement('div'); meta.className = 'muted'; meta.style.marginTop = '6px';
+        meta.textContent = `${c.duration_hours}h · ${euro(c.base_pay)}`;
+        if (isDone) {
+          const pillDone = document.createElement('span'); pillDone.className = 'pill'; pillDone.textContent = 'Complet';
+          meta.appendChild(document.createTextNode(' ')); meta.appendChild(pillDone);
+        }
+
+        const toggleRow = document.createElement('div'); toggleRow.className = 'contract-toggle-row';
+        const toggleBtn = document.createElement('button'); toggleBtn.className = 'btn2 btnSmall contract-toggle'; toggleBtn.type = 'button';
+        toggleBtn.textContent = 'Detalls';
+        toggleBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const isCompact = card.classList.toggle('contract-compact') ? true : false;
+          toggleBtn.textContent = isCompact ? 'Detalls' : 'Tancar';
+        });
+        toggleRow.appendChild(toggleBtn);
+
+        const detailsWrap = document.createElement('div'); detailsWrap.className = 'contract-details';
+
         const badges = document.createElement('div'); badges.className = 'badge-row';
         if (c.genre && c.genre !== 'any') badges.appendChild(createBadge(c.genre, 'badge--genre'));
         const risk = getRiskLevel(c);
@@ -150,13 +170,6 @@ export function renderRooms(options = {}) {
           badges.appendChild(deadlineBadge);
         }
 
-        const meta = document.createElement('div'); meta.className = 'muted'; meta.style.marginTop = '6px';
-        meta.textContent = `${c.duration_hours}h · ${euro(c.base_pay)}`;
-        if (isDone) {
-          const pillDone = document.createElement('span'); pillDone.className = 'pill'; pillDone.textContent = 'Complet';
-          meta.appendChild(document.createTextNode(' ')); meta.appendChild(pillDone);
-        }
-
         const assignedIds = assignContractPeople(c);
         const peopleMap = getPeopleByIdMap();
         const talent = assignedIds.map(id => peopleMap.get(id)).filter(Boolean);
@@ -172,7 +185,10 @@ export function renderRooms(options = {}) {
           talentWrap.appendChild(empty);
         }
 
-        card.appendChild(row); card.appendChild(badges); card.appendChild(meta); card.appendChild(talentWrap);
+        card.classList.add('contract-compact');
+        card.appendChild(row);
+        card.appendChild(meta);
+        card.appendChild(toggleRow);
 
         const manualWrap = document.createElement('div'); manualWrap.className = 'talent-manual';
         const manualTitle = document.createElement('div'); manualTitle.className = 'tiny'; manualTitle.textContent = 'Talent manual:';
@@ -253,13 +269,15 @@ export function renderRooms(options = {}) {
           selects.appendChild(selectWrap);
         });
 
+        detailsWrap.appendChild(badges);
+        detailsWrap.appendChild(talentWrap);
         if (roleDefs.length) {
           manualWrap.appendChild(selects);
-          card.appendChild(manualWrap);
+          detailsWrap.appendChild(manualWrap);
         }
 
         const reqEl = getRequirementsElement(c, state.selected.roomIndex);
-        if (reqEl) card.appendChild(reqEl);
+        if (reqEl) detailsWrap.appendChild(reqEl);
 
         const progWrap = document.createElement('div'); progWrap.style.marginTop = '8px';
         const progText = document.createElement('div'); progText.className = 'row tiny';
@@ -271,10 +289,12 @@ export function renderRooms(options = {}) {
         if (isDone) progressInner.style.opacity = '0.6';
         progress.appendChild(progressInner);
         progWrap.appendChild(progText); progWrap.appendChild(progress);
-        card.appendChild(progWrap);
+        detailsWrap.appendChild(progWrap);
 
         const schedNote = document.createElement('div'); schedNote.className = 'tiny'; schedNote.textContent = '⏱️ Aquesta feina es fa des del calendari.';
-        card.appendChild(schedNote);
+        detailsWrap.appendChild(schedNote);
+
+        card.appendChild(detailsWrap);
 
         leftContracts.appendChild(card);
       }

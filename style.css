@@ -927,6 +927,16 @@ input, select {
 
 .contract-card .badge-row { margin-top: 6px; }
 
+.contract-toggle-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.contract-card.contract-compact .contract-details {
+  display: none;
+}
+
 .rep-panel {
   margin-top: 12px;
   border: 1px solid var(--line);
