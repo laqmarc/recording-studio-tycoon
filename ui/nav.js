@@ -1,7 +1,7 @@
 import { state } from '../state.js';
 
 export function setPage(page) {
-  const normalized = (page === 'contracts' || page === 'shop' || page === 'rooms' || page === 'people') ? page : 'rooms';
+  const normalized = (page === 'contracts' || page === 'shop' || page === 'rooms' || page === 'people' || page === 'stats') ? page : 'rooms';
   state.ui = state.ui || { page: 'rooms' };
   state.ui.page = normalized;
   if (typeof document !== 'undefined') {

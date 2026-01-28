@@ -39,7 +39,6 @@ async function loadPeople() {
     if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
     maybeLoadDemo();
   } catch (e) {
-    console.warn('people.json load failed', e);
     try {
       if (typeof window !== 'undefined') {
         window.PEOPLE = PEOPLE_FALLBACK;

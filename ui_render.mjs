@@ -8,6 +8,7 @@ import { renderReputationPanels } from './ui/reputation.js';
 import { renderShop as renderShopImpl } from './ui/shop.js';
 import { renderRooms as renderRoomsImpl } from './ui/rooms.js';
 import { renderRoomDetails } from './ui/room_details.js';
+import { renderStatsPage } from './ui/stats.js';
 import { assignContractPeople, ensurePeopleData } from './ui/people_logic.js';
 import { getRequirementsElement } from './ui/requirements.js';
 import { clearChildren } from './ui/shared.js';
@@ -29,6 +30,7 @@ export function renderAll() {
   renderRooms();
   renderShop();
   renderRight();
+  renderStatsPage();
 }
 
 export function renderRooms() {

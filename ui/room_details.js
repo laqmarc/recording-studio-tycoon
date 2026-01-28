@@ -530,8 +530,12 @@ export function renderRoomDetails(options = {}) {
     { label: 'Despesa setmanal', value: euro(currentRecurring), meter: (currentRecurring / 5000) * 100, variant: 'kpi-meter--amber' },
     { label: 'Total facturat', value: euro(weeklyAccum), meter: (weeklyAccum / 10000) * 100 }
   ];
+  const hiddenHeader = new Set(['Inventari', 'Sala slots', 'Rep genere', 'Total facturat']);
   if (k) {
-    for (const item of kpiData) k.appendChild(makeBox(item.label, item.value, item.meter, item.variant));
+    for (const item of kpiData) {
+      if (hiddenHeader.has(item.label)) continue;
+      k.appendChild(makeBox(item.label, item.value, item.meter, item.variant));
+    }
   }
   if (mobileKpis) {
     const allowed = new Set(['Cash', 'Temps', 'Nivell', 'Fatiga', 'Reputacio']);
