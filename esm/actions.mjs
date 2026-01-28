@@ -10,6 +10,52 @@ function installedIds(roomIndex, category) {
   return bag[category] || [];
 }
 
+function getMicTypeCounts(req) {
+  const counts = {};
+  let types = [];
+  const micTotal = Number((req.min_items && req.min_items.mic) || 0);
+  if (req.mic_type_counts && typeof req.mic_type_counts === 'object') {
+    for (const [type, count] of Object.entries(req.mic_type_counts)) {
+      const n = Number(count) || 0;
+      if (n > 0) {
+        counts[type] = n;
+        types.push(type);
+      }
+    }
+    return { types, counts };
+  }
+  if (Array.isArray(req.mic_types) && req.mic_types.length) {
+    types = req.mic_types.slice();
+    if (micTotal > 0 && types.length <= micTotal) {
+      const base = Math.floor(micTotal / types.length);
+      const extra = micTotal % types.length;
+      types.forEach((type, idx) => {
+        counts[type] = base + (idx < extra ? 1 : 0);
+      });
+    } else {
+      types.forEach(type => { counts[type] = 1; });
+    }
+  }
+  return { types, counts };
+}
+
+function resolveMicTypeCoverage(installedMicIds, counts, itemsById) {
+  const remaining = {};
+  for (const [type, count] of Object.entries(counts)) {
+    remaining[type] = Number(count) || 0;
+  }
+  const mics = installedMicIds.map(id => itemsById.get(id)).filter(Boolean);
+  for (const mic of mics) {
+    const micTypes = Array.isArray(mic.type) ? mic.type : [];
+    const candidates = micTypes.filter(type => remaining[type] > 0);
+    if (!candidates.length) continue;
+    candidates.sort((a, b) => remaining[b] - remaining[a]);
+    const chosen = candidates[0];
+    remaining[chosen] -= 1;
+  }
+  return { remaining };
+}
+
 export function getContractETA(c) {
   const state = getState();
   if (!state) return { days:0, hours:0, finishDay:0, finishHour:0 };
@@ -80,18 +126,13 @@ export function workOnContract(contractId, hours) {
     if (maxIns < Number(req.min_interface_inputs)) { log(`❌ Cal una interface amb mínim ${req.min_interface_inputs} entrades (ara max: ${maxIns}).`); return; }
   }
 
-  if (req.mic_types && Array.isArray(req.mic_types)) {
-    const mics = getWin('installedIds')(state.selected.roomIndex, "mic").map(id=>state.itemsById.get(id)).filter(Boolean);
-    const coveredTypes = new Set();
-    for (const mic of mics) {
-      if (mic.type && Array.isArray(mic.type)) {
-        const coveredType = mic.type.find(t => req.mic_types.includes(t) && !coveredTypes.has(t));
-        if (coveredType) { coveredTypes.add(coveredType); }
-      }
-    }
-    for (const requiredType of req.mic_types) {
-      if (!coveredTypes.has(requiredType)) { log(`❌ Falta micròfon per: ${requiredType}`); return; }
-    }
+  const micTypeInfo = getMicTypeCounts(req);
+  if (Object.keys(micTypeInfo.counts).length) {
+    const installedFn = getWin('installedIds') || installedIds;
+    const micIds = installedFn(state.selected.roomIndex, "mic");
+    const coverage = resolveMicTypeCoverage(micIds, micTypeInfo.counts, state.itemsById || new Map());
+    const missing = Object.entries(coverage.remaining).find(([, count]) => count > 0);
+    if (missing) { log(`❌ Falta micròfon per: ${missing[0]}`); return; }
   }
 
   const remaining = (c.duration_hours || 0) - (c.worked_hours || 0);

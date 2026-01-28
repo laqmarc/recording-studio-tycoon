@@ -1128,19 +1128,28 @@ function getUnlockedRoomTypes() {
   return types;
 }
 
-function pickMicTypes(genre, type) {
-  const map = {
-    rap: ['vocals'],
-    hiphop: ['vocals'],
-    pop: ['vocals'],
-    podcast: ['vocals'],
-    rock: ['guitarra'],
-    live: ['vocals'],
-    film_score: ['instruments']
-  };
-  const types = map[genre] || ['vocals'];
-  if (type === 'recording' || type === 'streaming') return types;
-  return [];
+function pickMicTypes(genre, type, roomType, micCount) {
+  if (type !== 'recording' && type !== 'streaming') return [];
+  if (roomType === 'vocal_booth') return ['vocals'];
+  if (roomType === 'streaming_room') return ['vocals'];
+  if (roomType === 'live_room' || genre === 'rock' || genre === 'live') {
+    if (Number(micCount || 0) && Number(micCount) < 4) return ['vocals'];
+    return ['bombo', 'caixa', 'oh', 'guitarra'];
+  }
+  if (genre === 'film_score') return ['vocals', 'guitarra', 'oh'];
+  return ['vocals'];
+}
+
+function distributeMicTypeCounts(micTypes, total) {
+  const counts = {};
+  if (!Array.isArray(micTypes) || !micTypes.length || !total) return counts;
+  const types = micTypes.slice(0, Math.min(micTypes.length, total));
+  const base = Math.floor(total / types.length);
+  const extra = total % types.length;
+  types.forEach((type, idx) => {
+    counts[type] = base + (idx < extra ? 1 : 0);
+  });
+  return counts;
 }
 
 function buildOffer(day, index, templates) {
@@ -1172,11 +1181,15 @@ function buildOffer(day, index, templates) {
         room_type: template.room_type,
         min_items: template.min_items
       };
-      const micTypes = Array.isArray(template.mic_types) && template.mic_types.length
-        ? template.mic_types
-        : pickMicTypes(genre, template.type);
+      const micTotal = Number((template.min_items && template.min_items.mic) || 0);
+      let micTypes = Array.isArray(template.mic_types) && template.mic_types.length
+        ? template.mic_types.slice()
+        : pickMicTypes(genre, template.type, template.room_type, micTotal);
+      if (!micTypes.length && micTotal > 0) micTypes = ['vocals'];
+      if (micTotal > 0 && micTypes.length > micTotal) micTypes = micTypes.slice(0, micTotal);
       if (micTypes.length) {
         req.mic_types = micTypes;
+        if (micTotal > 0) req.mic_type_counts = distributeMicTypeCounts(micTypes, micTotal);
         req.min_interface_inputs = micTypes.length;
       }
       return req;

@@ -100,6 +100,53 @@ export function calcRoomMaintenanceDaily(roomIndex) {
   return total;
 }
 
+function getMicTypeCounts(req) {
+  const counts = {};
+  let types = [];
+  const micTotal = Number((req.min_items && req.min_items.mic) || 0);
+  if (req.mic_type_counts && typeof req.mic_type_counts === 'object') {
+    for (const [type, count] of Object.entries(req.mic_type_counts)) {
+      const n = Number(count) || 0;
+      if (n > 0) {
+        counts[type] = n;
+        types.push(type);
+      }
+    }
+    return { types, counts };
+  }
+  if (Array.isArray(req.mic_types) && req.mic_types.length) {
+    types = req.mic_types.slice();
+    if (micTotal > 0 && types.length <= micTotal) {
+      const base = Math.floor(micTotal / types.length);
+      const extra = micTotal % types.length;
+      types.forEach((type, idx) => {
+        counts[type] = base + (idx < extra ? 1 : 0);
+      });
+    } else {
+      types.forEach(type => { counts[type] = 1; });
+    }
+  }
+  return { types, counts };
+}
+
+function canCoverMicTypeCounts(installedMicIds, counts, itemsById) {
+  const remaining = {};
+  for (const [type, count] of Object.entries(counts)) {
+    remaining[type] = Number(count) || 0;
+  }
+  if (!Object.keys(remaining).length) return true;
+  const mics = installedMicIds.map(id => itemsById.get(id)).filter(Boolean);
+  for (const mic of mics) {
+    const micTypes = Array.isArray(mic.type) ? mic.type : [];
+    const candidates = micTypes.filter(type => remaining[type] > 0);
+    if (!candidates.length) continue;
+    candidates.sort((a, b) => remaining[b] - remaining[a]);
+    const chosen = candidates[0];
+    remaining[chosen] -= 1;
+  }
+  return Object.values(remaining).every(v => v <= 0);
+}
+
 // Contract requirement checker
 export function checkContractRequirements(contract, roomIndex) {
   const req = contract.requirements || {};
@@ -119,19 +166,12 @@ export function checkContractRequirements(contract, roomIndex) {
     }
   }
 
-  if (req.mic_types) {
+  const micTypeInfo = getMicTypeCounts(req);
+  if (Object.keys(micTypeInfo.counts).length) {
     const installedMicIds = (typeof installedIds === 'function') ? installedIds(roomIndex, 'mic') : [];
-    const installedMicTypes = new Set();
-    for (const micId of installedMicIds) {
-      const mic = state && state.itemsById ? state.itemsById.get(micId) : null;
-      if (mic && mic.type) {
-        mic.type.forEach(t => installedMicTypes.add(t));
-      }
-    }
-    for (const requiredType of req.mic_types) {
-      if (!installedMicTypes.has(requiredType)) {
-        return false;
-      }
+    const ok = canCoverMicTypeCounts(installedMicIds, micTypeInfo.counts, state.itemsById || new Map());
+    if (!ok) {
+      return false;
     }
   }
 

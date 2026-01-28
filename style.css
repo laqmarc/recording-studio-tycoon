@@ -727,6 +727,27 @@ input, select {
   gap: 8px;
 }
 
+.floor-zone.zone-compact .floor-nodes {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 8px;
+  padding-bottom: 4px;
+}
+
+.floor-zone.zone-compact .floor-node { flex: 0 0 70px; }
+
+.floor-zone.zone-compact .floor-token-name { max-width: 64px; }
+
+.floor-zone.zone-compact.zone-expand .floor-nodes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  overflow: visible;
+  padding-bottom: 0;
+}
+
+.floor-zone.zone-compact.zone-expand .floor-node { flex: initial; }
+
 .floor-node {
   border: 1px dashed rgba(255,255,255,0.2);
   border-radius: 12px;

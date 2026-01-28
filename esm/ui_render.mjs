@@ -16,6 +16,56 @@ function createTextDiv(text, color) {
   return d;
 }
 
+function getMicTypeCounts(req) {
+  const counts = {};
+  let types = [];
+  const micTotal = Number((req.min_items && req.min_items.mic) || 0);
+  if (req.mic_type_counts && typeof req.mic_type_counts === 'object') {
+    for (const [type, count] of Object.entries(req.mic_type_counts)) {
+      const n = Number(count) || 0;
+      if (n > 0) {
+        counts[type] = n;
+        types.push(type);
+      }
+    }
+    return { types, counts };
+  }
+  if (Array.isArray(req.mic_types) && req.mic_types.length) {
+    types = req.mic_types.slice();
+    if (micTotal > 0 && types.length <= micTotal) {
+      const base = Math.floor(micTotal / types.length);
+      const extra = micTotal % types.length;
+      types.forEach((type, idx) => {
+        counts[type] = base + (idx < extra ? 1 : 0);
+      });
+    } else {
+      types.forEach(type => { counts[type] = 1; });
+    }
+  }
+  return { types, counts };
+}
+
+function assignMicTypes(installedMicIds, counts) {
+  const assigned = {};
+  const remaining = {};
+  for (const [type, count] of Object.entries(counts)) {
+    assigned[type] = 0;
+    remaining[type] = Number(count) || 0;
+  }
+  if (!Object.keys(remaining).length) return { assigned, remaining };
+  const mics = installedMicIds.map(id => state.itemsById.get(id)).filter(Boolean);
+  for (const mic of mics) {
+    const micTypes = Array.isArray(mic.type) ? mic.type : [];
+    const candidates = micTypes.filter(type => remaining[type] > 0);
+    if (!candidates.length) continue;
+    candidates.sort((a, b) => remaining[b] - remaining[a]);
+    const chosen = candidates[0];
+    remaining[chosen] -= 1;
+    assigned[chosen] += 1;
+  }
+  return { assigned, remaining };
+}
+
 export function getRequirementsElement(contract, roomIndex) {
   const req = contract.requirements || {};
   const container = document.createElement('div');
@@ -40,19 +90,15 @@ export function getRequirementsElement(contract, roomIndex) {
     }
   }
 
-  if (req.mic_types && Array.isArray(req.mic_types)) {
+  const micTypeInfo = getMicTypeCounts(req);
+  if (micTypeInfo.types.length) {
     const installedMicIds = installedIds(roomIndex, 'mic');
-    const coveredTypes = new Set();
-    for (const micId of installedMicIds) {
-      const mic = state.itemsById.get(micId);
-      if (mic && mic.type && Array.isArray(mic.type)) {
-        const coveredType = mic.type.find(t => req.mic_types.includes(t) && !coveredTypes.has(t));
-        if (coveredType) coveredTypes.add(coveredType);
-      }
-    }
-    for (const requiredType of req.mic_types) {
-      const hasType = coveredTypes.has(requiredType);
-      container.appendChild(createTextDiv(`Mic ${requiredType}`, hasType ? '#4CAF50' : '#f44336'));
+    const coverage = assignMicTypes(installedMicIds, micTypeInfo.counts);
+    for (const requiredType of micTypeInfo.types) {
+      const required = Number(micTypeInfo.counts[requiredType] || 0);
+      const current = Number(coverage.assigned[requiredType] || 0);
+      const hasType = current >= required;
+      container.appendChild(createTextDiv(`Mic ${requiredType}: ${current}/${required}`, hasType ? '#4CAF50' : '#f44336'));
       has = true;
     }
   }

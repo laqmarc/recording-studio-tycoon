@@ -5,6 +5,7 @@ import { renderSignalFlowOverlay } from './room_visuals.js';
 import { calcRoomRepairCost, repairRoomItems } from './room_maintenance.js';
 
 const dragState = { itemId: null, source: null, category: null, index: null };
+const COMPACT_SLOT_THRESHOLD = 10;
 let audioCtx = null;
 
 function ensureRoomLayout(roomIndex, category, maxSlots, bagIds) {
@@ -126,6 +127,21 @@ function highlightZone(category, enable) {
   document.querySelectorAll(selector).forEach(zone => {
     zone.classList.toggle('zone-target', Boolean(enable));
   });
+}
+
+function shouldExpandZone(category, itemId) {
+  if (!itemId || !dragState.source) return false;
+  if (dragState.source === 'installed') return dragState.category === category;
+  if (dragState.source === 'inventory') {
+    const item = state.itemsById.get(itemId);
+    const itemCat = item ? (item.category || 'misc') : null;
+    return itemCat === category;
+  }
+  return false;
+}
+
+function clearZoneExpand() {
+  document.querySelectorAll('.floor-zone.zone-expand').forEach(zone => zone.classList.remove('zone-expand'));
 }
 
 function canDropItem(roomIndex, category, itemId) {
@@ -280,6 +296,7 @@ export function renderRoomDetails(options = {}) {
         token.addEventListener('dragend', () => {
           token.classList.remove('dragging');
           clearDragState();
+          clearZoneExpand();
           document.querySelectorAll('.floor-node.drag-over').forEach(el => el.classList.remove('drag-over'));
           const drop = document.querySelector('.inventory-grid.drag-over');
           if (drop) drop.classList.remove('drag-over');
@@ -305,6 +322,7 @@ export function renderRoomDetails(options = {}) {
           const label = node.dataset.filled === '1' ? 'Swap' : 'Moure';
           node.dataset.dropLabel = `${label} ${item ? item.name : ''}`.trim();
         }
+        if (zone.classList.contains('zone-compact')) zone.classList.add('zone-expand');
         e.preventDefault();
         node.classList.add('drag-over');
       });
@@ -353,6 +371,22 @@ export function renderRoomDetails(options = {}) {
     zone.appendChild(zoneHead);
     zone.appendChild(meter);
     zone.appendChild(nodes);
+    if (max >= COMPACT_SLOT_THRESHOLD) {
+      zone.classList.add('zone-compact');
+      zone.addEventListener('dragenter', (e) => {
+        const itemId = getDraggedItemId(e);
+        if (shouldExpandZone(cat, itemId)) zone.classList.add('zone-expand');
+      });
+      zone.addEventListener('dragover', (e) => {
+        const itemId = getDraggedItemId(e);
+        if (shouldExpandZone(cat, itemId)) zone.classList.add('zone-expand');
+      });
+      zone.addEventListener('dragleave', (e) => {
+        if (e.relatedTarget && zone.contains(e.relatedTarget)) return;
+        zone.classList.remove('zone-expand');
+      });
+      zone.addEventListener('drop', () => zone.classList.remove('zone-expand'));
+    }
     floorplan.appendChild(zone);
   });
 
@@ -388,6 +422,7 @@ export function renderRoomDetails(options = {}) {
         });
         card.addEventListener('dragend', () => {
           clearDragState();
+          clearZoneExpand();
           highlightZone(it.category, false);
           card.classList.remove('dragging');
           document.querySelectorAll('.floor-node').forEach(el => {
