@@ -299,6 +299,11 @@ input, select {
   gap: 8px;
 }
 
+.inventory-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .inventory-grid {
   margin-top: 10px;
   display: grid;

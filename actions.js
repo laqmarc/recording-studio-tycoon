@@ -1,5 +1,6 @@
 // actions.js - module that wires DOM events and exposes legacy globals
 import * as E from './esm/actions.mjs';
+import { installAllInventoryToRoom } from './ui/inventory_actions.js';
 
 function getImpl(name) {
   return (E && typeof E[name] === 'function') ? E[name] : (window.ESActions && typeof window.ESActions[name] === 'function') ? window.ESActions[name] : (typeof window[name] === 'function' ? window[name] : null);
@@ -71,6 +72,15 @@ if (typeof document !== 'undefined') {
       if (typeof window.saveState === 'function') window.saveState();
     } catch (e) {
       if (typeof window !== 'undefined' && typeof window.log === 'function') window.log('Error al passar dia: '+e.message);
+    }
+  });
+
+  on('btnInstallAll', 'click', () => {
+    try {
+      const roomIndex = window.state && window.state.selected ? Number(window.state.selected.roomIndex || 0) : 0;
+      installAllInventoryToRoom(roomIndex);
+    } catch (e) {
+      if (typeof window !== 'undefined' && typeof window.log === 'function') window.log('Error instal·lant tot: ' + e.message);
     }
   });
 
