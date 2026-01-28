@@ -1,45 +1,123 @@
-const storageKey = "studio_tycoon_tutorial_seen";
+const storageKey = "studio_tycoon_tutorial_seen_v2";
 
 const steps = [
   {
     title: "Benvingut",
-    text: "Aixo es una guia rapida per jugar a Studio Tycoon. Usa les pestanyes per canviar de pagina.",
+    text: "Aixo es un tutorial complet. Seguirem el flux natural del joc.",
     selector: "header",
     page: "rooms"
   },
   {
+    title: "Pestanyes",
+    text: "Fes servir les pestanyes per moure't entre Sales, Contractes, Shop i Personal.",
+    selector: "#pageTabs",
+    page: "rooms"
+  },
+  {
+    title: "KPIs",
+    text: "Aqui tens els indicadors clau: cash, temps, fatiga, reputacio i despeses.",
+    selector: "#kpis",
+    page: "rooms"
+  },
+  {
     title: "Sales",
-    text: "Selecciona una sala i mira els slots disponibles.",
+    text: "Selecciona una sala. Cada sala te slots i limitacions diferents.",
     selector: "#roomList",
     page: "rooms"
   },
   {
-    title: "Contractes",
-    text: "Aqui tens contractes compatibles amb la sala activa.",
-    selector: "#leftContracts",
-    page: "contracts"
+    title: "Sala activa",
+    text: "A la dreta veus el floorplan i dades de la sala. Aqui es on instal les equips.",
+    selector: "#roomDetails",
+    page: "rooms"
   },
   {
-    title: "Botiga",
-    text: "Compra equips i consumibles. Filtra per categoria i cerca noms.",
-    selector: "#shopList",
-    page: "shop"
+    title: "Inventari",
+    text: "Arrossega equips de l'inventari al floorplan. Arrossega de tornada per desinstal lar.",
+    selector: "#inventoryList",
+    page: "rooms"
   },
   {
-    title: "Sala + Inventari",
-    text: "Instal la equips, desinstal la i usa consumibles. Pots arrossegar items als slots.",
-    selector: "#inventoryControls",
+    title: "Manteniment",
+    text: "Sota l'inventari tens l'estat dels equips i el boto de reparacio.",
+    selector: ".inventory-panel",
+    page: "rooms"
+  },
+  {
+    title: "Log",
+    text: "El log et dona detall de sessions, costos i penalitzacions.",
+    selector: "#log",
     page: "rooms"
   },
   {
     title: "Passar dia",
-    text: "Avanca el temps per recuperar fatiga i aplicar costos.",
+    text: "Avanca el temps per recuperar fatiga i aplicar costos diaris.",
     selector: "#btnNextDay",
     page: "rooms"
   },
   {
+    title: "Feines",
+    text: "Aqui tens les feines compatibles. Estan en mode compacte per ocupar poc.",
+    selector: "#leftContracts",
+    page: "contracts"
+  },
+  {
+    title: "Detalls i talent",
+    text: "Prem Detalls per veure requisits, progres i assignar talent. Auto (Jo) no cobra.",
+    selector: "#leftContracts",
+    page: "contracts"
+  },
+  {
+    title: "Sala activa per contractes",
+    text: "Canvia la sala activa per veure feines compatibles amb cada sala.",
+    selector: "#selContractRoom",
+    page: "contracts"
+  },
+  {
+    title: "Clients",
+    text: "Les ofertes apareixen aqui. Si no n'hi ha, prem Buscar client.",
+    selector: "#clientOffers",
+    page: "contracts"
+  },
+  {
+    title: "Calendari",
+    text: "Arrossega feines al calendari per planificar hores. Pots moure-les entre dies.",
+    selector: "#scheduleBoard",
+    page: "contracts"
+  },
+  {
+    title: "Reputacio",
+    text: "La reputacio per genere puja quan completes feines i millora les ofertes.",
+    selector: "#repPanel",
+    page: "contracts"
+  },
+  {
+    title: "Personal",
+    text: "Contracta musics i tecnics. Sense personal contractat no podras assignar-los.",
+    selector: "#personnelPanel",
+    page: "people"
+  },
+  {
+    title: "Shop",
+    text: "Filtra per categoria i cerca equips. Els bundles acceleren la compra.",
+    selector: "#selCategory",
+    page: "shop"
+  },
+  {
+    title: "Llista d'items",
+    text: "Selecciona un item, compara stats i compra. Els equips apareixen a l'inventari.",
+    selector: "#shopList",
+    page: "shop"
+  },
+  {
+    title: "Controls",
+    text: "Pots canviar tema, activar audio ambient i resetar la persistencia des del header.",
+    selector: "header",
+    page: "rooms"
+  },
+  {
     title: "Llestos",
-    text: "Ja pots jugar. Pots reiniciar el tutorial esborrant la persistencia.",
+    text: "Ja pots jugar. Si vols tornar a veure el tutorial, reinicia la persistencia.",
     selector: null,
     page: "rooms"
   }
