@@ -163,7 +163,8 @@ export function simulateRecording(roomIndex, contract) {
     return total / ids.length;
   })();
   const condition_penalty = clamp((100 - gearCondition) * 0.15, 0, 20);
-  const final_quality = clamp(quality - noise_penalty - fatigue_penalty - condition_penalty, 0, 100);
+  const qa_bonus = Number(contract.qa_bonus || 0);
+  const final_quality = clamp(quality - noise_penalty - fatigue_penalty - condition_penalty + qa_bonus, 0, 100);
 
   const target = Number(contract.target_quality || 55);
   let happiness = 50 + (final_quality - target) * 0.8 - Math.max(0, latency_ms - 8) * 0.6;
@@ -254,12 +255,14 @@ export function simulateContract(contractId) {
     state.reputation = state.reputation || { overall: 0, byGenre: {} };
     const genreKey = contract.genre || 'any';
     const repGain = (contract.reputation_gain && contract.reputation_gain.success) ? Number(contract.reputation_gain.success) : 1;
-    state.reputation.overall += repGain;
-    state.reputation.byGenre[genreKey] = (state.reputation.byGenre[genreKey] || 0) + repGain;
+    const qaRep = Number(contract.qa_rep_bonus || 0);
+    state.reputation.overall += repGain + qaRep;
+    state.reputation.byGenre[genreKey] = (state.reputation.byGenre[genreKey] || 0) + repGain + qaRep;
   } catch (e) {}
 
+  const qaBonusText = contract.qa_bonus ? `, QA +${Number(contract.qa_bonus || 0)}` : '';
   const feeBlock = feeLines.length ? `\n- Talent:\n  - ${feeLines.join('\n  - ')}` : '\n- Talent: (Auto/Jo)';
-  log(`🎬 Sessió: ${contract.name}\n- Qualitat: ${res.final_quality.toFixed(1)}\n- Latència: ${res.latency_ms.toFixed(1)} ms\n- Happiness: ${res.happiness.toFixed(1)}\n- Payout: ${euro(payout)}\n- XP: ${xpAward}\n- Penalitzacions: Soroll ${res.noise_penalty.toFixed(1)}, Fatiga ${res.fatigue_penalty.toFixed(1)}, Estat equips ${res.condition_penalty.toFixed(1)}\n- Bonus: Talent ${res.talent_bonus.toFixed(1)}, Sinergia ${res.synergy_bonus.toFixed(1)}${feeBlock}\n- Fees talent: ${euro(talent_cost)}\n`);
+  log(`🎬 Sessió: ${contract.name}\n- Qualitat: ${res.final_quality.toFixed(1)}\n- Latència: ${res.latency_ms.toFixed(1)} ms\n- Happiness: ${res.happiness.toFixed(1)}\n- Payout: ${euro(payout)}\n- XP: ${xpAward}\n- Penalitzacions: Soroll ${res.noise_penalty.toFixed(1)}, Fatiga ${res.fatigue_penalty.toFixed(1)}, Estat equips ${res.condition_penalty.toFixed(1)}\n- Bonus: Talent ${res.talent_bonus.toFixed(1)}, Sinergia ${res.synergy_bonus.toFixed(1)}${qaBonusText}${feeBlock}\n- Fees talent: ${euro(talent_cost)}\n`);
 
   if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
   if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();

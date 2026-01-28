@@ -17,6 +17,7 @@ if (typeof window !== 'undefined') {
   window.workOnContract = window.workOnContract || ((id,h)=>call('workOnContract', id, h));
   window.applyScheduledWork = window.applyScheduledWork || ((id,h,room,day)=>call('applyScheduledWork', id, h, room, day));
   window.buySelected = window.buySelected || (()=>call('buySelected'));
+  window.leaseSelected = window.leaseSelected || (()=>call('leaseSelected'));
   window.prepareInstallFromShop = window.prepareInstallFromShop || (()=>call('prepareInstallFromShop'));
   window.installSelected = window.installSelected || (()=>call('installSelected'));
   window.uninstallLast = window.uninstallLast || (()=>call('uninstallLast'));
@@ -32,6 +33,7 @@ if (typeof document !== 'undefined') {
   on('btnClearSave', 'click', () => { if (confirm('Esborrar la persistència i reiniciar el progrés?')) clearPersistenceAndReset(); });
 
   on('btnBuy', 'click', () => call('buySelected'));
+  on('btnLease', 'click', () => call('leaseSelected'));
   on('btnAddToInstall', 'click', () => call('prepareInstallFromShop'));
   on('btnInstall', 'click', () => call('installSelected'));
   on('btnUninstall', 'click', () => call('uninstallLast'));
@@ -163,6 +165,10 @@ export function workOnContract(...args) {
 
 export function buySelected(...args) {
   return call('buySelected', ...args);
+}
+
+export function leaseSelected(...args) {
+  return call('leaseSelected', ...args);
 }
 
 export function prepareInstallFromShop(...args) {

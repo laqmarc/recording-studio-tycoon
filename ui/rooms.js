@@ -136,6 +136,10 @@ export function renderRooms(options = {}) {
         const bt = document.createElement('b'); bt.textContent = c.name;
         const typ = document.createElement('span'); typ.className = 'pill'; typ.textContent = c.type;
         row.appendChild(bt); row.appendChild(typ);
+        if (c.special) {
+          const spec = document.createElement('span'); spec.className = 'pill'; spec.textContent = 'special';
+          row.appendChild(spec);
+        }
 
         const meta = document.createElement('div'); meta.className = 'muted'; meta.style.marginTop = '6px';
         meta.textContent = `${c.duration_hours}h · ${euro(c.base_pay)}`;
@@ -308,6 +312,68 @@ export function renderRooms(options = {}) {
 
         const reqEl = getRequirementsElement(c, state.selected.roomIndex);
         if (reqEl) detailsWrap.appendChild(reqEl);
+
+        if (Array.isArray(c.milestones) && c.milestones.length) {
+          const milestoneWrap = document.createElement('div'); milestoneWrap.className = 'milestone-wrap';
+          const milestoneTitle = document.createElement('div'); milestoneTitle.className = 'tiny'; milestoneTitle.textContent = 'Milestones:';
+          milestoneWrap.appendChild(milestoneTitle);
+          for (const m of c.milestones) {
+            const row = document.createElement('div'); row.className = 'milestone-row';
+            const pct = c.duration_hours ? Math.round((Number(m.at_hours || 0) / Number(c.duration_hours || 1)) * 100) : 0;
+            const chosen = Array.isArray(m.options) && m.choice ? m.options.find(o => o.id === m.choice) : null;
+            const status = m.choice ? `✅ ${m.label} · ${chosen ? chosen.label : m.choice}`
+              : (Number(c.worked_hours || 0) >= Number(m.at_hours || 0) ? `🧭 ${m.label} (${pct}%)` : `🔒 ${m.label} (${pct}%)`);
+            const label = document.createElement('div'); label.className = 'tiny'; label.textContent = status;
+            row.appendChild(label);
+            milestoneWrap.appendChild(row);
+            if (!m.choice && Number(c.worked_hours || 0) >= Number(m.at_hours || 0) && Array.isArray(m.options) && m.options.length) {
+              const actions = document.createElement('div'); actions.className = 'milestone-actions';
+              for (const opt of m.options) {
+                const btn = document.createElement('button'); btn.className = 'btn2 btnSmall'; btn.type = 'button';
+                btn.textContent = opt.label;
+                btn.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (typeof window !== 'undefined' && typeof window.applySpecialDecision === 'function') {
+                    window.applySpecialDecision(c.id, m.id, opt.id);
+                  }
+                });
+                actions.appendChild(btn);
+              }
+              milestoneWrap.appendChild(actions);
+            }
+          }
+          detailsWrap.appendChild(milestoneWrap);
+        }
+
+        const qaWrap = document.createElement('div'); qaWrap.className = 'qa-wrap';
+        const qaTitle = document.createElement('div'); qaTitle.className = 'tiny'; qaTitle.textContent = 'QA checklist:';
+        qaWrap.appendChild(qaTitle);
+        const qaList = document.createElement('div'); qaList.className = 'qa-list';
+        ['Nivells i gains', 'Cablejat i peus', 'Latència i routing'].forEach(labelText => {
+          const line = document.createElement('div'); line.className = 'tiny'; line.textContent = `• ${labelText}`;
+          qaList.appendChild(line);
+        });
+        qaWrap.appendChild(qaList);
+        if (!c.qa_done) {
+          const btnQa = document.createElement('button'); btnQa.className = 'btn2 btnSmall'; btnQa.type = 'button';
+          btnQa.textContent = 'Marcar QA feta (+qualitat)';
+          btnQa.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            c.qa_done = true;
+            c.qa_bonus = Math.max(4, Number(c.qa_bonus || 0));
+            c.qa_rep_bonus = Math.max(1, Number(c.qa_rep_bonus || 0));
+            if (typeof log === 'function') log(`✅ QA feta: ${c.name} (+qualitat)`);
+            if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
+            if (typeof renderAll === 'function') renderAll();
+          });
+          qaWrap.appendChild(btnQa);
+        } else {
+          const qaOk = document.createElement('div'); qaOk.className = 'tiny muted'; qaOk.textContent = 'QA OK (+qualitat +rep)';
+          qaWrap.appendChild(qaOk);
+        }
+        detailsWrap.appendChild(qaWrap);
 
         const progWrap = document.createElement('div'); progWrap.style.marginTop = '8px';
         const progText = document.createElement('div'); progText.className = 'row tiny';

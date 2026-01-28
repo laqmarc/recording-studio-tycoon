@@ -2,7 +2,7 @@
 export const state = {
   cash: 1000,
   db: { items: [], rooms: [], contracts: [], people: [] },
-  finance: { weeklyExpenses: 0 },
+  finance: { weeklyExpenses: 0, monthlyExpenses: 0, loans: [], leases: [], creditLine: { limit: 0, dailyFee: 0 }, cashflowLimit: 0, arrears: 0 },
   itemsById: new Map(),
   itemsByCategory: new Map(),
   inventory: new Map(), // id -> qty
@@ -12,10 +12,11 @@ export const state = {
   reputation: { overall: 0, byGenre: {} },
   roomUpgrades: {},
   itemCondition: new Map(),
-  market: { offers: [], lastDayGenerated: 0 },
+  market: { offers: [], lastDayGenerated: 0, specials: [], lastSpecialDay: 0 },
   schedule: [],
   hiredPeople: [],
   roomsInstalled: [], // per room: { category -> [itemId,...] }
+  roomMaintenance: [],
   // billing info per room: { lastBilledDay: number|null }
   roomBilling: [],
   // Player state: track short-term and chronic fatigue separately.
@@ -42,6 +43,7 @@ export function ensureRoomsInstalled() {
   state.roomsInstalled = state.db.rooms.map(()=> ({}));
   // initialize billing info array in parallel with roomsInstalled
   state.roomBilling = state.db.rooms.map(()=> ({ lastBilledDay: null, weeksBilled: 0, totalCharged: 0, justInstalled: false }));
+  state.roomMaintenance = state.db.rooms.map(()=> ({ lastInspectionDay: null, inspectionUntilDay: 0 }));
   state.roomUpgrades = state.roomUpgrades || {};
   state.db.rooms.forEach((r, idx) => {
     state.roomUpgrades[idx] = state.roomUpgrades[idx] || { acoustic: 0, isolation: 0, slots: 0 };

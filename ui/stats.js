@@ -1,5 +1,5 @@
 import { state } from '../state.js';
-import { euro, calcRoomMaintenanceDaily, xpToNext } from '../helpers.js';
+import { euro, calcRoomMaintenanceDaily, xpToNext, takeLoan, repayLoan, openCreditLine, returnLease } from '../helpers.js';
 import { clearChildren } from './shared.js';
 
 function makeStat(label, value, hint) {
@@ -243,6 +243,102 @@ export function renderStatsPage() {
   finGrid.appendChild(makeStat('Manteniment diari', euro(Math.round(maintenanceDaily))));
   finance.content.appendChild(finGrid);
 
+  const creditPanel = createPanel('🏦 Crèdit i leasing');
+  const creditGrid = document.createElement('div'); creditGrid.className = 'stat-grid';
+  const creditLine = state.finance && state.finance.creditLine ? state.finance.creditLine : { limit: 0, dailyFee: 0 };
+  const cashflowLimit = Number(state.finance && state.finance.cashflowLimit || 0);
+  const arrears = Number(state.finance && state.finance.arrears || 0);
+  const loans = state.finance && Array.isArray(state.finance.loans) ? state.finance.loans : [];
+  const leases = state.finance && Array.isArray(state.finance.leases) ? state.finance.leases : [];
+  const loansBalance = loans.reduce((sum, l) => sum + Number(l.balance || 0), 0);
+  const leaseDaily = leases.reduce((sum, l) => sum + Number(l.dailyCost || 0) * Number(l.qty || 0), 0);
+  creditGrid.appendChild(makeStat('Límit cashflow', euro(Math.round(cashflowLimit))));
+  creditGrid.appendChild(makeStat('Arrears', euro(Math.round(arrears))));
+  creditGrid.appendChild(makeStat('Deute préstecs', euro(Math.round(loansBalance))));
+  creditGrid.appendChild(makeStat('Leasing/dia', euro(Math.round(leaseDaily))));
+  creditPanel.content.appendChild(creditGrid);
+
+  const loanActions = document.createElement('div'); loanActions.className = 'stat-list';
+  const loanTitle = document.createElement('div'); loanTitle.className = 'stat-label'; loanTitle.textContent = 'Préstecs ràpids';
+  loanActions.appendChild(loanTitle);
+  const loanOpts = [
+    { name: 'Curt', principal: 4000, weeks: 8, rate: 0.05 },
+    { name: 'Mitja', principal: 12000, weeks: 12, rate: 0.04 },
+    { name: 'Gran', principal: 25000, weeks: 16, rate: 0.035 }
+  ];
+  const loanBtnRow = document.createElement('div'); loanBtnRow.className = 'btn-row';
+  loanOpts.forEach(opt => {
+    const btn = document.createElement('button'); btn.className = 'btn2 btnSmall';
+    btn.textContent = `+${euro(opt.principal)} (${opt.name})`;
+    btn.addEventListener('click', () => {
+      takeLoan(opt);
+      try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
+      if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
+    });
+    loanBtnRow.appendChild(btn);
+  });
+  loanActions.appendChild(loanBtnRow);
+
+  if (loans.length) {
+    const activeTitle = document.createElement('div'); activeTitle.className = 'stat-label'; activeTitle.textContent = 'Préstecs actius';
+    loanActions.appendChild(activeTitle);
+    loans.forEach(loan => {
+      const row = document.createElement('div'); row.className = 'stat-row';
+      const left = document.createElement('div'); left.className = 'stat-bar-label';
+      left.textContent = `${loan.name} · ${euro(Math.round(loan.balance || 0))}`;
+      const btn = document.createElement('button'); btn.className = 'btn2 btnSmall'; btn.textContent = 'Pagar tot';
+      btn.addEventListener('click', () => {
+        repayLoan(loan.id);
+        try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
+        if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
+      });
+      row.appendChild(left); row.appendChild(btn);
+      loanActions.appendChild(row);
+    });
+  }
+
+  const creditTitle = document.createElement('div'); creditTitle.className = 'stat-label'; creditTitle.textContent = 'Linia de crèdit';
+  loanActions.appendChild(creditTitle);
+  const creditRow = document.createElement('div'); creditRow.className = 'btn-row';
+  [2000, 5000, 10000].forEach(limit => {
+    const btn = document.createElement('button'); btn.className = 'btn2 btnSmall';
+    btn.textContent = `Límit ${euro(limit)}`;
+    btn.addEventListener('click', () => {
+      openCreditLine(limit);
+      try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
+      if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
+    });
+    creditRow.appendChild(btn);
+  });
+  const btnClose = document.createElement('button'); btnClose.className = 'btn2 btnSmall'; btnClose.textContent = 'Tancar';
+  btnClose.addEventListener('click', () => {
+    openCreditLine(0);
+    try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
+    if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
+  });
+  creditRow.appendChild(btnClose);
+  loanActions.appendChild(creditRow);
+
+  if (leases.length) {
+    const leaseTitle = document.createElement('div'); leaseTitle.className = 'stat-label'; leaseTitle.textContent = 'Leasing actiu';
+    loanActions.appendChild(leaseTitle);
+    leases.forEach(lease => {
+      const item = state.itemsById.get(lease.itemId);
+      const row = document.createElement('div'); row.className = 'stat-row';
+      const left = document.createElement('div'); left.className = 'stat-bar-label';
+      left.textContent = `${item ? item.name : lease.itemId} x${lease.qty} · ${euro(Math.round(Number(lease.dailyCost || 0) * Number(lease.qty || 0)))}/dia`;
+      const btn = document.createElement('button'); btn.className = 'btn2 btnSmall'; btn.textContent = 'Retornar';
+      btn.addEventListener('click', () => {
+        returnLease(lease.id);
+        try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
+        if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
+      });
+      row.appendChild(left); row.appendChild(btn);
+      loanActions.appendChild(row);
+    });
+  }
+  creditPanel.content.appendChild(loanActions);
+
   const controls = createPanel('⚙️ Filtres', 'rang de dies', true);
   const rangeWrap = document.createElement('div'); rangeWrap.className = 'stat-grid';
   const rangeSelect = document.createElement('select');
@@ -447,6 +543,7 @@ export function renderStatsPage() {
   grid.appendChild(reputation.panel);
   grid.appendChild(rooms.panel);
   grid.appendChild(finance.panel);
+  grid.appendChild(creditPanel.panel);
   grid.appendChild(planning.panel);
   grid.appendChild(schedule.panel);
   grid.appendChild(cashflow.panel);

@@ -1062,6 +1062,64 @@ const TEMPLATE_POOL = [
   }
 ];
 
+const SPECIAL_TEMPLATES = [
+  {
+    name: 'Tour Sessions',
+    type: 'recording',
+    room_type: 'live_room',
+    unlock_level: 6,
+    allowed_genres: ['live', 'rock'],
+    base_pay: [1200, 2200],
+    target_quality: [70, 88],
+    duration_days: [3, 6],
+    min_items: { mic: 10, preamp_multi: 1, interface: 1, headphones: 4, cable: 12, mic_stand: 10, multicore: 1 }
+  },
+  {
+    name: 'Vocal Tour',
+    type: 'recording',
+    room_type: 'vocal_booth',
+    unlock_level: 5,
+    allowed_genres: ['pop', 'rap', 'hiphop'],
+    base_pay: [700, 1500],
+    target_quality: [68, 84],
+    duration_days: [3, 5],
+    min_items: { mic: 4, preamp: 1, interface: 1, headphones: 2, pop_filter: 1, mic_stand: 2 }
+  },
+  {
+    name: 'Production Sprint',
+    type: 'production',
+    room_type: 'control_room',
+    unlock_level: 7,
+    allowed_genres: ['pop', 'hiphop', 'film_score'],
+    base_pay: [1400, 2600],
+    target_quality: [70, 88],
+    duration_days: [4, 7],
+    min_items: { interface: 1, monitor: 2, software_daw: 1, midi_controller: 1 }
+  },
+  {
+    name: 'Mastering Marathon',
+    type: 'master',
+    room_type: 'mastering_suite',
+    unlock_level: 8,
+    allowed_genres: ['any'],
+    base_pay: [1200, 2200],
+    target_quality: [72, 92],
+    duration_days: [3, 5],
+    min_items: { monitor: 2, acoustic_treatment: 6, software_mix_master: 1 }
+  },
+  {
+    name: 'Streaming Week',
+    type: 'streaming',
+    room_type: 'streaming_room',
+    unlock_level: 5,
+    allowed_genres: ['live', 'podcast'],
+    base_pay: [600, 1400],
+    target_quality: [62, 80],
+    duration_days: [3, 6],
+    min_items: { interface: 1, mic: 3, headphones: 2, monitor: 1 }
+  }
+];
+
 function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -1152,6 +1210,99 @@ function distributeMicTypeCounts(micTypes, total) {
   return counts;
 }
 
+function buildMilestones(totalHours) {
+  const steps = [
+    {
+      id: 'prep',
+      label: 'Pre-produccio',
+      atPct: 0.25,
+      options: [
+        { id: 'fast', label: 'Anar rapid', effects: { pay_multiplier: 1.04, quality_delta: -2, deadline_delta: -1 } },
+        { id: 'quality', label: 'Refinar', effects: { pay_multiplier: 1.08, quality_delta: 3, deadline_delta: 1 } }
+      ]
+    },
+    {
+      id: 'mid',
+      label: 'Mig projecte',
+      atPct: 0.55,
+      options: [
+        { id: 'extra', label: 'Prendre extra takes', effects: { pay_multiplier: 1.06, quality_delta: 2, deadline_delta: 1 } },
+        { id: 'keep', label: 'Mantenir ritme', effects: { pay_multiplier: 1.02, quality_delta: 1, deadline_delta: 0 } }
+      ]
+    },
+    {
+      id: 'final',
+      label: 'Tancament',
+      atPct: 0.85,
+      options: [
+        { id: 'master', label: 'Passada extra', effects: { pay_multiplier: 1.07, quality_delta: 3, deadline_delta: 1 } },
+        { id: 'deliver', label: 'Entregar aviat', effects: { pay_multiplier: 0.98, quality_delta: -1, deadline_delta: -1 } }
+      ]
+    }
+  ];
+  return steps.map(step => ({
+    id: step.id,
+    label: step.label,
+    at_hours: Math.max(1, Math.round(totalHours * step.atPct)),
+    options: step.options,
+    reached: false,
+    choice: null
+  }));
+}
+
+function buildSpecialOffer(day, index, template) {
+  const repOverall = Number((state.reputation && state.reputation.overall) || 0);
+  const genre = pickGenreWithTemplates([template]);
+  const pay = randInt(template.base_pay[0], template.base_pay[1]);
+  const target = randInt(template.target_quality[0], template.target_quality[1]);
+  const durationDays = randInt(template.duration_days[0], template.duration_days[1]);
+  const workHours = Number(state.time && state.time.workHoursPerDay || 8);
+  const duration = Math.max(8, durationDays * workHours);
+  const deadline = durationDays + randInt(2, 5);
+  const repBoost = 1 + repOverall * 0.01;
+  const genreRep = (state.reputation && state.reputation.byGenre) ? Number(state.reputation.byGenre[genre] || 0) : 0;
+  const genreBoost = 1 + genreRep * 0.015;
+  const base_pay = Math.round(pay * repBoost * genreBoost);
+  const target_quality = Math.min(92, Math.round(target + repOverall * 0.15));
+  const milestones = buildMilestones(duration);
+  const micTotal = Number((template.min_items && template.min_items.mic) || 0);
+  let micTypes = Array.isArray(template.mic_types) && template.mic_types.length
+    ? template.mic_types.slice()
+    : pickMicTypes(genre, template.type, template.room_type, micTotal);
+  if (!micTypes.length && micTotal > 0) micTypes = ['vocals'];
+  if (micTotal > 0 && micTypes.length > micTotal) micTypes = micTypes.slice(0, micTotal);
+
+  return {
+    id: `special_${day}_${index}_${Math.floor(Math.random() * 9999)}`,
+    name: `${template.name} · ${genre}`,
+    type: template.type,
+    genre,
+    duration_hours: duration,
+    base_pay,
+    target_quality,
+    deadline_days: deadline,
+    start_day: day,
+    expires_day: day + randInt(3, 5),
+    special: true,
+    milestones,
+    requirements: (() => {
+      const req = {
+        room_type: template.room_type,
+        min_items: template.min_items
+      };
+      if (micTypes.length) {
+        req.mic_types = micTypes;
+        if (micTotal > 0) req.mic_type_counts = distributeMicTypeCounts(micTypes, micTotal);
+        const minInputs = Math.max(micTotal, micTypes.length);
+        if (minInputs > 0) req.min_interface_inputs = minInputs;
+      }
+      return req;
+    })(),
+    reputation_gain: { success: Math.max(2, Math.round(genreRep * 0.35) + 3), fail: 1 },
+    source: 'special'
+  };
+}
+
 function buildOffer(day, index, templates) {
   const repOverall = Number((state.reputation && state.reputation.overall) || 0);
   const genre = pickGenreWithTemplates(templates);
@@ -1217,7 +1368,95 @@ export function generateDailyOffers(force = false) {
   state.market.lastDayGenerated = day;
   try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
   if (typeof showNotification === 'function') showNotification(`📬 ${offers.length} ofertes noves`);
+  try { if (typeof generateSpecialOffers === 'function') generateSpecialOffers(); } catch (e) {}
   return offers;
+}
+
+export function generateSpecialOffers(force = false) {
+  state.market = state.market || { offers: [], lastDayGenerated: 0, specials: [], lastSpecialDay: 0 };
+  const day = state.time ? Number(state.time.day || 1) : 1;
+  const repOverall = Number((state.reputation && state.reputation.overall) || 0);
+  const playerLevel = Number((state.player && state.player.level) || 1);
+  if (repOverall < 6) return [];
+  state.market.specials = Array.isArray(state.market.specials) ? state.market.specials : [];
+  state.market.specials = state.market.specials.filter(s => !s.expires_day || s.expires_day >= day);
+  const lastDay = Number(state.market.lastSpecialDay || 0);
+  if (!force && state.market.specials.length && (day - lastDay) < 4) return state.market.specials;
+  const unlockedTypes = getUnlockedRoomTypes();
+  const pool = SPECIAL_TEMPLATES.filter(t => (!t.unlock_level || playerLevel >= t.unlock_level) && unlockedTypes.has(t.room_type));
+  if (!pool.length) return state.market.specials;
+  const count = repOverall >= 20 ? 2 : 1;
+  const specials = [];
+  for (let i = 0; i < count; i++) {
+    const template = pool[randInt(0, pool.length - 1)];
+    specials.push(buildSpecialOffer(day, i + 1, template));
+  }
+  state.market.specials = specials;
+  state.market.lastSpecialDay = day;
+  try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
+  return specials;
+}
+
+export function acceptSpecialOffer(offerId) {
+  const specials = (state.market && Array.isArray(state.market.specials)) ? state.market.specials : [];
+  const offer = specials.find(o => o.id === offerId);
+  if (!offer) return;
+  const contract = { ...offer };
+  contract.id = `contract_${offer.id}`;
+  contract.worked_hours = 0;
+  contract.completed = false;
+  contract.completed_at = null;
+  contract.assigned_people = [];
+  contract.assigned_people_map = [];
+  contract.milestones = offer.milestones ? JSON.parse(JSON.stringify(offer.milestones)) : [];
+  state.db.contracts.push(contract);
+  state.market.specials = specials.filter(o => o.id !== offerId);
+  if (typeof log === 'function') log(`🧭 Projecte especial acceptat: ${offer.name} (${euro(offer.base_pay)})`);
+  try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
+  if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
+}
+
+export function updateContractMilestones(contract) {
+  if (!contract || !Array.isArray(contract.milestones)) return;
+  const progress = Number(contract.worked_hours || 0);
+  for (const milestone of contract.milestones) {
+    if (milestone.reached) continue;
+    if (progress >= Number(milestone.at_hours || 0)) {
+      milestone.reached = true;
+      if (Array.isArray(milestone.options) && milestone.options.length && !milestone.choice) {
+        milestone.pending = true;
+        if (typeof log === 'function') log(`🧭 Decisio pendent: ${contract.name} · ${milestone.label}`);
+        if (typeof showNotification === 'function') showNotification(`🧭 Decisio: ${milestone.label}`);
+      }
+    }
+  }
+}
+
+export function applySpecialDecision(contractId, milestoneId, optionId) {
+  const contract = state.db && Array.isArray(state.db.contracts) ? state.db.contracts.find(c => c.id === contractId) : null;
+  if (!contract || !Array.isArray(contract.milestones)) return;
+  const milestone = contract.milestones.find(m => m.id === milestoneId);
+  if (!milestone || milestone.choice) return;
+  const option = Array.isArray(milestone.options) ? milestone.options.find(o => o.id === optionId) : null;
+  if (!option) return;
+  const effects = option.effects || {};
+  if (effects.pay_multiplier) contract.base_pay = Math.round(Number(contract.base_pay || 0) * Number(effects.pay_multiplier || 1));
+  if (effects.pay_add) contract.base_pay = Math.round(Number(contract.base_pay || 0) + Number(effects.pay_add || 0));
+  if (effects.quality_delta) contract.target_quality = Math.min(95, Math.round(Number(contract.target_quality || 0) + Number(effects.quality_delta || 0)));
+  if (effects.deadline_delta && contract.deadline_days) contract.deadline_days = Math.max(1, Number(contract.deadline_days || 0) + Number(effects.deadline_delta || 0));
+  milestone.choice = option.id;
+  milestone.pending = false;
+  if (typeof log === 'function') log(`✅ Decisio aplicada: ${milestone.label} · ${option.label}`);
+  if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
+  if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
+}
+
+export function declineSpecialOffer(offerId) {
+  const specials = (state.market && Array.isArray(state.market.specials)) ? state.market.specials : [];
+  state.market.specials = specials.filter(o => o.id !== offerId);
+  if (typeof log === 'function') log('📪 Oferta especial declinada');
+  try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
+  if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
 }
 
 export function ensureRoomOffers(roomType, minCount = 2) {
@@ -1270,7 +1509,12 @@ export function declineOffer(offerId) {
 
 if (typeof window !== 'undefined') {
   window.generateDailyOffers = window.generateDailyOffers || generateDailyOffers;
+  window.generateSpecialOffers = window.generateSpecialOffers || generateSpecialOffers;
   window.ensureRoomOffers = window.ensureRoomOffers || ensureRoomOffers;
   window.acceptOffer = window.acceptOffer || acceptOffer;
+  window.acceptSpecialOffer = window.acceptSpecialOffer || acceptSpecialOffer;
+  window.applySpecialDecision = window.applySpecialDecision || applySpecialDecision;
+  window.updateContractMilestones = window.updateContractMilestones || updateContractMilestones;
+  window.declineSpecialOffer = window.declineSpecialOffer || declineSpecialOffer;
   window.declineOffer = window.declineOffer || declineOffer;
 }

@@ -147,6 +147,10 @@ export function workOnContract(contractId, hours) {
   const fatigueReduction = Math.min(0.4, engineerLevel * 0.03);
   const progressHours = Math.min(remaining, actual_hours * (1 + speedBonus));
   c.worked_hours = Number(c.worked_hours || 0) + progressHours;
+  try {
+    const updateMilestones = getWin('updateContractMilestones');
+    if (updateMilestones) updateMilestones(c);
+  } catch (e) {}
   if (c.worked_hours >= (c.duration_hours || 0)) {
     c.worked_hours = c.duration_hours || c.worked_hours;
     log(`✅ Contracte completat: ${c.name} (treballats ${c.worked_hours}h/${c.duration_hours}h)`);
@@ -207,6 +211,10 @@ export function applyScheduledWork(contractId, hours, roomIndex, day) {
   const fatigueReduction = Math.min(0.4, engineerLevel * 0.03);
   const progressHours = Math.min(remaining, actual_hours * (1 + speedBonus));
   c.worked_hours = Number(c.worked_hours || 0) + progressHours;
+  try {
+    const updateMilestones = getWin('updateContractMilestones');
+    if (updateMilestones) updateMilestones(c);
+  } catch (e) {}
 
   if (c.worked_hours >= (c.duration_hours || 0)) {
     c.worked_hours = c.duration_hours || c.worked_hours;
@@ -242,6 +250,7 @@ export function buySelected() {
   const euro = getWin('euro') || ((n)=>`${n}€`);
   const invAdd = getWin('invAdd');
   const invQty = getWin('invQty');
+  const canSpend = getWin('canSpend');
   const renderAll = getWin('renderAll');
   const prepareInstallFromShop = getWin('prepareInstallFromShop');
   const saveState = getWin('saveState') || (()=>{});
@@ -259,12 +268,38 @@ export function buySelected() {
 
   const qty = clamp(Number(document.getElementById("qtyBuy").value || 1), 1, 99);
   const cost = Number(it.price || 0) * qty;
-  if (state.cash < cost) return log(`No tens prou diners. Necessites ${euro(cost)}.`);
+  if (canSpend) {
+    if (!canSpend(cost)) return log(`❌ Límite de cashflow: cal ${euro(cost)}.`);
+  } else if (state.cash < cost) {
+    return log(`No tens prou diners. Necessites ${euro(cost)}.`);
+  }
   state.cash -= cost;
   if (invAdd) invAdd(id, qty);
   if (renderAll) renderAll();
   try { if (prepareInstallFromShop) prepareInstallFromShop(); } catch (e) {}
   log(`✅ Comprat: ${it.name} x${qty} per ${euro(cost)}.`); showNotification(`🛒 Comprat: ${it.name} x${qty}`); saveState();
+}
+
+export function leaseSelected() {
+  const state = getState();
+  const log = getWin('log') || ((m)=>console.log(m));
+  const renderAll = getWin('renderAll');
+  const saveState = getWin('saveState') || (()=>{});
+  const addLease = getWin('addLease');
+  if (!addLease) return log('Lease no disponible.');
+
+  let id = state.selected.shopItemId;
+  if (!id) {
+    const cat = document.getElementById('selCategory').value;
+    const items = (state.itemsByCategory.get(cat) || []).filter(it => Number(it.unlock_level || 1) <= Number(state.player.level || 1));
+    if (items.length) { id = items[0].id; state.selected.shopItemId = id; }
+    else return log('No hi ha items disponibles en aquesta categoria.');
+  }
+  const qty = clamp(Number(document.getElementById('qtyBuy').value || 1), 1, 99);
+  const lease = addLease(id, qty);
+  if (!lease) return;
+  if (renderAll) renderAll();
+  saveState();
 }
 
 export function prepareInstallFromShop() {

@@ -11,7 +11,12 @@ export function saveState() {
       cash: state.cash,
       finance: {
         weeklyExpenses: Number((state.finance && state.finance.weeklyExpenses) || 0),
-        monthlyExpenses: Number((state.finance && state.finance.monthlyExpenses) || 0)
+        monthlyExpenses: Number((state.finance && state.finance.monthlyExpenses) || 0),
+        loans: Array.isArray(state.finance && state.finance.loans) ? state.finance.loans : [],
+        leases: Array.isArray(state.finance && state.finance.leases) ? state.finance.leases : [],
+        creditLine: state.finance && state.finance.creditLine ? state.finance.creditLine : { limit: 0, dailyFee: 0 },
+        cashflowLimit: Number((state.finance && state.finance.cashflowLimit) || 0),
+        arrears: Number((state.finance && state.finance.arrears) || 0)
       },
       ui: {
         page: state.ui && state.ui.page || 'rooms',
@@ -24,12 +29,13 @@ export function saveState() {
       reputation: state.reputation || { overall: 0, byGenre: {} },
       roomUpgrades: state.roomUpgrades || {},
       itemCondition: state.itemCondition ? Array.from(state.itemCondition.entries()) : [],
-      market: state.market || { offers: [], lastDayGenerated: 0 },
+      market: state.market || { offers: [], lastDayGenerated: 0, specials: [], lastSpecialDay: 0 },
       schedule: Array.isArray(state.schedule) ? state.schedule : [],
       hiredPeople: Array.isArray(state.hiredPeople) ? state.hiredPeople : [],
       inventory: Array.from(state.inventory.entries()),
       roomsInstalled: state.roomsInstalled,
       roomBilling: state.roomBilling,
+      roomMaintenance: Array.isArray(state.roomMaintenance) ? state.roomMaintenance : [],
       contractsProgress: state.db.contracts.map(c => ({ id: c.id, worked_hours: c.worked_hours || 0, completed: !!c.completed, completed_at: c.completed_at || null })),
       contractsMeta: state.db.contracts.map(c => ({
         id: c.id,
@@ -85,6 +91,11 @@ export function loadStateFromStorage() {
     if (p.finance && typeof p.finance === 'object') {
       if (typeof p.finance.weeklyExpenses === 'number') state.finance.weeklyExpenses = p.finance.weeklyExpenses;
       if (typeof p.finance.monthlyExpenses === 'number') state.finance.monthlyExpenses = p.finance.monthlyExpenses;
+      if (Array.isArray(p.finance.loans)) state.finance.loans = p.finance.loans;
+      if (Array.isArray(p.finance.leases)) state.finance.leases = p.finance.leases;
+      if (p.finance.creditLine && typeof p.finance.creditLine === 'object') state.finance.creditLine = p.finance.creditLine;
+      if (typeof p.finance.cashflowLimit === 'number') state.finance.cashflowLimit = p.finance.cashflowLimit;
+      if (typeof p.finance.arrears === 'number') state.finance.arrears = p.finance.arrears;
     }
     if (p.ui && typeof p.ui === 'object') {
       state.ui = state.ui || { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
@@ -109,6 +120,15 @@ export function loadStateFromStorage() {
     } else if (!state.analytics) {
       state.analytics = { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
     }
+    if (!state.finance || typeof state.finance !== 'object') state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
+    if (!Array.isArray(state.finance.loans)) state.finance.loans = [];
+    if (!Array.isArray(state.finance.leases)) state.finance.leases = [];
+    if (!state.finance.creditLine || typeof state.finance.creditLine !== 'object') state.finance.creditLine = { limit: 0, dailyFee: 0 };
+    if (typeof state.finance.cashflowLimit !== 'number') state.finance.cashflowLimit = 0;
+    if (typeof state.finance.arrears !== 'number') state.finance.arrears = 0;
+    if (!state.market || typeof state.market !== 'object') state.market = { offers: [], lastDayGenerated: 0, specials: [], lastSpecialDay: 0 };
+    if (!Array.isArray(state.market.specials)) state.market.specials = [];
+    if (typeof state.market.lastSpecialDay !== 'number') state.market.lastSpecialDay = 0;
     if (typeof state.finance.weeklyExpenses !== 'number') state.finance.weeklyExpenses = 0;
     if (typeof state.finance.monthlyExpenses !== 'number') state.finance.monthlyExpenses = 0;
     if (Array.isArray(p.roomBilling) && p.roomBilling.length === state.db.rooms.length) {
@@ -130,6 +150,14 @@ export function loadStateFromStorage() {
           c.completed_at = cp.completed_at || null;
         }
       }
+    }
+    if (Array.isArray(p.roomMaintenance) && p.roomMaintenance.length === state.db.rooms.length) {
+      state.roomMaintenance = p.roomMaintenance.map(m => ({
+        lastInspectionDay: (m && m.lastInspectionDay != null) ? m.lastInspectionDay : null,
+        inspectionUntilDay: Number((m && m.inspectionUntilDay) || 0)
+      }));
+    } else if (!Array.isArray(state.roomMaintenance) || state.roomMaintenance.length !== state.db.rooms.length) {
+      state.roomMaintenance = state.db.rooms.map(()=> ({ lastInspectionDay: null, inspectionUntilDay: 0 }));
     }
     if (Array.isArray(p.contractsMeta)) {
       for (const cm of p.contractsMeta) {

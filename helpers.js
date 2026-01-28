@@ -53,6 +53,196 @@ export function invRemove(id, qty=1){
   return true;
 }
 
+export function countInstalledItem(itemId) {
+  if (!state || !Array.isArray(state.roomsInstalled)) return 0;
+  let total = 0;
+  for (const bag of state.roomsInstalled) {
+    for (const ids of Object.values(bag || {})) {
+      for (const id of (ids || [])) if (id === itemId) total += 1;
+    }
+  }
+  return total;
+}
+
+function ensureFinanceState() {
+  state.finance = state.finance || {};
+  if (!Array.isArray(state.finance.loans)) state.finance.loans = [];
+  if (!Array.isArray(state.finance.leases)) state.finance.leases = [];
+  if (!state.finance.creditLine || typeof state.finance.creditLine !== 'object') state.finance.creditLine = { limit: 0, dailyFee: 0 };
+  if (typeof state.finance.cashflowLimit !== 'number') state.finance.cashflowLimit = 0;
+  if (typeof state.finance.weeklyExpenses !== 'number') state.finance.weeklyExpenses = 0;
+  if (typeof state.finance.monthlyExpenses !== 'number') state.finance.monthlyExpenses = 0;
+  if (typeof state.finance.arrears !== 'number') state.finance.arrears = 0;
+}
+
+export function getCashflowLimit() {
+  if (typeof state === 'undefined') return 0;
+  ensureFinanceState();
+  return Number(state.finance.cashflowLimit || 0);
+}
+
+export function canSpend(cost) {
+  if (typeof state === 'undefined') return false;
+  const limit = getCashflowLimit();
+  return (Number(state.cash || 0) - Number(cost || 0)) >= -limit;
+}
+
+export function takeLoan({ name, principal, weeks, rate }) {
+  if (!state) return null;
+  ensureFinanceState();
+  const totalPayable = Math.max(1, Math.round(Number(principal || 0) * (1 + Number(rate || 0) * Number(weeks || 0))));
+  const totalDays = Math.max(1, Number(weeks || 1) * 7);
+  const dailyPayment = Math.max(1, Math.round(totalPayable / totalDays));
+  const weeklyPayment = dailyPayment * 7;
+  const id = `loan_${Date.now()}_${Math.floor(Math.random() * 9999)}`;
+  const loan = {
+    id,
+    name: name || 'Prestec',
+    principal: Number(principal || 0),
+    rate: Number(rate || 0),
+    weeks: Number(weeks || 1),
+    balance: totalPayable,
+    dailyPayment,
+    weeklyPayment,
+    startDay: state.time ? Number(state.time.day || 1) : 1,
+    paid: 0
+  };
+  state.finance.loans.push(loan);
+  state.cash = Number(state.cash || 0) + Number(principal || 0);
+  log(`💳 Nou préstec: ${loan.name} (+${euro(principal)}) · quota ${euro(weeklyPayment)}/setmana`);
+  if (typeof showNotification === 'function') showNotification('💳 Préstec aprovat');
+  return loan;
+}
+
+export function repayLoan(loanId) {
+  if (!state) return false;
+  ensureFinanceState();
+  const loan = state.finance.loans.find(l => l.id === loanId);
+  if (!loan) return false;
+  const balance = Number(loan.balance || 0);
+  if (balance <= 0) return false;
+  if (!canSpend(balance)) { log(`❌ Límite de cashflow: cal ${euro(balance)}`); return false; }
+  state.cash = Number(state.cash || 0) - balance;
+  loan.balance = 0;
+  loan.closed = true;
+  state.finance.loans = state.finance.loans.filter(l => l.id !== loanId);
+  log(`✅ Préstec tancat: ${loan.name}`);
+  return true;
+}
+
+export function openCreditLine(limit) {
+  if (!state) return false;
+  ensureFinanceState();
+  const max = Math.max(0, Number(limit || 0));
+  if (max <= 0) {
+    state.finance.creditLine = { limit: 0, dailyFee: 0, paid: 0 };
+    state.finance.cashflowLimit = 0;
+    log('💤 Linia de crèdit tancada');
+    return true;
+  }
+  const dailyFee = Math.max(1, Math.round(max * 0.002));
+  state.finance.creditLine = { limit: max, dailyFee, paid: 0, openedDay: state.time ? Number(state.time.day || 1) : 1 };
+  state.finance.cashflowLimit = max;
+  log(`🏦 Linia de crèdit: límit ${euro(max)} · cost diari ${euro(dailyFee)}`);
+  return true;
+}
+
+export function addLease(itemId, qty = 1, dailyRate = 0.015) {
+  if (!state) return null;
+  ensureFinanceState();
+  const item = state.itemsById.get(itemId);
+  if (!item) return null;
+  const cost = Math.max(1, Math.round(Number(item.price || 0) * Number(dailyRate || 0)));
+  const upfront = cost * Number(qty || 1);
+  if (!canSpend(upfront)) { log(`❌ Límite de cashflow: cal ${euro(upfront)}`); return null; }
+  state.cash = Number(state.cash || 0) - upfront;
+  const id = `lease_${Date.now()}_${Math.floor(Math.random() * 9999)}`;
+  const lease = {
+    id,
+    itemId,
+    qty: Number(qty || 1),
+    dailyCost: cost,
+    startDay: state.time ? Number(state.time.day || 1) : 1,
+    paid: upfront
+  };
+  state.finance.leases.push(lease);
+  invAdd(itemId, qty);
+  log(`📦 Lease: ${item.name} x${qty} · ${euro(cost)}/dia`);
+  if (typeof showNotification === 'function') showNotification('📦 Lease activat');
+  return lease;
+}
+
+export function returnLease(leaseId) {
+  if (!state) return false;
+  ensureFinanceState();
+  const lease = state.finance.leases.find(l => l.id === leaseId);
+  if (!lease) return false;
+  const installed = countInstalledItem(lease.itemId);
+  const available = invQty(lease.itemId) - installed;
+  if (available < Number(lease.qty || 0)) { log('❌ No pots retornar: equips instal·lats'); return false; }
+  invRemove(lease.itemId, lease.qty);
+  state.finance.leases = state.finance.leases.filter(l => l.id !== leaseId);
+  log('↩️ Lease retornat');
+  return true;
+}
+
+function applyCashflowClamp() {
+  if (!state) return 0;
+  const limit = getCashflowLimit();
+  if (limit <= 0) return 0;
+  if (Number(state.cash || 0) >= -limit) return 0;
+  const deficit = Math.abs(Number(state.cash || 0) + limit);
+  ensureFinanceState();
+  state.finance.arrears = (state.finance.arrears || 0) + deficit;
+  state.cash = -limit;
+  try {
+    state.reputation = state.reputation || { overall: 0, byGenre: {} };
+    state.reputation.overall = Math.max(0, Number(state.reputation.overall || 0) - 1);
+  } catch (e) {}
+  return deficit;
+}
+
+function applyFinanceCharges() {
+  if (!state) return 0;
+  ensureFinanceState();
+  let charged = 0;
+  const loans = Array.isArray(state.finance.loans) ? state.finance.loans : [];
+  for (const loan of loans) {
+    const daily = Number(loan.dailyPayment || 0);
+    if (loan.balance == null) loan.balance = Number(loan.remaining || loan.principal || 0);
+    if (daily > 0) {
+      state.cash = Number(state.cash || 0) - daily;
+      loan.balance = Math.max(0, Number(loan.balance || 0) - daily);
+      loan.paid = Number(loan.paid || 0) + daily;
+      charged += daily;
+    }
+    if (Number(loan.balance || 0) <= 0) loan.closed = true;
+  }
+  state.finance.loans = loans.filter(l => !l.closed);
+  const leases = Array.isArray(state.finance.leases) ? state.finance.leases : [];
+  for (const lease of leases) {
+    const cost = Number(lease.dailyCost || 0) * Number(lease.qty || 0);
+    if (cost > 0) {
+      state.cash = Number(state.cash || 0) - cost;
+      lease.paid = Number(lease.paid || 0) + cost;
+      charged += cost;
+    }
+  }
+  const credit = state.finance.creditLine || { limit: 0, dailyFee: 0 };
+  if (Number(credit.limit || 0) > 0 && Number(credit.dailyFee || 0) > 0) {
+    const fee = Number(credit.dailyFee || 0);
+    state.cash = Number(state.cash || 0) - fee;
+    charged += fee;
+    credit.paid = Number(credit.paid || 0) + fee;
+    state.finance.creditLine = credit;
+  }
+  if (charged > 0) {
+    state.finance.weeklyExpenses = (state.finance.weeklyExpenses || 0) + charged;
+    state.finance.monthlyExpenses = (state.finance.monthlyExpenses || 0) + charged;
+  }
+  return charged;
+}
+
 // Gear condition and maintenance
 export function getItemCondition(id) {
   if (typeof state === 'undefined') return 100;
@@ -72,6 +262,9 @@ export function applyItemWear(roomIndex, hours = 1, multiplier = 1) {
   if (!state || !state.roomsInstalled || !state.itemsById) return;
   state.itemCondition = state.itemCondition || new Map();
   const bag = state.roomsInstalled[roomIndex] || {};
+  const maintenance = state.roomMaintenance && state.roomMaintenance[roomIndex] ? state.roomMaintenance[roomIndex] : null;
+  const day = state.time ? Number(state.time.day || 1) : 1;
+  const inspectionBoost = (maintenance && Number(maintenance.inspectionUntilDay || 0) >= day) ? 0.7 : 1;
   const counts = new Map();
   for (const ids of Object.values(bag)) {
     for (const id of (ids || [])) counts.set(id, (counts.get(id) || 0) + 1);
@@ -80,7 +273,7 @@ export function applyItemWear(roomIndex, hours = 1, multiplier = 1) {
     const item = state.itemsById.get(id);
     const reliability = Number((item && item.stats && item.stats.reliability) || 80);
     const wearRate = clamp((100 - reliability) / 600, 0.02, 0.5);
-    const wear = wearRate * Number(hours || 0) * Number(multiplier || 1);
+    const wear = wearRate * Number(hours || 0) * Number(multiplier || 1) * inspectionBoost;
     const next = clamp(getItemCondition(id) - wear, 5, 100);
     state.itemCondition.set(id, next);
   }
@@ -278,6 +471,7 @@ export function processScheduledDay(day) {
 export function applyDailyRoomCosts() {
   if (!state || !state.db || !Array.isArray(state.db.rooms)) return 0;
   let charged = 0;
+  ensureFinanceState();
   // Staff payroll (daily)
   try {
     const engLevel = (state.staff && state.staff.engineer && state.staff.engineer.level) ? Number(state.staff.engineer.level) : 1;
@@ -288,6 +482,7 @@ export function applyDailyRoomCosts() {
       state.cash = Number(state.cash || 0) - staffDaily;
       state.finance = state.finance || {};
       state.finance.weeklyExpenses = (state.finance.weeklyExpenses || 0) + staffDaily;
+      state.finance.monthlyExpenses = (state.finance.monthlyExpenses || 0) + staffDaily;
       charged += staffDaily;
       state.finance.staffWeekly = staffWeekly;
     }
@@ -308,6 +503,7 @@ export function applyDailyRoomCosts() {
         state.cash = Number(state.cash || 0) - maintenanceDaily;
         state.finance = state.finance || {};
         state.finance.weeklyExpenses = (state.finance.weeklyExpenses || 0) + maintenanceDaily;
+        state.finance.monthlyExpenses = (state.finance.monthlyExpenses || 0) + maintenanceDaily;
         charged += maintenanceDaily;
       }
     } catch (e) {}
@@ -318,6 +514,7 @@ export function applyDailyRoomCosts() {
       state.cash = Number(state.cash || 0) - perWeek;
       state.finance = state.finance || {};
       state.finance.weeklyExpenses = (state.finance.weeklyExpenses || 0) + perWeek;
+      state.finance.monthlyExpenses = (state.finance.monthlyExpenses || 0) + perWeek;
       charged += perWeek;
       billing.lastBilledDay = (state.time && state.time.day) ? state.time.day : 1;
       billing.weeksBilled = (billing.weeksBilled || 0) + 1;
@@ -340,6 +537,7 @@ export function applyDailyRoomCosts() {
       state.cash = Number(state.cash || 0) - perWeek;
       state.finance = state.finance || {};
       state.finance.weeklyExpenses = (state.finance.weeklyExpenses || 0) + perWeek;
+      state.finance.monthlyExpenses = (state.finance.monthlyExpenses || 0) + perWeek;
       charged += perWeek;
       billing.weeksBilled = (billing.weeksBilled || 0) + 1;
       billing.totalCharged = (billing.totalCharged || 0) + perWeek;
@@ -350,6 +548,11 @@ export function applyDailyRoomCosts() {
       } catch (e) {}
     }
   }
+  try {
+    charged += applyFinanceCharges();
+    const deficit = applyCashflowClamp();
+    if (deficit > 0 && typeof log === 'function') log(`⚠️ Cashflow al límit: ${euro(deficit)} pendent`);
+  } catch (e) {}
   try {
     const day = Number(state.time && state.time.day || 1);
     state.analytics = state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
@@ -396,7 +599,7 @@ export function showNotification(message, duration = 3000) {
 
 // Attach to window for backward compatibility with non-module scripts
 if (typeof window !== 'undefined') {
-  window.Helpers = Object.assign(window.Helpers || {}, { log, euro, clamp, avgStat, sumStat, xpToNext, addXp, invQty, invAdd, invRemove, checkContractRequirements, advanceTime, showNotification, getItemCondition, setItemCondition, applyItemWear, calcRoomMaintenanceDaily, processScheduledDay });
+  window.Helpers = Object.assign(window.Helpers || {}, { log, euro, clamp, avgStat, sumStat, xpToNext, addXp, invQty, invAdd, invRemove, countInstalledItem, getCashflowLimit, canSpend, takeLoan, repayLoan, openCreditLine, addLease, returnLease, checkContractRequirements, advanceTime, showNotification, getItemCondition, setItemCondition, applyItemWear, calcRoomMaintenanceDaily, processScheduledDay });
   // Overwrite any temporary shim wrappers so the real implementations are used
   window.log = log;
   window.euro = euro;
@@ -408,6 +611,14 @@ if (typeof window !== 'undefined') {
   window.invQty = invQty;
   window.invAdd = invAdd;
   window.invRemove = invRemove;
+  window.countInstalledItem = countInstalledItem;
+  window.getCashflowLimit = getCashflowLimit;
+  window.canSpend = canSpend;
+  window.takeLoan = takeLoan;
+  window.repayLoan = repayLoan;
+  window.openCreditLine = openCreditLine;
+  window.addLease = addLease;
+  window.returnLease = returnLease;
   window.getItemCondition = getItemCondition;
   window.setItemCondition = setItemCondition;
   window.applyItemWear = applyItemWear;

@@ -2,7 +2,7 @@ import { state, installedIds, installToRoom, uninstallItemFromRoom, getRoomEffec
 import { euro, xpToNext, invQty, invRemove, invAdd, log, showNotification } from '../helpers.js';
 import { clearChildren, createArt, formatStatKey, getItemArt, getRoomArt, getTopStats } from './shared.js';
 import { renderSignalFlowOverlay } from './room_visuals.js';
-import { calcRoomRepairCost, repairRoomItems } from './room_maintenance.js';
+import { calcRoomInspectionCost, calcRoomRepairCost, inspectRoom, repairRoomItems } from './room_maintenance.js';
 
 const dragState = { itemId: null, source: null, category: null, index: null };
 const COMPACT_SLOT_THRESHOLD = 10;
@@ -512,13 +512,27 @@ export function renderRoomDetails(options = {}) {
     const repairCost = calcRoomRepairCost(state.selected.roomIndex);
     const repairLine = document.createElement('div'); repairLine.className = 'ops-row muted';
     repairLine.textContent = repairCost > 0 ? `Cost reparacio: ${euro(repairCost)}` : 'Tot OK';
+    const maintenanceState = state.roomMaintenance && state.roomMaintenance[state.selected.roomIndex] ? state.roomMaintenance[state.selected.roomIndex] : null;
+    const today = Number(state.time && state.time.day || 1);
+    const inspectUntil = maintenanceState ? Number(maintenanceState.inspectionUntilDay || 0) : 0;
+    const inspectLeft = Math.max(0, inspectUntil - today);
+    const inspectCost = calcRoomInspectionCost(state.selected.roomIndex);
+    const inspectLine = document.createElement('div'); inspectLine.className = 'ops-row muted';
+    inspectLine.textContent = inspectCost > 0
+      ? `Inspeccio: ${inspectLeft > 0 ? `bonus ${inspectLeft} dies` : 'sense bonus'} · Cost ${euro(inspectCost)}`
+      : 'Inspeccio: sense equip';
     const repairActions = document.createElement('div'); repairActions.className = 'ops-actions';
     const btnRepair = document.createElement('button'); btnRepair.className = 'btn2 btnSpecial';
     btnRepair.textContent = repairCost > 0 ? `Reparar (${euro(repairCost)})` : 'Reparar';
     btnRepair.disabled = repairCost <= 0;
     btnRepair.addEventListener('click', () => repairRoomItems(state.selected.roomIndex));
+    const btnInspect = document.createElement('button'); btnInspect.className = 'btn2';
+    btnInspect.textContent = inspectCost > 0 ? `Inspeccio (${euro(inspectCost)})` : 'Inspeccio';
+    btnInspect.disabled = inspectCost <= 0;
+    btnInspect.addEventListener('click', () => inspectRoom(state.selected.roomIndex));
     repairActions.appendChild(btnRepair);
-    maintenanceBody.appendChild(maintLine); maintenanceBody.appendChild(repairLine);
+    repairActions.appendChild(btnInspect);
+    maintenanceBody.appendChild(maintLine); maintenanceBody.appendChild(repairLine); maintenanceBody.appendChild(inspectLine);
     maintenanceCard.appendChild(maintenanceTitle); maintenanceCard.appendChild(maintenanceBody); maintenanceCard.appendChild(repairActions);
     inventorySection.appendChild(maintenanceCard);
   }
