@@ -23,7 +23,7 @@ const TEMPLATE_POOL = [
     target_quality: [58, 75],
     duration: [3, 6],
     deadline: [2, 5],
-    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, cable: 2, mic_stand: 1, software: 1 }
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, cable: 2, mic_stand: 1, software_daw: 1 }
   },
   {
     type: 'recording',
@@ -192,7 +192,7 @@ const TEMPLATE_POOL = [
     target_quality: [62, 80],
     duration: [5, 9],
     deadline: [3, 6],
-    min_items: { interface: 1, monitor: 2, software: 1, midi_controller: 1 }
+    min_items: { interface: 1, monitor: 2, software_daw: 1, midi_controller: 1 }
   },
   {
     type: 'streaming',
@@ -442,7 +442,7 @@ const TEMPLATE_POOL = [
     target_quality: [66, 84],
     duration: [3, 5],
     deadline: [2, 4],
-    min_items: { monitor: 2, acoustic_treatment: 6, software: 1 }
+    min_items: { monitor: 2, acoustic_treatment: 6, software_daw: 1 }
   },
   {
     type: 'mix',
@@ -453,7 +453,7 @@ const TEMPLATE_POOL = [
     target_quality: [68, 86],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 2, acoustic_treatment: 6, software: 1, effects: 1 }
+    min_items: { monitor: 2, acoustic_treatment: 6, software_daw: 1, effects: 1 }
   },
   {
     type: 'mix',
@@ -464,7 +464,7 @@ const TEMPLATE_POOL = [
     target_quality: [70, 88],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 3, acoustic_treatment: 8, software: 1, effects: 2 }
+    min_items: { monitor: 3, acoustic_treatment: 8, software_daw: 1, effects: 2 }
   },
   {
     type: 'master',
@@ -475,7 +475,7 @@ const TEMPLATE_POOL = [
     target_quality: [68, 88],
     duration: [2, 4],
     deadline: [1, 3],
-    min_items: { monitor: 2, acoustic_treatment: 6, software: 1 }
+    min_items: { monitor: 2, acoustic_treatment: 6, software_daw: 1 }
   },
   {
     type: 'master',
@@ -486,7 +486,7 @@ const TEMPLATE_POOL = [
     target_quality: [72, 92],
     duration: [3, 5],
     deadline: [1, 3],
-    min_items: { monitor: 3, acoustic_treatment: 8, software: 1, effects: 2 }
+    min_items: { monitor: 3, acoustic_treatment: 8, software_daw: 1, effects: 2 }
   },
   {
     type: 'mix_master',
@@ -497,7 +497,7 @@ const TEMPLATE_POOL = [
     target_quality: [72, 92],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 3, acoustic_treatment: 8, software: 1, effects: 2 }
+    min_items: { monitor: 3, acoustic_treatment: 8, software_daw: 1, effects: 2 }
   },
   // Streaming room expansion
   {
