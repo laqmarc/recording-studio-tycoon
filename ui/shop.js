@@ -20,10 +20,45 @@ function pickBestItem(cat, statKey) {
   return items[0];
 }
 
+function pickItemByName(name) {
+  if (!name) return null;
+  for (const it of state.itemsById.values()) {
+    if (it && it.name === name) return it;
+  }
+  return null;
+}
+
 function buildBundles(roomIndex) {
   const bundles = [];
   const room = state.db.rooms[roomIndex];
   const roomType = room ? room.type : 'control_room';
+  const isSmallControlRoom = roomType === 'control_room' && Number(room && room.size_m2 || 0) > 0 && Number(room.size_m2) <= 16;
+
+  if (isSmallControlRoom) {
+    const bundleItems = [
+      pickItemByName('t.akustik QRD Diffusor'),
+      pickItemByName('t.akustik QRD Diffusor'),
+      pickItemByName('Mackie CR4-X'),
+      pickItemByName('Mackie CR4-X'),
+      pickItemByName('Audacity')
+    ].filter(Boolean);
+    if (bundleItems.length) {
+      bundles.push({ name: 'Control Room Essentials', items: bundleItems, total: 350, fixedTotal: true });
+    }
+    const vocalItems = [
+      pickItemByName('Micròfon Condensador Vocal'),
+      pickItemByName('Behringer MIC200 Tube Ultragain'),
+      pickItemByName('Tascam TH-02'),
+      pickItemByName('the sssnake XLR3 Basic'),
+      pickItemByName('the sssnake XLR3 Basic'),
+      pickItemByName('Millenium MS3003'),
+      pickItemByName('Focusrite Scarlett Solo 4th Gen')
+    ].filter(Boolean);
+    if (vocalItems.length) {
+      bundles.push({ name: 'Vocal Starter Pack', items: vocalItems, total: 300, fixedTotal: true });
+    }
+    return bundles;
+  }
 
   const defs = {
     vocal_booth: [
@@ -122,6 +157,9 @@ function buildBundles(roomIndex) {
 
 function buildUpgradePlan(roomIndex) {
   const plan = [];
+  const room = state.db.rooms[roomIndex];
+  const isSmallControlRoom = room && room.type === 'control_room' && Number(room.size_m2 || 0) > 0 && Number(room.size_m2) <= 16;
+  if (isSmallControlRoom) return plan;
   const categories = [
     { cat: 'mic', stat: 'mic_quality' },
     { cat: 'preamp', stat: 'preamp_quality' },
@@ -148,8 +186,9 @@ function buildUpgradePlan(roomIndex) {
   return plan;
 }
 
-function buyBundle(items, { renderAll } = {}) {
-  const total = items.reduce((sum, it) => sum + Number(it.price || 0), 0);
+function buyBundle(bundle, { renderAll } = {}) {
+  const items = bundle.items || [];
+  const total = bundle.fixedTotal ? Number(bundle.total || 0) : items.reduce((sum, it) => sum + Number(it.price || 0), 0);
   if (state.cash < total) { log(`❌ No tens prou diners (${euro(total)})`); return; }
   state.cash -= total;
   for (const it of items) invAdd(it.id, 1);
@@ -226,7 +265,7 @@ export function renderShop(options = {}) {
       });
       const total = document.createElement('div'); total.className = 'bundle-total'; total.textContent = `Total ${euro(b.total)}`;
       const btn = document.createElement('button'); btn.className = 'btn2 btnOk'; btn.textContent = 'Comprar bundle';
-      btn.addEventListener('click', () => buyBundle(b.items, { renderAll }));
+      btn.addEventListener('click', () => buyBundle(b, { renderAll }));
       card.appendChild(name); card.appendChild(list); card.appendChild(total); card.appendChild(btn);
       bundleGrid.appendChild(card);
     }

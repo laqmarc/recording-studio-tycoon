@@ -187,6 +187,19 @@ export function advanceTime(hours) {
         const daily = applyDailyRoomCosts();
         if (daily && typeof log === 'function') log(`💸 Costos diaris sales: ${euro(daily)} · Despesa setmanal acumulada: ${Math.round((state.finance && state.finance.weeklyExpenses) || 0)}€`);
       } catch (e) {}
+      // store daily analytics snapshot
+      try {
+        state.analytics = state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
+        state.analytics.daily = Array.isArray(state.analytics.daily) ? state.analytics.daily : [];
+        state.analytics.daily.push({
+          day: completedDay,
+          cash: Number(state.cash || 0),
+          fatigueShort: Number(state.player.fatigueShort || 0),
+          fatigueChronic: Number(state.player.fatigueChronic || 0),
+          reputation: Number(state.reputation && state.reputation.overall || 0)
+        });
+        if (state.analytics.daily.length > 120) state.analytics.daily.shift();
+      } catch (e) {}
       log(`🌅 Nou dia! Fatiga curta: ${state.player.fatigueShort.toFixed(1)}h · Fatiga crònica: ${state.player.fatigueChronic.toFixed(2)}`);
       try { if (typeof window !== 'undefined' && typeof window.processScheduledDay === 'function') window.processScheduledDay(completedDay); } catch (e) {}
       try { if (typeof window !== 'undefined' && typeof window.generateDailyOffers === 'function') window.generateDailyOffers(); } catch (e) {}
@@ -297,6 +310,12 @@ export function applyDailyRoomCosts() {
       } catch (e) {}
     }
   }
+  try {
+    const day = Number(state.time && state.time.day || 1);
+    state.analytics = state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
+    state.analytics.expenseByDay = state.analytics.expenseByDay || {};
+    state.analytics.expenseByDay[day] = Number(state.analytics.expenseByDay[day] || 0) + Number(charged || 0);
+  } catch (e) {}
   return charged;
 }
 

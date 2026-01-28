@@ -229,6 +229,22 @@ export function simulateContract(contractId) {
     }
   } catch (e) {}
   payout = Math.max(0, Math.round(payout - talent_cost));
+  try {
+    const day = Number(state.time && state.time.day || 1);
+    state.analytics = state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
+    state.analytics.revenueByDay = state.analytics.revenueByDay || {};
+    state.analytics.revenueByDay[day] = Number(state.analytics.revenueByDay[day] || 0) + Number(payout || 0);
+    state.analytics.sessions = Array.isArray(state.analytics.sessions) ? state.analytics.sessions : [];
+    state.analytics.sessions.unshift({
+      day,
+      name: contract.name,
+      type: contract.type,
+      payout,
+      quality: Number(res.final_quality || 0),
+      fees: Number(talent_cost || 0)
+    });
+    if (state.analytics.sessions.length > 50) state.analytics.sessions.pop();
+  } catch (e) {}
   state.cash += payout;
   const xpAward = Math.max(0, Math.round(payout/20 + res.final_quality/10));
   addXp(xpAward);

@@ -7,7 +7,7 @@ export const state = {
   itemsByCategory: new Map(),
   inventory: new Map(), // id -> qty
   selected: { roomIndex: 0, shopItemId: null },
-  ui: { page: "rooms", roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 } },
+  ui: { page: "rooms", roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 },
   staff: { engineer: { level: 1 }, producer: { level: 1 } },
   reputation: { overall: 0, byGenre: {} },
   roomUpgrades: {},
@@ -19,7 +19,8 @@ export const state = {
   // billing info per room: { lastBilledDay: number|null }
   roomBilling: [],
   // Player state: track short-term and chronic fatigue separately.
-  player: { level: 1, xp: 0, fatigue: 0, fatigueShort: 0, fatigueChronic: 0, restBonus: 0 }
+  player: { level: 1, xp: 0, fatigue: 0, fatigueShort: 0, fatigueChronic: 0, restBonus: 0 },
+  analytics: { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] }
 };
 // time state (days/hours)
 state.time = { day: 1, hour: 0, workHoursPerDay: 8 };

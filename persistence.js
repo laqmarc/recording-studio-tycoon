@@ -17,7 +17,8 @@ export function saveState() {
         page: state.ui && state.ui.page || 'rooms',
         roomLayout: state.ui && state.ui.roomLayout ? state.ui.roomLayout : {},
         showSignalFlow: !!(state.ui && state.ui.showSignalFlow),
-        ambient: state.ui && state.ui.ambient ? state.ui.ambient : { enabled: false, volume: 0.2 }
+        ambient: state.ui && state.ui.ambient ? state.ui.ambient : { enabled: false, volume: 0.2 },
+        statsRange: (state.ui && state.ui.statsRange) ? Number(state.ui.statsRange) : 7
       },
       staff: state.staff || { engineer: { level: 1 }, producer: { level: 1 } },
       reputation: state.reputation || { overall: 0, byGenre: {} },
@@ -39,7 +40,8 @@ export function saveState() {
         base_terms: c._base_terms || null,
         assigned_people: Array.isArray(c.assigned_people) ? c.assigned_people : [],
         assigned_people_map: Array.isArray(c.assigned_people_map) ? c.assigned_people_map : []
-      }))
+      })),
+      analytics: state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] }
     };
     localStorage.setItem('studio_tycoon_state_v1', JSON.stringify(payload));
     log('💾 Estat guardat');
@@ -85,11 +87,12 @@ export function loadStateFromStorage() {
       if (typeof p.finance.monthlyExpenses === 'number') state.finance.monthlyExpenses = p.finance.monthlyExpenses;
     }
     if (p.ui && typeof p.ui === 'object') {
-      state.ui = state.ui || { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 } };
+      state.ui = state.ui || { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
       if (typeof p.ui.page === 'string') state.ui.page = p.ui.page;
       if (p.ui.roomLayout && typeof p.ui.roomLayout === 'object') state.ui.roomLayout = p.ui.roomLayout;
       if (typeof p.ui.showSignalFlow === 'boolean') state.ui.showSignalFlow = p.ui.showSignalFlow;
       if (p.ui.ambient && typeof p.ui.ambient === 'object') state.ui.ambient = p.ui.ambient;
+      if (typeof p.ui.statsRange === 'number') state.ui.statsRange = p.ui.statsRange;
     }
     if (p.staff && typeof p.staff === 'object') state.staff = p.staff;
     if (p.reputation && typeof p.reputation === 'object') state.reputation = p.reputation;
@@ -101,6 +104,11 @@ export function loadStateFromStorage() {
     if (p.market && typeof p.market === 'object') state.market = p.market;
     if (Array.isArray(p.schedule)) state.schedule = p.schedule;
     if (Array.isArray(p.hiredPeople)) state.hiredPeople = p.hiredPeople;
+    if (p.analytics && typeof p.analytics === 'object') {
+      state.analytics = p.analytics;
+    } else if (!state.analytics) {
+      state.analytics = { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
+    }
     if (typeof state.finance.weeklyExpenses !== 'number') state.finance.weeklyExpenses = 0;
     if (typeof state.finance.monthlyExpenses !== 'number') state.finance.monthlyExpenses = 0;
     if (Array.isArray(p.roomBilling) && p.roomBilling.length === state.db.rooms.length) {
@@ -153,7 +161,7 @@ export function clearPersistenceAndReset() {
     state.time = { day: 1, hour: 0, workHoursPerDay: state.time.workHoursPerDay || 8 };
     state.cash = 1000;
     state.inventory.clear();
-    state.ui = { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 } };
+    state.ui = { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
     state.staff = { engineer: { level: 1 }, producer: { level: 1 } };
     state.reputation = { overall: 0, byGenre: {} };
     state.roomUpgrades = {};
@@ -161,6 +169,7 @@ export function clearPersistenceAndReset() {
     state.market = { offers: [], lastDayGenerated: 0 };
     state.schedule = [];
     state.hiredPeople = [];
+    state.analytics = { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
     ensureRoomsInstalled();
     state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
     for (const c of state.db.contracts) {
@@ -190,12 +199,13 @@ export function loadFromObject(obj) {
   ensureRoomsInstalled();
   state.selected.roomIndex = 0;
   state.selected.shopItemId = items.length ? items[0].id : null;
-  state.ui = state.ui || { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 } };
+  state.ui = state.ui || { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
   state.staff = state.staff || { engineer: { level: 1 }, producer: { level: 1 } };
   state.reputation = state.reputation || { overall: 0, byGenre: {} };
   state.roomUpgrades = state.roomUpgrades || {};
   state.itemCondition = state.itemCondition || new Map();
   state.market = state.market || { offers: [], lastDayGenerated: 0 };
+  state.analytics = state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
   state.schedule = Array.isArray(state.schedule) ? state.schedule : [];
   state.hiredPeople = Array.isArray(state.hiredPeople) ? state.hiredPeople : [];
   // Ensure finance tracking exists after loading demo data
@@ -220,7 +230,7 @@ export function resetGame() {
   ensureRoomsInstalled();
   state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
   state.selected.shopItemId = state.db.items.length ? state.db.items[0].id : null;
-  state.ui = { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 } };
+  state.ui = { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
   state.staff = { engineer: { level: 1 }, producer: { level: 1 } };
   state.reputation = { overall: 0, byGenre: {} };
   state.roomUpgrades = {};
@@ -228,6 +238,7 @@ export function resetGame() {
   state.market = { offers: [], lastDayGenerated: 0 };
   state.schedule = [];
   state.hiredPeople = [];
+  state.analytics = { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
   log("🔄 Reset: cash=1000, inventari buit, instal·lacions buides.");
   if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
   localStorage.removeItem('studio_tycoon_state_v1');
