@@ -233,6 +233,22 @@ body[data-page="stats"] .page[data-page="stats"] {
   text-shadow: 0 1px 0 rgba(0,0,0,0.4);
 }
 
+.card.is-scheduled::after {
+  content: attr(data-stamp);
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  padding: 2px 8px;
+  border: 1px solid var(--acc);
+  color: var(--acc);
+  font-weight: 700;
+  letter-spacing: 1px;
+  transform: rotate(-6deg);
+  background: rgba(6, 16, 32, 0.35);
+  border-radius: 8px;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+}
+
 .card-grid { display: flex; gap: 10px; align-items: center; }
 .card-body { flex: 1 1 auto; min-width: 0; }
 .card-art {
@@ -1110,6 +1126,12 @@ input, select {
 .contract-card .btn2 {
   padding: 8px 10px;
   font-size: 12px;
+}
+
+.contract-card.is-scheduled {
+  border-color: rgba(35, 217, 160, 0.7);
+  box-shadow: 0 0 0 1px rgba(35, 217, 160, 0.2), 0 12px 24px rgba(35, 217, 160, 0.15);
+  background: linear-gradient(180deg, rgba(35, 217, 160, 0.18) 0%, rgba(0,0,0,0.06) 100%), rgba(255,255,255,0.06);
 }
 
 .contract-card .badge-row { margin-top: 6px; }

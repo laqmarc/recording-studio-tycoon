@@ -111,6 +111,7 @@ export function renderRooms(options = {}) {
         const eta = getContractETA(c);
         const etaText = remaining === 0 ? 'Ready' : formatEta(eta);
         const isDone = Boolean(c.completed);
+        const isScheduled = Array.isArray(state.schedule) && state.schedule.some(s => s.contractId === c.id);
 
         const card = document.createElement('div');
         card.className = 'card contract-card';
@@ -125,6 +126,10 @@ export function renderRooms(options = {}) {
         if (isDone) {
           card.classList.add('is-complete');
           card.setAttribute('data-stamp', 'DONE');
+        }
+        if (!isDone && isScheduled) {
+          card.classList.add('is-scheduled');
+          card.setAttribute('data-stamp', 'PROG');
         }
 
         const row = document.createElement('div'); row.className = 'row';
