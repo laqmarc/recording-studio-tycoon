@@ -64,9 +64,9 @@ export const CAMPAIGN_CHAPTERS = [
       {
         id: "5_contracts",
         title: "Experiència",
-        description: "Completa 300 contractes amb èxit",
+        description: "Completa 100 contractes amb èxit",
         type: "contract_complete",
-        target: 300,
+        target: 100,
         reward: { xp: 400, cash: 1500 },
         unlocks: ["production_room"]
       }
