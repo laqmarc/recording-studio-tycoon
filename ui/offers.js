@@ -58,9 +58,6 @@ export function renderOffers() {
   };
 
   if (specials.length) {
-    const head = document.createElement('div'); head.className = 'offer-section';
-    head.textContent = '🌍 Projectes especials';
-    offersEl.appendChild(head);
     const workHours = Number(state.time && state.time.workHoursPerDay || 8);
     for (const offer of specials) {
       const card = document.createElement('div'); card.className = 'offer-card special-offer';
