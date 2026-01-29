@@ -1,7 +1,6 @@
 import { state, installedIds, installToRoom, uninstallItemFromRoom, getRoomEffective, getRoomSlotCapacity } from '../state.js';
 import { euro, xpToNext, invQty, invRemove, invAdd, log, showNotification } from '../helpers.js';
 import { clearChildren, createArt, formatStatKey, getItemArt, getRoomArt, getTopStats } from './shared.js';
-import { renderSignalFlowOverlay } from './room_visuals.js';
 import { calcRoomInspectionCost, calcRoomRepairCost, inspectRoom, repairRoomItems } from './room_maintenance.js';
 
 const dragState = { itemId: null, source: null, category: null, index: null };
@@ -232,15 +231,7 @@ export function renderRoomDetails(options = {}) {
   headLeft.appendChild(hero); headLeft.appendChild(infoBlock);
   canvasHead.appendChild(headLeft);
   const headActions = document.createElement('div'); headActions.className = 'room-canvas-actions';
-  const flowBtn = document.createElement('button'); flowBtn.className = 'btn2 btnSmall';
-  flowBtn.textContent = (state.ui && state.ui.showSignalFlow) ? 'Flow: ON' : 'Flow: OFF';
-  flowBtn.addEventListener('click', () => {
-    state.ui.showSignalFlow = !state.ui.showSignalFlow;
-    flowBtn.textContent = state.ui.showSignalFlow ? 'Flow: ON' : 'Flow: OFF';
-    if (typeof renderRight === 'function') renderRight();
-    if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
-  });
-  headActions.appendChild(flowBtn);
+  // Removed Flow button as requested
   canvasHead.appendChild(headActions);
   canvas.appendChild(canvasHead);
 
@@ -392,7 +383,6 @@ export function renderRoomDetails(options = {}) {
 
   canvas.appendChild(floorplan);
   details.appendChild(canvas);
-  requestAnimationFrame(() => renderSignalFlowOverlay(canvas, floorplan));
 
   const selCat = document.getElementById('selInvCategory');
   if (selCat && selCat.parentElement) selCat.parentElement.style.display = 'none';

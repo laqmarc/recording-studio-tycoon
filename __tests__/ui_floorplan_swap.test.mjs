@@ -34,7 +34,7 @@ describe('ui/room_details floorplan swap', () => {
     state.selected.roomIndex = 0;
     state.player = { level: 1, xp: 0, fatigue: 0, fatigueShort: 0, fatigueChronic: 0 };
     state.time = { day: 1, hour: 0, workHoursPerDay: 8 };
-    state.ui = { page: 'rooms', roomLayout: {}, showSignalFlow: false };
+    state.ui = { page: 'rooms', roomLayout: {} };
   });
 
   test('drag installed item onto another slot swaps layout', () => {

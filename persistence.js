@@ -21,7 +21,6 @@ export function saveState() {
       ui: {
         page: state.ui && state.ui.page || 'rooms',
         roomLayout: state.ui && state.ui.roomLayout ? state.ui.roomLayout : {},
-        showSignalFlow: !!(state.ui && state.ui.showSignalFlow),
         ambient: state.ui && state.ui.ambient ? state.ui.ambient : { enabled: false, volume: 0.2 },
         statsRange: (state.ui && state.ui.statsRange) ? Number(state.ui.statsRange) : 7
       },
@@ -99,10 +98,9 @@ export function loadStateFromStorage() {
       if (typeof p.finance.arrears === 'number') state.finance.arrears = p.finance.arrears;
     }
     if (p.ui && typeof p.ui === 'object') {
-      state.ui = state.ui || { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
+      state.ui = state.ui || { page: 'rooms', roomLayout: {}, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
       if (typeof p.ui.page === 'string') state.ui.page = p.ui.page;
       if (p.ui.roomLayout && typeof p.ui.roomLayout === 'object') state.ui.roomLayout = p.ui.roomLayout;
-      if (typeof p.ui.showSignalFlow === 'boolean') state.ui.showSignalFlow = p.ui.showSignalFlow;
       if (p.ui.ambient && typeof p.ui.ambient === 'object') state.ui.ambient = p.ui.ambient;
       if (typeof p.ui.statsRange === 'number') state.ui.statsRange = p.ui.statsRange;
     }
@@ -195,7 +193,7 @@ export function clearPersistenceAndReset() {
     state.time = { day: 1, hour: 0, workHoursPerDay: state.time.workHoursPerDay || 8 };
     state.cash = 1000;
     state.inventory.clear();
-    state.ui = { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
+    state.ui = { page: 'rooms', roomLayout: {}, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
     state.staff = { engineer: { level: 1 }, producer: { level: 1 } };
     state.reputation = { overall: 0, byGenre: {} };
     state.roomUpgrades = {};
@@ -234,7 +232,7 @@ export function loadFromObject(obj) {
   ensureRoomsInstalled();
   state.selected.roomIndex = 0;
   state.selected.shopItemId = items.length ? items[0].id : null;
-  state.ui = state.ui || { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
+  state.ui = state.ui || { page: 'rooms', roomLayout: {}, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
   state.staff = state.staff || { engineer: { level: 1 }, producer: { level: 1 } };
   state.reputation = state.reputation || { overall: 0, byGenre: {} };
   state.roomUpgrades = state.roomUpgrades || {};
@@ -272,7 +270,7 @@ export function resetGame() {
   ensureRoomsInstalled();
   state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
   state.selected.shopItemId = state.db.items.length ? state.db.items[0].id : null;
-  state.ui = { page: 'rooms', roomLayout: {}, showSignalFlow: false, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
+  state.ui = { page: 'rooms', roomLayout: {}, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 };
   state.staff = { engineer: { level: 1 }, producer: { level: 1 } };
   state.reputation = { overall: 0, byGenre: {} };
   state.roomUpgrades = {};

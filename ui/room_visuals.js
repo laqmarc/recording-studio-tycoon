@@ -1,5 +1,7 @@
 import { state } from '../state.js';
 
+// Removed signal flow functionality as requested
+/*
 export function renderSignalFlowOverlay(canvas, floorplan) {
   if (!canvas || !floorplan) return;
   const old = canvas.querySelector('.signal-flow');
@@ -61,3 +63,4 @@ export function renderSignalFlowOverlay(canvas, floorplan) {
 
   canvas.appendChild(svg);
 }
+*/
