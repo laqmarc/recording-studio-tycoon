@@ -38,6 +38,15 @@ export function addXp(amount){
     state.player.xp -= xpToNext(state.player.level);
     state.player.level += 1;
     log(`⬆️ Level up! Ara ets nivell ${state.player.level}`);
+    
+    // Check campaign objectives for level
+    try {
+      if (state.campaign && state.campaign.active) {
+        import('./campaign.js').then(module => {
+          module.checkObjectiveProgress('level', state.player.level);
+        }).catch(e => console.log('Campaign level check error:', e));
+      }
+    } catch (e) {}
   }
 }
 

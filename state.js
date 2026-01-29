@@ -21,7 +21,17 @@ export const state = {
   roomBilling: [],
   // Player state: track short-term and chronic fatigue separately.
   player: { level: 1, xp: 0, fatigue: 0, fatigueShort: 0, fatigueChronic: 0, restBonus: 0 },
-  analytics: { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] }
+  analytics: { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] },
+  campaign: {
+    active: false,
+    currentChapter: 0,
+    currentObjective: 0,
+    completedObjectives: [],
+    unlockedFeatures: [],
+    storylineProgress: {},
+    milestones: [],
+    achievements: []
+  }
 };
 // time state (days/hours)
 state.time = { day: 1, hour: 0, workHoursPerDay: 8 };
@@ -96,6 +106,15 @@ export function installToRoom(roomIndex, category, itemId) {
       state.roomBilling[roomIndex] = state.roomBilling[roomIndex] || { lastBilledDay: null };
       // indicate that room has been newly installed; actual cash change handled by helpers to avoid circular imports
       state.roomBilling[roomIndex].justInstalled = true;
+      
+      // Check campaign objectives for room building
+      try {
+        if (wasEmpty && state.campaign && state.campaign.active) {
+          import('./campaign.js').then(module => {
+            module.checkObjectiveProgress('room_built', 1, room.category);
+          }).catch(e => console.log('Campaign room check error:', e));
+        }
+      } catch (e) {}
     }
   } catch (e) {}
   return { ok:true };

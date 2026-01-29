@@ -258,6 +258,21 @@ export function simulateContract(contractId) {
     const qaRep = Number(contract.qa_rep_bonus || 0);
     state.reputation.overall += repGain + qaRep;
     state.reputation.byGenre[genreKey] = (state.reputation.byGenre[genreKey] || 0) + repGain + qaRep;
+    
+    // Check campaign objectives for reputation
+    try {
+      if (state.campaign && state.campaign.active) {
+        import('./campaign.js').then(module => {
+          module.checkObjectiveProgress('reputation', state.reputation.overall);
+          module.checkObjectiveProgress('genre_reputation', state.reputation.byGenre[genreKey]);
+          
+          // Check total revenue objectives
+          const totalRevenue = Object.values(state.analytics.revenueByDay)
+            .reduce((sum, daily) => sum + Number(daily), 0);
+          module.checkObjectiveProgress('revenue_total', totalRevenue);
+        }).catch(e => console.log('Campaign reputation check error:', e));
+      }
+    } catch (e) {}
   } catch (e) {}
 
   const qaBonusText = contract.qa_bonus ? `, QA +${Number(contract.qa_bonus || 0)}` : '';

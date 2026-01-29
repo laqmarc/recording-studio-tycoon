@@ -47,7 +47,8 @@ export function saveState() {
         assigned_people: Array.isArray(c.assigned_people) ? c.assigned_people : [],
         assigned_people_map: Array.isArray(c.assigned_people_map) ? c.assigned_people_map : []
       })),
-      analytics: state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] }
+      analytics: state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] },
+      campaign: state.campaign || { active: false, currentChapter: 0, currentObjective: 0, completedObjectives: [], unlockedFeatures: [], storylineProgress: {}, milestones: [], achievements: [] }
     };
     localStorage.setItem('studio_tycoon_state_v1', JSON.stringify(payload));
     log('💾 Estat guardat');
@@ -119,6 +120,11 @@ export function loadStateFromStorage() {
       state.analytics = p.analytics;
     } else if (!state.analytics) {
       state.analytics = { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
+    }
+    if (p.campaign && typeof p.campaign === 'object') {
+      state.campaign = p.campaign;
+    } else if (!state.campaign) {
+      state.campaign = { active: false, currentChapter: 0, currentObjective: 0, completedObjectives: [], unlockedFeatures: [], storylineProgress: {}, milestones: [], achievements: [] };
     }
     if (!state.finance || typeof state.finance !== 'object') state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
     if (!Array.isArray(state.finance.loans)) state.finance.loans = [];
@@ -198,6 +204,7 @@ export function clearPersistenceAndReset() {
     state.schedule = [];
     state.hiredPeople = [];
     state.analytics = { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
+    state.campaign = { active: false, currentChapter: 0, currentObjective: 0, completedObjectives: [], unlockedFeatures: [], storylineProgress: {}, milestones: [], achievements: [] };
     ensureRoomsInstalled();
     state.finance = { weeklyExpenses: 0, monthlyExpenses: 0 };
     for (const c of state.db.contracts) {
