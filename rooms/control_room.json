@@ -28,6 +28,7 @@
         "mic_accessory": 2,
         "effects": 2,
         "instruments": 1,
+        "midi_controller": 1,
         "software_daw": 1
       },
       "price_per_week": 150.0

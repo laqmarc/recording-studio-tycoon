@@ -104,7 +104,7 @@ const TEMPLATE_POOL = [
     target_quality: [65, 80],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 2, acoustic_treatment: 3, software_mix_master: 1 }
+    min_items: { monitor: 2, acoustic_treatment: 3, software_daw: 1 }
   },
   {
     type: 'mix',
@@ -148,7 +148,7 @@ const TEMPLATE_POOL = [
     target_quality: [66, 84],
     duration: [3, 4],
     deadline: [1, 3],
-    min_items: { monitor: 2, acoustic_treatment: 5, software_mix_master: 1 }
+    min_items: { monitor: 2, acoustic_treatment: 5, software_daw: 1 }
   },
   {
     type: 'master',
@@ -576,7 +576,7 @@ const TEMPLATE_POOL = [
     target_quality: [60, 78],
     duration: [3, 6],
     deadline: [2, 4],
-    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, cable: 2, mic_stand: 1, software: 1 }
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, cable: 2, mic_stand: 1, software_daw: 1 }
   },
   {
     type: 'recording',
@@ -587,11 +587,11 @@ const TEMPLATE_POOL = [
     target_quality: [64, 82],
     duration: [4, 7],
     deadline: [2, 4],
-    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, cable: 2, mic_stand: 1, software: 1, acoustic_treatment: 2 }
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, cable: 2, mic_stand: 1, software_daw: 1, acoustic_treatment: 2 }
   },
   {
     type: 'mix',
-    room_type: 'control_room',
+    room_type: 'mastering_suite',
     unlock_level: 5,
     allowed_genres: ['any'],
     base_pay: [260, 460],
@@ -602,7 +602,7 @@ const TEMPLATE_POOL = [
   },
   {
     type: 'mix',
-    room_type: 'control_room',
+    room_type: 'mastering_suite',
     unlock_level: 7,
     allowed_genres: ['any'],
     base_pay: [300, 520],
@@ -613,7 +613,7 @@ const TEMPLATE_POOL = [
   },
   {
     type: 'mix_master',
-    room_type: 'control_room',
+    room_type: 'mastering_suite',
     unlock_level: 8,
     allowed_genres: ['any'],
     base_pay: [380, 680],
@@ -624,14 +624,14 @@ const TEMPLATE_POOL = [
   },
   {
     type: 'master',
-    room_type: 'control_room',
+    room_type: 'mastering_suite',
     unlock_level: 6,
     allowed_genres: ['any'],
     base_pay: [260, 480],
     target_quality: [66, 84],
     duration: [3, 4],
     deadline: [1, 3],
-    min_items: { monitor: 2, acoustic_treatment: 5, software_mix_master: 1 }
+    min_items: { monitor: 2, acoustic_treatment: 5, software_daw: 1 }
   },
   {
     type: 'production',
@@ -642,7 +642,7 @@ const TEMPLATE_POOL = [
     target_quality: [66, 84],
     duration: [6, 10],
     deadline: [3, 6],
-    min_items: { interface: 1, monitor: 2, software: 1, midi_controller: 1, instruments: 1 }
+    min_items: { interface: 1, monitor: 2, software_daw: 1, midi_controller: 1, instruments: 1 }
   },
   {
     type: 'production',
@@ -653,7 +653,7 @@ const TEMPLATE_POOL = [
     target_quality: [68, 86],
     duration: [6, 10],
     deadline: [3, 6],
-    min_items: { interface: 2, monitor: 2, software: 2, midi_controller: 1, instruments: 2 }
+    min_items: { interface: 1, monitor: 2, software_daw: 1, midi_controller: 1, instruments: 1 }
   },
   {
     type: 'streaming',
@@ -675,7 +675,7 @@ const TEMPLATE_POOL = [
     target_quality: [62, 78],
     duration: [3, 5],
     deadline: [1, 3],
-    min_items: { interface: 1, mic: 2, headphones: 2, monitor: 1, software: 1 }
+    min_items: { interface: 1, mic: 2, headphones: 2, monitor: 1, software_daw: 1 }
   },
   // Vocal booth high-tier
   {
@@ -881,7 +881,7 @@ const TEMPLATE_POOL = [
     target_quality: [68, 86],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 3, acoustic_treatment: 8, software: 1, effects: 2 }
+    min_items: { monitor: 3, acoustic_treatment: 8, software_mix_master: 1, effects: 2 }
   },
   {
     type: 'mix',
@@ -892,7 +892,7 @@ const TEMPLATE_POOL = [
     target_quality: [70, 88],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 3, acoustic_treatment: 8, software: 2, effects: 2 }
+    min_items: { monitor: 3, acoustic_treatment: 8, software_mix_master: 2, effects: 2 }
   },
   {
     type: 'mix',
@@ -903,7 +903,7 @@ const TEMPLATE_POOL = [
     target_quality: [72, 90],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 4, acoustic_treatment: 10, software: 2, effects: 3 }
+    min_items: { monitor: 4, acoustic_treatment: 10, software_mix_master: 2, effects: 3 }
   },
   {
     type: 'master',
@@ -914,7 +914,7 @@ const TEMPLATE_POOL = [
     target_quality: [72, 90],
     duration: [3, 5],
     deadline: [1, 3],
-    min_items: { monitor: 3, acoustic_treatment: 8, software: 1, effects: 2 }
+    min_items: { monitor: 3, acoustic_treatment: 8, software_mix_master: 1, effects: 2 }
   },
   {
     type: 'master',
@@ -925,7 +925,7 @@ const TEMPLATE_POOL = [
     target_quality: [74, 92],
     duration: [3, 5],
     deadline: [1, 3],
-    min_items: { monitor: 4, acoustic_treatment: 10, software: 2, effects: 3 }
+    min_items: { monitor: 4, acoustic_treatment: 10, software_mix_master: 2, effects: 3 }
   },
   {
     type: 'mix_master',
@@ -936,7 +936,7 @@ const TEMPLATE_POOL = [
     target_quality: [74, 92],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 4, acoustic_treatment: 10, software: 2, effects: 3 }
+    min_items: { monitor: 4, acoustic_treatment: 10, software_mix_master: 2, effects: 3 }
   },
   {
     type: 'mix_master',
@@ -947,7 +947,7 @@ const TEMPLATE_POOL = [
     target_quality: [76, 94],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 4, acoustic_treatment: 12, software: 2, effects: 4 }
+    min_items: { monitor: 4, acoustic_treatment: 12, software_mix_master: 2, effects: 4 }
   },
   // Streaming room high-tier
   {
@@ -1064,7 +1064,7 @@ const TEMPLATE_POOL = [
 
 const SPECIAL_TEMPLATES = [
   {
-    name: 'First Recording',
+    name: 'SP First Recording',
     type: 'recording',
     room_type: 'control_room',
     unlock_level: 1,
@@ -1075,7 +1075,7 @@ const SPECIAL_TEMPLATES = [
     min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, cable: 2, mic_stand: 1 }
   },
   {
-    name: 'Quick Mix',
+    name: 'SP Quick Mix',
     type: 'mix',
     room_type: 'control_room',
     unlock_level: 2,
@@ -1086,7 +1086,7 @@ const SPECIAL_TEMPLATES = [
     min_items: { monitor: 2, acoustic_treatment: 2 }
   },
   {
-    name: 'Tour Sessions',
+    name: 'SP Tour Sessions',
     type: 'recording',
     room_type: 'live_room',
     unlock_level: 6,
@@ -1097,7 +1097,7 @@ const SPECIAL_TEMPLATES = [
     min_items: { mic: 10, preamp_multi: 1, interface: 1, headphones: 4, cable: 12, mic_stand: 10, multicore: 1 }
   },
   {
-    name: 'Vocal Tour',
+    name: 'SP Vocal Tour',
     type: 'recording',
     room_type: 'vocal_booth',
     unlock_level: 5,
@@ -1108,7 +1108,7 @@ const SPECIAL_TEMPLATES = [
     min_items: { mic: 4, preamp: 1, interface: 1, headphones: 2, pop_filter: 1, mic_stand: 2 }
   },
   {
-    name: 'Production Sprint',
+    name: 'SP Production Sprint',
     type: 'production',
     room_type: 'control_room',
     unlock_level: 7,
@@ -1119,7 +1119,7 @@ const SPECIAL_TEMPLATES = [
     min_items: { interface: 1, monitor: 2, software_daw: 1, midi_controller: 1 }
   },
   {
-    name: 'Mastering Marathon',
+    name: 'SP Mastering Marathon',
     type: 'master',
     room_type: 'mastering_suite',
     unlock_level: 8,
@@ -1130,7 +1130,7 @@ const SPECIAL_TEMPLATES = [
     min_items: { monitor: 2, acoustic_treatment: 6, software_mix_master: 1 }
   },
   {
-    name: 'Streaming Week',
+    name: 'SP Streaming Week',
     type: 'streaming',
     room_type: 'streaming_room',
     unlock_level: 5,

@@ -312,5 +312,16 @@
     "reliability": 88,
     "fee_per_hour": 30,
     "unlock_level": 4
+  },
+  {
+    "id": "marc_llobera_tech",
+    "name": "Marquitus",
+    "role": "technician",
+    "genres": ["any"],
+    "skill": 95,
+    "speed": 91,
+    "reliability": 99,
+    "fee_per_hour": 42,
+    "unlock_level": 6
   }
 ]

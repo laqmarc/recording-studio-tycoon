@@ -76,6 +76,7 @@ function initAudioPlayer(containerId, playlist) {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 3px 3px 5px 1px;
   `;
 
   // Controls container
