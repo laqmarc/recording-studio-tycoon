@@ -1345,9 +1345,9 @@ function buildSpecialOffer(day, index, template) {
   const workHours = Number(state.time && state.time.workHoursPerDay || 8);
   const duration_days = Math.ceil(duration / workHours);
   const deadline = duration_days + randInt(2, 5);
-  const repBoost = 1 + repOverall * 0.01;
+  const repBoost = Math.min(2.5, 1 + repOverall * 0.01);
   const genreRep = (state.reputation && state.reputation.byGenre) ? Number(state.reputation.byGenre[genre] || 0) : 0;
-  const genreBoost = 1 + genreRep * 0.015;
+  const genreBoost = Math.min(3, 1 + genreRep * 0.015);
   const base_pay = Math.round(pay * repBoost * genreBoost);
   const target_quality = Math.min(92, Math.round(target + repOverall * 0.15));
   const milestones = buildMilestones(duration);
@@ -1400,9 +1400,9 @@ function buildOffer(day, index, templates) {
   const workHours = Number(state.time && state.time.workHoursPerDay || 8);
   const duration_days = Math.ceil(duration / workHours);
   const deadline = randInt(template.deadline[0], template.deadline[1]);
-  const repBoost = 1 + repOverall * 0.01;
+  const repBoost = Math.min(2.5, 1 + repOverall * 0.01);
   const genreRep = (state.reputation && state.reputation.byGenre) ? Number(state.reputation.byGenre[genre] || 0) : 0;
-  const genreBoost = 1 + genreRep * 0.015;
+  const genreBoost = Math.min(3, 1 + genreRep * 0.015);
   const base_pay = Math.round(pay * repBoost * genreBoost);
   const target_quality = Math.min(90, Math.round(target + repOverall * 0.2));
 
