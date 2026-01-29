@@ -40,6 +40,17 @@ const TEMPLATE_POOL = [
     deadline: [2, 5],
     min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, cable: 2, mic_stand: 1 }
   },
+    {
+    type: 'recording',
+    room_type: 'control_room',
+    unlock_level: 1,
+    allowed_genres: ['pop', 'rap', 'hiphop', 'podcast'],
+    base_pay: [120, 220],
+    target_quality: [50, 70],
+    duration: [2, 4],
+    deadline: [2, 5],
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, cable: 2, mic_stand: 1 }
+  },
   {
     type: 'recording',
     room_type: 'control_room',
