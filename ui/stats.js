@@ -1,6 +1,6 @@
 import { state } from '../state.js';
 import { euro, calcRoomMaintenanceDaily, xpToNext, takeLoan, repayLoan, openCreditLine, returnLease } from '../helpers.js';
-import { clearChildren } from './shared.js';
+import { clearChildren, formatGenreLabel } from './shared.js';
 
 function makeStat(label, value, hint) {
   const item = document.createElement('div');
@@ -170,7 +170,7 @@ function buildRepBars() {
   }
   const max = Math.max(1, ...entries.map(e => Number(e[1]) || 0));
   for (const [genre, value] of entries) {
-    wrap.appendChild(makeBarRow(genre, Number(value || 0), max));
+    wrap.appendChild(makeBarRow(formatGenreLabel(genre), Number(value || 0), max));
   }
   return wrap;
 }

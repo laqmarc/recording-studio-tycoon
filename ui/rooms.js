@@ -4,7 +4,7 @@ import { getContractETA } from '../actions.js';
 import { assignContractPeople, buildRoleDefs, getPeopleByIdMap, getPeopleOptions } from './people_logic.js';
 import { getRequirementsElement } from './requirements.js';
 import { scheduleContractToNextFree } from './schedule.js';
-import { clearChildren, createArt, createBadge, formatEta, getRiskLevel, getRoomArt } from './shared.js';
+import { clearChildren, createArt, createBadge, formatEta, formatGenreLabel, getRiskLevel, getRoomArt } from './shared.js';
 
 export function renderRooms(options = {}) {
   const { renderAll } = options;
@@ -185,7 +185,7 @@ export function renderRooms(options = {}) {
         const detailsWrap = document.createElement('div'); detailsWrap.className = 'contract-details';
 
         const badges = document.createElement('div'); badges.className = 'badge-row';
-        if (c.genre && c.genre !== 'any') badges.appendChild(createBadge(c.genre, 'badge--genre'));
+        if (c.genre && c.genre !== 'any') badges.appendChild(createBadge(formatGenreLabel(c.genre), 'badge--genre'));
         const risk = getRiskLevel(c);
         badges.appendChild(createBadge(risk.label, 'badge--risk', risk.level));
         if (c.target_quality != null) badges.appendChild(createBadge(`Qualitat ${c.target_quality}`, 'badge--quality'));

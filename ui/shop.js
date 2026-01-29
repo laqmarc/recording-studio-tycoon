@@ -1,6 +1,6 @@
 import { state, installedIds } from '../state.js';
 import { euro, avgStat, invAdd, log, showNotification } from '../helpers.js';
-import { clearChildren, createArt, formatStatKey, getItemArt, getPrimaryStat, getTopStats } from './shared.js';
+import { clearChildren, createArt, formatCategoryLabel, formatStatKey, getItemArt, getPrimaryStat, getTopStats } from './shared.js';
 
 let micTypeListenerAdded = false;
 
@@ -262,7 +262,7 @@ export function renderShop(options = {}) {
   const cats = Array.from(state.itemsByCategory.keys()).sort();
   const sel = document.getElementById('selCategory');
   if (!sel.options.length) {
-    for (const c of cats) sel.add(new Option(c, c));
+    for (const c of cats) sel.add(new Option(formatCategoryLabel(c), c));
   }
   if (!cats.includes(sel.value) && cats.length) sel.value = cats[0];
 
@@ -365,15 +365,21 @@ export function renderShop(options = {}) {
     const tier = it.tier || 'mid';
     const tierPill = tier === 'pro' ? 'ok' : tier === 'low' ? 'bad' : '';
 
-    const row = document.createElement('div'); row.className = 'row';
+    const titleRow = document.createElement('div'); titleRow.className = 'shop-title';
     const b = document.createElement('b'); b.textContent = it.name;
+    titleRow.appendChild(b);
+
+    const priceSpan = document.createElement('span'); priceSpan.className = 'shop-price'; priceSpan.textContent = euro(it.price || 0);
     const pill = document.createElement('span'); pill.className = `pill ${tierPill}`; pill.textContent = tier;
-    row.appendChild(b); row.appendChild(pill);
+    const metaRow = document.createElement('div'); metaRow.className = 'shop-meta';
+    metaRow.appendChild(priceSpan); metaRow.appendChild(pill);
+
+    const header = document.createElement('div'); header.className = 'shop-header';
+    header.appendChild(titleRow); header.appendChild(metaRow);
 
     const row2 = document.createElement('div'); row2.className = 'shop-sub';
-    const catSpan = document.createElement('span'); catSpan.className = 'shop-cat'; catSpan.textContent = it.category;
-    const priceSpan = document.createElement('span'); priceSpan.className = 'shop-price'; priceSpan.textContent = euro(it.price || 0);
-    row2.appendChild(catSpan); row2.appendChild(priceSpan);
+    const catSpan = document.createElement('span'); catSpan.className = 'shop-cat'; catSpan.textContent = formatCategoryLabel(it.category);
+    row2.appendChild(catSpan);
 
     const notes = document.createElement('div'); notes.className = 'shop-notes'; notes.textContent = it.notes ? it.notes : '';
 
@@ -440,12 +446,16 @@ export function renderShop(options = {}) {
       }
     }
 
-    body.appendChild(row); body.appendChild(row2);
-    if (notes.textContent) body.appendChild(notes);
-    if (statWrap.childNodes.length) body.appendChild(statWrap);
+    body.appendChild(header);
     if (art) layout.appendChild(art);
     layout.appendChild(body);
     div.appendChild(layout);
+
+    const details = document.createElement('div'); details.className = 'shop-details';
+    details.appendChild(row2);
+    if (notes.textContent) details.appendChild(notes);
+    if (statWrap.childNodes.length) details.appendChild(statWrap);
+    if (details.childNodes.length) div.appendChild(details);
     if (compareRow) div.appendChild(compareRow);
     if (compareStats) div.appendChild(compareStats);
 

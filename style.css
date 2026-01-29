@@ -1293,6 +1293,9 @@ select {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.06) 100%),
     rgba(255, 255, 255, 0.02);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .shop-card:hover {
@@ -1313,6 +1316,9 @@ select {
 }
 
 .shop-card .card-grid {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 14px;
   align-items: flex-start;
 }
 
@@ -1328,62 +1334,109 @@ select {
 .shop-card .card-body {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+}
+
+.shop-header {
+  display: flex;
+  flex-direction: column;
   gap: 6px;
 }
 
-.shop-sub {
+.shop-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.2;
+  min-height: calc(1.2em * 2);
+}
+
+.shop-title b {
+  font-weight: 700;
+}
+
+.shop-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
 }
 
+.shop-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.shop-details {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
 .shop-cat {
-  font-size: 11px;
-  padding: 2px 8px;
+  font-size: 10px;
+  padding: 3px 8px;
   border-radius: 999px;
   border: 1px solid var(--line);
   color: var(--muted);
   background: rgba(255, 255, 255, 0.08);
   font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .shop-price {
   font-family: var(--font-mono);
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 10px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 12px;
   border: 1px solid rgba(242, 195, 90, 0.6);
   color: var(--gold);
-  background: rgba(242, 195, 90, 0.08);
+  background: rgba(242, 195, 90, 0.12);
 }
 
 .shop-notes {
   font-size: 12px;
   color: var(--muted);
   line-height: 1.3;
+  width: 100%;
+  display: block;
 }
 
 .shop-actions-row {
-  margin-top: 10px;
+  margin-top: auto;
+  padding-top: 12px;
   display: flex;
   justify-content: flex-start;
 }
 
 .shop-card .btn-quick {
-  padding: 8px 12px;
-  border-radius: 999px;
+  padding: 8px 14px;
+  border-radius: 12px;
   width: auto;
-  background: linear-gradient(135deg, rgba(35, 217, 160, 0.25), rgba(35, 217, 160, 0.08));
+  background: linear-gradient(135deg, rgba(35, 217, 160, 0.28), rgba(35, 217, 160, 0.08));
   border-color: rgba(35, 217, 160, 0.6);
 }
 
 .shop-card .inventory-stats {
-  margin-top: 4px;
+  margin-top: 2px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.shop-card .stat-chip {
+  display: flex;
+  justify-content: space-between;
 }
 
 .shop-card .btn-quick {
-  margin-top: 10px;
+  margin-top: 12px;
   width: auto;
   display: inline-flex;
 }

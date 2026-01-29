@@ -1,5 +1,5 @@
 import { state, installedIds } from '../state.js';
-import { createTextDiv } from './shared.js';
+import { createTextDiv, formatCategoryLabel, formatRoomLabel } from './shared.js';
 
 function getMicTypeCounts(req) {
   const counts = {};
@@ -62,7 +62,7 @@ export function getRequirementsElement(contract, roomIndex) {
   if (req.room_type) {
     const room = state.db.rooms[roomIndex];
     const hasRoom = room && room.type === req.room_type;
-    container.appendChild(createTextDiv(`Sala: ${req.room_type}`, hasRoom ? '#4CAF50' : '#f44336'));
+    container.appendChild(createTextDiv(`Sala: ${formatRoomLabel(req.room_type)}`, hasRoom ? '#4CAF50' : '#f44336'));
     has = true;
   }
 
@@ -70,7 +70,7 @@ export function getRequirementsElement(contract, roomIndex) {
     for (const [cat, min] of Object.entries(req.min_items)) {
       const installed = installedIds(roomIndex, cat).length;
       const hasEnough = installed >= Number(min);
-      container.appendChild(createTextDiv(`${cat}: ${installed}/${min}`, hasEnough ? '#4CAF50' : '#f44336'));
+      container.appendChild(createTextDiv(`${formatCategoryLabel(cat)}: ${installed}/${min}`, hasEnough ? '#4CAF50' : '#f44336'));
       has = true;
     }
   }

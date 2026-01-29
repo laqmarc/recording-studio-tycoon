@@ -1,6 +1,6 @@
 import { state } from '../state.js';
 import { euro } from '../helpers.js';
-import { clearChildren } from './shared.js';
+import { clearChildren, formatGenreLabel, formatRoomLabel } from './shared.js';
 import { getRequirementsElement } from './requirements.js';
 import { ensureRoomOffers } from '../client_market.js';
 
@@ -71,11 +71,18 @@ export function renderOffers() {
   for (const offer of offers) {
     const card = document.createElement('div'); card.className = 'offer-card';
     const row = document.createElement('div'); row.className = 'offer-row';
-    const name = document.createElement('b'); name.textContent = offer.name;
+    const name = document.createElement('b');
+    if (offer && offer.genre) {
+      const genreLabel = formatGenreLabel(offer.genre);
+      name.textContent = offer.name ? offer.name.replace(offer.genre, genreLabel) : `${offer.type} · ${genreLabel}`;
+    } else {
+      name.textContent = offer.name;
+    }
     const pill = document.createElement('span'); pill.className = 'pill'; pill.textContent = offer.type;
     row.appendChild(name); row.appendChild(pill);
     const meta = document.createElement('div'); meta.className = 'offer-meta';
-    meta.textContent = `${offer.duration_hours}h · ${euro(offer.base_pay)} · Qualitat ${offer.target_quality} · Deadline ${offer.deadline_days}d · Sala ${offer.requirements && offer.requirements.room_type ? offer.requirements.room_type : 'any'}`;
+    const roomLabel = offer.requirements && offer.requirements.room_type ? formatRoomLabel(offer.requirements.room_type) : 'any';
+    meta.textContent = `${offer.duration_hours}h · ${euro(offer.base_pay)} · Qualitat ${offer.target_quality} · Deadline ${offer.deadline_days}d · Sala ${roomLabel}`;
     const reqEl = getRequirementsElement(offer, state.selected.roomIndex);
     const actions = document.createElement('div'); actions.className = 'offer-actions';
     const btnAccept = document.createElement('button'); btnAccept.className = 'btn2 btnOk'; btnAccept.textContent = 'Acceptar';

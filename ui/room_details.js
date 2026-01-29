@@ -1,6 +1,6 @@
 import { state, installedIds, installToRoom, uninstallItemFromRoom, getRoomEffective, getRoomSlotCapacity } from '../state.js';
 import { euro, xpToNext, invQty, invRemove, invAdd, log, showNotification } from '../helpers.js';
-import { clearChildren, createArt, formatStatKey, getItemArt, getRoomArt, getTopStats } from './shared.js';
+import { clearChildren, createArt, formatCategoryLabel, formatRoomLabel, formatStatKey, getItemArt, getRoomArt, getTopStats } from './shared.js';
 import { calcRoomInspectionCost, calcRoomRepairCost, inspectRoom, repairRoomItems } from './room_maintenance.js';
 import { simulateRecording } from '../lib/simulation.js';
 
@@ -222,7 +222,7 @@ export function renderRoomDetails(options = {}) {
   hero.appendChild(heroImg);
   const row = document.createElement('div'); row.className = 'row';
   const title = document.createElement('b'); title.style.fontSize = '16px'; title.textContent = room.name;
-  const p = document.createElement('span'); p.className = 'pill'; p.textContent = room.type;
+  const p = document.createElement('span'); p.className = 'pill'; p.textContent = formatRoomLabel(room.type);
   row.appendChild(title); row.appendChild(p);
 
   const meta = document.createElement('div'); meta.className = 'muted'; meta.style.marginTop = '6px';
@@ -254,7 +254,7 @@ export function renderRoomDetails(options = {}) {
     zone.dataset.occupancy = occupancy;
 
     const zoneHead = document.createElement('div'); zoneHead.className = 'floor-zone-head';
-    const zb = document.createElement('b'); zb.textContent = cat;
+    const zb = document.createElement('b'); zb.textContent = formatCategoryLabel(cat);
     const zm = document.createElement('div'); zm.className = 'muted'; zm.textContent = `${bagIds.length}/${max}`;
     zoneHead.appendChild(zb); zoneHead.appendChild(zm);
 

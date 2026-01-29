@@ -60,6 +60,45 @@ const STAT_LABELS = {
   outputs: 'OUT'
 };
 
+const CATEGORY_LABELS = {
+  console_digital: 'Console Digital',
+  console_analog: 'Console Analog',
+  mic_stand: 'Mic Stand',
+  mic_accessory: 'Mic Accessory',
+  pop_filter: 'Pop Filter',
+  shock_mount: 'Shock Mount',
+  acoustic_treatment: 'Acoustic Treatment',
+  headphone_amp: 'Headphone Amp',
+  software_daw: 'Software DAW',
+  software_fx: 'Software FX',
+  software_mix_master: 'Software Mix/Master',
+  midi_controller: 'MIDI Controller',
+  monitor_stand: 'Monitor Stand',
+  preamp_multi: 'Preamp Multi'
+};
+
+const ROOM_LABELS = {
+  control_room: 'Control Room',
+  live_room: 'Live Room',
+  vocal_booth: 'Vocal Booth',
+  mastering_suite: 'Mastering Suite',
+  streaming_room: 'Streaming Room',
+  podcast_studio: 'Podcast Studio',
+  foley_room: 'Foley Room'
+};
+
+const GENRE_LABELS = {
+  pop: 'Pop',
+  rap: 'Rap',
+  hiphop: 'Hip-Hop',
+  rock: 'Rock',
+  podcast: 'Podcast',
+  live: 'Live',
+  film_score: 'Film Score',
+  commercial: 'Commercial',
+  any: 'Qualsevol'
+};
+
 const PRIMARY_STATS_BY_CATEGORY = {
   mic: 'mic_quality',
   preamp: 'preamp_quality',
@@ -110,6 +149,27 @@ export function formatStatKey(key) {
   if (!key) return '';
   if (STAT_LABELS[key]) return STAT_LABELS[key];
   return key.replace(/_/g, ' ').slice(0, 12);
+}
+
+export function formatCategoryLabel(category) {
+  if (!category) return '';
+  if (CATEGORY_LABELS[category]) return CATEGORY_LABELS[category];
+  const label = category.replace(/_/g, ' ');
+  return label.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+export function formatRoomLabel(roomType) {
+  if (!roomType) return '';
+  if (ROOM_LABELS[roomType]) return ROOM_LABELS[roomType];
+  const label = roomType.replace(/_/g, ' ');
+  return label.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+export function formatGenreLabel(genre) {
+  if (!genre) return '';
+  if (GENRE_LABELS[genre]) return GENRE_LABELS[genre];
+  const label = genre.replace(/_/g, ' ');
+  return label.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 export function getPrimaryStat(item) {

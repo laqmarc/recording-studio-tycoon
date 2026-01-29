@@ -1,5 +1,5 @@
 import { state } from '../state.js';
-import { clearChildren } from './shared.js';
+import { clearChildren, formatGenreLabel } from './shared.js';
 
 function renderRepContent(panel) {
   const repHeader = document.createElement('div'); repHeader.className = 'rep-header';
@@ -20,7 +20,7 @@ function renderRepContent(panel) {
     const max = Math.max(1, ...entries.map(e => Number(e[1]) || 0));
     for (const [genre, value] of entries) {
       const row = document.createElement('div'); row.className = 'rep-row';
-      const label = document.createElement('div'); label.className = 'rep-label'; label.textContent = genre;
+      const label = document.createElement('div'); label.className = 'rep-label'; label.textContent = formatGenreLabel(genre);
       const bar = document.createElement('div'); bar.className = 'rep-bar';
       const fill = document.createElement('div'); fill.className = 'rep-bar-fill';
       fill.style.width = `${Math.min(100, Math.round((Number(value) / max) * 100))}%`;
