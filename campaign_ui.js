@@ -223,7 +223,7 @@ export function hookCampaignEvents() {
 // Campaign notification styles
 const campaignStyles = `
   .campaign-status {
-    background: linear-gradient(135deg, #000000 0%, #2a2a2a 100%);
+    background: linear-gradient(135deg, #236141 0%, #236141 100%);
     padding: 4px 8px;
     margin: 10px 0;
     border-radius: 8px;
