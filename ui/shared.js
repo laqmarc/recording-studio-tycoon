@@ -3,7 +3,9 @@ export const ROOM_ART = {
   live_room: 'assets/rooms/live_room.svg',
   vocal_booth: 'assets/rooms/vocal_booth.svg',
   mastering_suite: 'assets/rooms/mastering_suite.svg',
-  streaming_room: 'assets/rooms/streaming_room.svg'
+  streaming_room: 'assets/rooms/streaming_room.svg',
+  podcast_studio: 'assets/rooms/streaming_room.svg',
+  foley_room: 'assets/rooms/live_room.svg'
 };
 
 export const ITEM_ART = {

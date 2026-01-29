@@ -124,6 +124,29 @@ function buildBundles(roomIndex) {
         { cat: 'effects' }
       ]}
     ],
+    podcast_studio: [
+      { name: 'Podcast Studio Kit', items: [
+        { cat: 'mic', stat: 'mic_quality' },
+        { cat: 'mic', stat: 'mic_quality' },
+        { cat: 'preamp', stat: 'preamp_quality' },
+        { cat: 'interface', stat: 'conversion_quality' },
+        { cat: 'headphones', stat: 'hp_accuracy' },
+        { cat: 'pop_filter' },
+        { cat: 'mic_stand' },
+        { cat: 'software_daw', stat: 'daw_quality' }
+      ]}
+    ],
+    foley_room: [
+      { name: 'Foley Essentials', items: [
+        { cat: 'mic', stat: 'mic_quality' },
+        { cat: 'mic', stat: 'mic_quality' },
+        { cat: 'preamp', stat: 'preamp_quality' },
+        { cat: 'interface', stat: 'conversion_quality' },
+        { cat: 'headphones', stat: 'hp_accuracy' },
+        { cat: 'instruments', stat: 'instrument_quality' },
+        { cat: 'effects' }
+      ]}
+    ],
     streaming_room: [
       { name: 'Streaming Rig', items: [
         { cat: 'mic', stat: 'mic_quality' },

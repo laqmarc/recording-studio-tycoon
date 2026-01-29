@@ -1,7 +1,7 @@
 import { state } from './state.js';
 import { log, showNotification, euro } from './helpers.js';
 
-const GENRES = ['pop', 'rap', 'hiphop', 'rock', 'podcast', 'live', 'film_score'];
+const GENRES = ['pop', 'rap', 'hiphop', 'rock', 'podcast', 'live', 'film_score', 'commercial'];
 const TEMPLATE_POOL = [
   {
     type: 'recording',
@@ -248,6 +248,70 @@ const TEMPLATE_POOL = [
     duration: [2, 4],
     deadline: [1, 3],
     min_items: { mic: 2, interface: 1, headphones: 2 }
+  },
+  {
+    name: 'Podcast Session',
+    type: 'recording',
+    room_type: 'podcast_studio',
+    unlock_level: 3,
+    allowed_genres: ['podcast'],
+    base_pay: [180, 320],
+    target_quality: [60, 78],
+    duration: [3, 5],
+    deadline: [1, 3],
+    min_items: { mic: 2, preamp: 1, interface: 1, headphones: 2, pop_filter: 1, mic_stand: 2 },
+    mic_types: ['vocals']
+  },
+  {
+    name: 'Streamer Collab',
+    type: 'streaming',
+    room_type: 'podcast_studio',
+    unlock_level: 4,
+    allowed_genres: ['live', 'podcast'],
+    base_pay: [160, 300],
+    target_quality: [58, 76],
+    duration: [2, 4],
+    deadline: [1, 3],
+    min_items: { interface: 1, mic: 2, headphones: 2, pop_filter: 1, mic_stand: 2 },
+    mic_types: ['vocals']
+  },
+  {
+    name: 'Ad Voiceover',
+    type: 'recording',
+    room_type: 'vocal_booth',
+    unlock_level: 4,
+    allowed_genres: ['commercial'],
+    base_pay: [200, 360],
+    target_quality: [62, 80],
+    duration: [2, 4],
+    deadline: [1, 3],
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, pop_filter: 1, mic_stand: 1 },
+    mic_types: ['vocals']
+  },
+  {
+    name: 'Agency Spot Mix',
+    type: 'mix',
+    room_type: 'control_room',
+    unlock_level: 5,
+    allowed_genres: ['commercial', 'film_score'],
+    base_pay: [240, 420],
+    target_quality: [64, 82],
+    duration: [3, 5],
+    deadline: [2, 4],
+    min_items: { monitor: 2, acoustic_treatment: 2, software_daw: 1 }
+  },
+  {
+    name: 'Foley Effects Session',
+    type: 'recording',
+    room_type: 'foley_room',
+    unlock_level: 5,
+    allowed_genres: ['film_score', 'commercial'],
+    base_pay: [280, 520],
+    target_quality: [62, 82],
+    duration: [4, 7],
+    deadline: [2, 5],
+    min_items: { mic: 4, preamp: 1, interface: 1, headphones: 2, instruments: 2, effects: 1, mic_stand: 4, cable: 6 },
+    mic_types: ['oh', 'guitarra', 'vocals']
   },
   // Vocal booth expansion
   {
@@ -892,7 +956,7 @@ const TEMPLATE_POOL = [
     target_quality: [70, 88],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 3, acoustic_treatment: 8, software_mix_master: 2, effects: 2 }
+    min_items: { monitor: 3, acoustic_treatment: 8, software_mix_master: 1, effects: 2 }
   },
   {
     type: 'mix',
@@ -903,7 +967,7 @@ const TEMPLATE_POOL = [
     target_quality: [72, 90],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 4, acoustic_treatment: 10, software_mix_master: 2, effects: 3 }
+    min_items: { monitor: 4, acoustic_treatment: 10, software_mix_master: 1, effects: 3 }
   },
   {
     type: 'master',
@@ -925,7 +989,7 @@ const TEMPLATE_POOL = [
     target_quality: [74, 92],
     duration: [3, 5],
     deadline: [1, 3],
-    min_items: { monitor: 4, acoustic_treatment: 10, software_mix_master: 2, effects: 3 }
+    min_items: { monitor: 4, acoustic_treatment: 10, software_mix_master: 1, effects: 3 }
   },
   {
     type: 'mix_master',
@@ -936,7 +1000,7 @@ const TEMPLATE_POOL = [
     target_quality: [74, 92],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 4, acoustic_treatment: 10, software_mix_master: 2, effects: 3 }
+    min_items: { monitor: 4, acoustic_treatment: 10, software_mix_master: 1, effects: 3 }
   },
   {
     type: 'mix_master',
@@ -947,7 +1011,7 @@ const TEMPLATE_POOL = [
     target_quality: [76, 94],
     duration: [4, 6],
     deadline: [2, 4],
-    min_items: { monitor: 4, acoustic_treatment: 12, software_mix_master: 2, effects: 4 }
+    min_items: { monitor: 4, acoustic_treatment: 12, software_mix_master: 1, effects: 4 }
   },
   // Streaming room high-tier
   {
@@ -1342,9 +1406,10 @@ function buildOffer(day, index, templates) {
   const base_pay = Math.round(pay * repBoost * genreBoost);
   const target_quality = Math.min(90, Math.round(target + repOverall * 0.2));
 
+  const name = template.name ? `${template.name} · ${genre}` : `${template.type} · ${genre}`;
   return {
     id: `offer_${day}_${index}_${Math.floor(Math.random() * 9999)}`,
-    name: `${template.type} · ${genre}`,
+    name,
     type: template.type,
     genre,
     duration_hours: duration,

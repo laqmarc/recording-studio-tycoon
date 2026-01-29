@@ -4,6 +4,8 @@
     "live_room",
     "mastering_suite",
     "streaming_room",
-    "vocal_booth"
+    "vocal_booth",
+    "podcast_studio",
+    "foley_room"
   ]
 }

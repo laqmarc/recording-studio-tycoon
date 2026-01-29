@@ -1,0 +1,53 @@
+  { "rooms": [
+    {
+      "id": "room_foley_1",
+      "name": "Foley Room",
+      "type": "foley_room",
+      "unlock_level": 5,
+      "size_m2": 20,
+      "max_people": 3,
+      "noise_floor_db": -50,
+      "isolation": 40,
+      "base_acoustic": 40,
+      "slots": {
+        "mic": 6,
+        "preamp": 2,
+        "interface": 1,
+        "headphones": 2,
+        "headphone_amp": 1,
+        "acoustic_treatment": 8,
+        "cable": 12,
+        "mic_stand": 6,
+        "instruments": 3,
+        "effects": 2,
+        "software_daw": 1
+      },
+      "price_per_week": 240.0
+    },
+    {
+      "id": "room_foley_2",
+      "name": "Foley Room (Gran)",
+      "type": "foley_room",
+      "unlock_level": 7,
+      "size_m2": 32,
+      "max_people": 5,
+      "noise_floor_db": -55,
+      "isolation": 45,
+      "base_acoustic": 45,
+      "slots": {
+        "mic": 8,
+        "preamp": 3,
+        "interface": 2,
+        "headphones": 4,
+        "headphone_amp": 2,
+        "acoustic_treatment": 10,
+        "cable": 16,
+        "mic_stand": 8,
+        "instruments": 4,
+        "effects": 3,
+        "software_daw": 1
+      },
+      "price_per_week": 360.0
+    }
+  ]
+  }
