@@ -193,11 +193,11 @@ function getObjectiveProgress(obj) {
 
   switch (obj.type) {
     case 'contract_complete': {
-      const current = contracts.filter(c => c.completed).length;
+      const current = Number(state.analytics && state.analytics.completedContracts || contracts.filter(c => c.completed).length);
       return { current, target: obj.target, done: current >= obj.target, label: `${current}/${obj.target}` };
     }
     case 'special_contract_complete': {
-      const current = contracts.filter(c => c.completed && c.special).length;
+      const current = Number(state.analytics && state.analytics.completedSpecialContracts || contracts.filter(c => c.completed && c.special).length);
       return { current, target: obj.target, done: current >= obj.target, label: `${current}/${obj.target}` };
     }
     case 'revenue_total': {
@@ -325,10 +325,32 @@ export function renderStatsPage() {
   summaryGrid.appendChild(makeStat('Reputacio', String(repOverall)));
   summaryGrid.appendChild(makeStat('Rep genere', state.reputation && state.reputation.byGenre ? `${Object.keys(state.reputation.byGenre).length} generes` : '0 generes'));
   summaryGrid.appendChild(makeStat('Feines actives', String(activeContracts)));
+  const totalCompleted = Number(state.analytics && state.analytics.completedContracts || completedContracts);
+  const totalSpecialCompleted = Number(state.analytics && state.analytics.completedSpecialContracts || 0);
   summaryGrid.appendChild(makeStat('Feines completades', String(completedContracts)));
   summaryGrid.appendChild(makeStat('Ofertes avui', String(offersCount)));
   summaryGrid.appendChild(makeStat('Total facturat', euro(totalBilled)));
   summary.content.appendChild(summaryGrid);
+
+  const historyPanel = createPanel('📜 Històric de feines');
+  const historyGrid = document.createElement('div'); historyGrid.className = 'stat-grid';
+  historyGrid.appendChild(makeStat('Totals completades', String(totalCompleted)));
+  historyGrid.appendChild(makeStat('Especials completades', String(totalSpecialCompleted)));
+  historyPanel.content.appendChild(historyGrid);
+
+  const historyTypes = createPanel('🧩 Històric per tipus');
+  const typeList = document.createElement('div'); typeList.className = 'stat-list';
+  const typeEntries = Object.entries(contractTypes).sort((a, b) => Number(b[1]) - Number(a[1]));
+  if (!typeEntries.length) {
+    const empty = document.createElement('div'); empty.className = 'muted'; empty.textContent = 'Sense dades de tipus.';
+    typeList.appendChild(empty);
+  } else {
+    const maxType = Math.max(1, ...typeEntries.map(e => Number(e[1]) || 0));
+    for (const [type, value] of typeEntries) {
+      typeList.appendChild(makeBarRow(type, Number(value || 0), maxType));
+    }
+  }
+  historyTypes.content.appendChild(typeList);
 
   const reputation = createPanel('🎯 Reputacio per genere');
   reputation.content.appendChild(buildRepBars());
@@ -523,6 +545,19 @@ export function renderStatsPage() {
   cashGrid.appendChild(netBlock);
   cashflow.content.appendChild(cashGrid);
 
+  const completedPanel = createPanel(`✅ Completades (${statsRange} dies)`);
+  const completionValues = [];
+  const completionStart = Math.max(1, Number(state.time.day || 1) - statsRange + 1);
+  const completionEnd = Number(state.time.day || 1);
+  const completionSessions = Array.isArray(analytics.sessions) ? analytics.sessions : [];
+  for (let d = completionStart; d <= completionEnd; d++) {
+    const count = completionSessions.filter(s => Number(s.day || 0) === d).length;
+    completionValues.push(count);
+  }
+  const completionTotal = completionValues.reduce((sum, v) => sum + v, 0);
+  completedPanel.content.appendChild(makeStat('Completades', String(completionTotal)));
+  completedPanel.content.appendChild(buildLineChart(completionValues, '#7f8cff'));
+
   const offers = createPanel('📬 Ofertes per tipus');
   const offerCounts = {};
   if (state.market && Array.isArray(state.market.offers)) {
@@ -648,6 +683,8 @@ export function renderStatsPage() {
   grid.appendChild(controls.panel);
   grid.appendChild(summary.panel);
   grid.appendChild(reputation.panel);
+  grid.appendChild(historyPanel.panel);
+  grid.appendChild(historyTypes.panel);
   grid.appendChild(campaignPanel.panel);
   grid.appendChild(rooms.panel);
   grid.appendChild(finance.panel);
@@ -655,6 +692,7 @@ export function renderStatsPage() {
   grid.appendChild(planning.panel);
   grid.appendChild(schedule.panel);
   grid.appendChild(cashflow.panel);
+  grid.appendChild(completedPanel.panel);
   grid.appendChild(offers.panel);
   grid.appendChild(offersRoom.panel);
   grid.appendChild(inventory.panel);

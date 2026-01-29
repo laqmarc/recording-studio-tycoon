@@ -54,11 +54,42 @@ export function renderScheduleBoard({ renderAll } = {}) {
   const scheduleBoard = document.getElementById('scheduleBoard');
   if (!scheduleBoard) return;
   clearChildren(scheduleBoard);
+  const controls = document.createElement('div'); controls.className = 'schedule-controls';
+  const toggleLabel = document.createElement('label'); toggleLabel.className = 'tiny';
+  const toggle = document.createElement('input'); toggle.type = 'checkbox';
+  toggle.checked = Boolean(state.ui && state.ui.scheduleShowEmptyRooms);
+  toggle.addEventListener('change', () => {
+    state.ui = state.ui || {};
+    state.ui.scheduleShowEmptyRooms = toggle.checked;
+    try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
+    if (typeof renderAll === 'function') renderAll();
+    else renderScheduleBoard({ renderAll });
+  });
+  toggleLabel.appendChild(toggle);
+  toggleLabel.appendChild(document.createTextNode(' Mostrar sales buides'));
+  controls.appendChild(toggleLabel);
+  scheduleBoard.appendChild(controls);
+
+  const hasInstalled = (idx) => {
+    const bag = Array.isArray(state.roomsInstalled) ? state.roomsInstalled[idx] : null;
+    if (!bag || typeof bag !== 'object') return false;
+    return Object.values(bag).some(arr => Array.isArray(arr) && arr.length > 0);
+  };
+  const showEmpty = Boolean(state.ui && state.ui.scheduleShowEmptyRooms);
   const visibleRooms = state.db.rooms.map((r, idx) => ({ r, idx }))
-    .filter(({ r }) => Number(r.unlock_level || 1) <= Number(state.player.level || 1));
+    .filter(({ r }) => Number(r.unlock_level || 1) <= Number(state.player.level || 1))
+    .filter(({ idx }) => (showEmpty ? true : hasInstalled(idx)));
   const days = 7;
   const startDay = Number(state.time.day || 1);
   const schedule = Array.isArray(state.schedule) ? state.schedule : [];
+  if (!visibleRooms.length) {
+    const empty = document.createElement('div'); empty.className = 'muted'; empty.style.marginTop = '6px';
+    empty.textContent = showEmpty
+      ? 'No hi ha sales disponibles per mostrar.'
+      : 'No hi ha sales amb equips instal·lats.';
+    scheduleBoard.appendChild(empty);
+    return;
+  }
   const grid = document.createElement('div'); grid.className = 'schedule-grid';
   const head = document.createElement('div'); head.className = 'schedule-head';
   const blank = document.createElement('div'); blank.textContent = 'Sala'; head.appendChild(blank);

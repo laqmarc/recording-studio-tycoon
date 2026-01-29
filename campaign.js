@@ -55,7 +55,7 @@ export const CAMPAIGN_CHAPTERS = [
       {
         id: "reputation_20",
         title: "Reputació local",
-        description: "Aconsegueix 20 punts de reputació general",
+        description: "Aconsegueix 200 punts de reputació general",
         type: "reputation",
         target: 200,
         reward: { xp: 250, cash: 750 },
@@ -64,9 +64,9 @@ export const CAMPAIGN_CHAPTERS = [
       {
         id: "5_contracts",
         title: "Experiència",
-        description: "Completa 30 contractes amb èxit",
+        description: "Completa 300 contractes amb èxit",
         type: "contract_complete",
-        target: 30,
+        target: 300,
         reward: { xp: 400, cash: 1500 },
         unlocks: ["production_room"]
       }

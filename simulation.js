@@ -245,6 +245,10 @@ export function simulateContract(contractId) {
       fees: Number(talent_cost || 0)
     });
     if (state.analytics.sessions.length > 50) state.analytics.sessions.pop();
+    state.analytics.completedContracts = Number(state.analytics.completedContracts || 0) + 1;
+    if (contract.special) {
+      state.analytics.completedSpecialContracts = Number(state.analytics.completedSpecialContracts || 0) + 1;
+    }
   } catch (e) {}
   state.cash += payout;
   const xpAward = Math.max(0, Math.round(payout/20 + res.final_quality/10));

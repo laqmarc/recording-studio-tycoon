@@ -171,7 +171,7 @@ export function workOnContract(contractId, hours) {
       
       // Check campaign objectives
       try {
-        const totalCompleted = state.db.contracts.filter(c => c.completed).length;
+        const totalCompleted = Number(state.analytics && state.analytics.completedContracts || state.db.contracts.filter(c => c.completed).length);
         const scheduleCompleted = state.schedule.filter(c => c.completed).length;
         console.log('🔍 Contract completion check:', { 
           totalCompleted, 
@@ -181,7 +181,7 @@ export function workOnContract(contractId, hours) {
           allSchedule: state.schedule.length
         });
         if (state.campaign && state.campaign.active) {
-          const specialCompleted = state.db.contracts.filter(c => c.completed && c.special).length;
+          const specialCompleted = Number(state.analytics && state.analytics.completedSpecialContracts || state.db.contracts.filter(c => c.completed && c.special).length);
           import('../campaign.js').then(module => {
             console.log('📞 Calling checkObjectiveProgress for contracts...');
             const result = module.checkObjectiveProgress('contract_complete', totalCompleted);
@@ -263,7 +263,7 @@ export function applyScheduledWork(contractId, hours, roomIndex, day) {
       
       // Check campaign objectives
       try {
-        const totalCompleted = state.db.contracts.filter(c => c.completed).length;
+        const totalCompleted = Number(state.analytics && state.analytics.completedContracts || state.db.contracts.filter(c => c.completed).length);
         const scheduleCompleted = state.schedule.filter(c => c.completed).length;
         console.log('🔍 Contract completion check (applyScheduledWork):', { 
           totalCompleted, 
@@ -273,7 +273,7 @@ export function applyScheduledWork(contractId, hours, roomIndex, day) {
           allSchedule: state.schedule.length
         });
         if (state.campaign && state.campaign.active) {
-          const specialCompleted = state.db.contracts.filter(c => c.completed && c.special).length;
+          const specialCompleted = Number(state.analytics && state.analytics.completedSpecialContracts || state.db.contracts.filter(c => c.completed && c.special).length);
           import('../campaign.js').then(module => {
             console.log('📞 Calling checkObjectiveProgress for contracts...');
             const result = module.checkObjectiveProgress('contract_complete', totalCompleted);
