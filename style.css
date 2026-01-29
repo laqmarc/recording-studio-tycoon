@@ -1594,11 +1594,28 @@ button#btnCheat{
   box-shadow: 0 10px 20px rgba(242, 195, 90, 0.12);
 }
 
+.offer-card.pipeline-offer {
+  border-color: rgba(255, 107, 107, 0.7);
+  background: linear-gradient(180deg, rgba(255, 107, 107, 0.18) 0%, rgba(0, 0, 0, 0.05) 100%), rgba(255, 255, 255, 0.04);
+  box-shadow: 0 10px 20px rgba(255, 107, 107, 0.15);
+}
+
+.contract-card.pipeline-contract {
+  border-color: rgba(255, 107, 107, 0.6);
+  background: linear-gradient(180deg, rgba(255, 107, 107, 0.14) 0%, rgba(0, 0, 0, 0.04) 100%), rgba(255, 255, 255, 0.03);
+}
+
 .offer-card .tiny {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 2px 6px;
+}
+
+.pill.pill-pipeline {
+  background: rgba(255, 107, 107, 0.18);
+  border-color: rgba(255, 107, 107, 0.6);
+  color: #ff9b9b;
 }
 
 .offer-section {

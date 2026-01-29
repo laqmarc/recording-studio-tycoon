@@ -2,7 +2,7 @@
   "rooms": [
     {
       "id": "room_streaming_1",
-      "name": "Live Streaming Room",
+      "name": "Sala de Streaming",
       "type": "streaming_room",
       "unlock_level": 4,
       "size_m2": 18,

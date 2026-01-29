@@ -5,7 +5,8 @@ export const ROOM_ART = {
   mastering_suite: 'assets/rooms/mastering_suite.svg',
   streaming_room: 'assets/rooms/streaming_room.svg',
   podcast_studio: 'assets/rooms/streaming_room.svg',
-  foley_room: 'assets/rooms/live_room.svg'
+  foley_room: 'assets/rooms/live_room.svg',
+  edit_room: 'assets/rooms/control_room.svg'
 };
 
 export const ITEM_ART = {
@@ -78,13 +79,24 @@ const CATEGORY_LABELS = {
 };
 
 const ROOM_LABELS = {
-  control_room: 'Control Room',
-  live_room: 'Live Room',
-  vocal_booth: 'Vocal Booth',
-  mastering_suite: 'Mastering Suite',
-  streaming_room: 'Streaming Room',
-  podcast_studio: 'Podcast Studio',
-  foley_room: 'Foley Room'
+  control_room: 'Sala de Control',
+  live_room: 'Sala en directe',
+  vocal_booth: 'Cabina de veu',
+  mastering_suite: 'Suite de Mastering',
+  streaming_room: 'Sala de Streaming',
+  podcast_studio: 'Estudi de Podcast',
+  foley_room: 'Sala Foley',
+  edit_room: "Sala d'Edicio"
+};
+
+const CONTRACT_TYPE_LABELS = {
+  recording: 'Gravacio',
+  streaming: 'Streaming',
+  mix: 'Mescla',
+  master: 'Mastering',
+  mix_master: 'Mescla + Mastering',
+  production: 'Produccio',
+  edit: 'Edicio'
 };
 
 const GENRE_LABELS = {
@@ -162,6 +174,13 @@ export function formatRoomLabel(roomType) {
   if (!roomType) return '';
   if (ROOM_LABELS[roomType]) return ROOM_LABELS[roomType];
   const label = roomType.replace(/_/g, ' ');
+  return label.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+export function formatContractTypeLabel(type) {
+  if (!type) return '';
+  if (CONTRACT_TYPE_LABELS[type]) return CONTRACT_TYPE_LABELS[type];
+  const label = type.replace(/_/g, ' ');
   return label.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 

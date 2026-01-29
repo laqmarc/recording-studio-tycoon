@@ -56,6 +56,30 @@ function resolveMicTypeCoverage(installedMicIds, counts, itemsById) {
   return { remaining };
 }
 
+function applyStageToContract(contract, stage) {
+  if (!contract || !stage) return;
+  contract.type = stage.type;
+  contract.duration_hours = Number(stage.duration_hours || contract.duration_hours || 0);
+  contract.worked_hours = 0;
+  contract.requirements = stage.requirements || contract.requirements;
+  contract.stage_label = stage.label || stage.type;
+  contract.stage_room_type = stage.room_type || (stage.requirements && stage.requirements.room_type) || contract.stage_room_type;
+}
+
+function advancePipelineStage(contract, state) {
+  if (!contract || !Array.isArray(contract.stages) || !contract.stages.length) return false;
+  const current = Number(contract.stage_index || 0);
+  const next = current + 1;
+  if (!contract.stages[next]) return false;
+  contract.stage_index = next;
+  const stage = contract.stages[next];
+  applyStageToContract(contract, stage);
+  if (state && Array.isArray(state.schedule)) {
+    state.schedule = state.schedule.filter(s => s.contractId !== contract.id);
+  }
+  return true;
+}
+
 export function getContractETA(c) {
   const state = getState();
   if (!state) return { days:0, hours:0, finishDay:0, finishHour:0 };
@@ -153,6 +177,15 @@ export function workOnContract(contractId, hours) {
   } catch (e) {}
   if (c.worked_hours >= (c.duration_hours || 0)) {
     c.worked_hours = c.duration_hours || c.worked_hours;
+    if (c.pipeline && Array.isArray(c.stages) && Number(c.stage_index || 0) < c.stages.length - 1) {
+      const advanced = advancePipelineStage(c, state);
+      if (advanced) {
+        showNotification(`🔁 Etapa completada · Ara: ${c.stage_label || c.type}`);
+        if (renderAll) renderAll();
+        saveState();
+        return;
+      }
+    }
     log(`✅ Contracte completat: ${c.name} (treballats ${c.worked_hours}h/${c.duration_hours}h)`);
     const ok = simulateContract && simulateContract(c.id);
     if (ok) {
@@ -252,6 +285,15 @@ export function applyScheduledWork(contractId, hours, roomIndex, day) {
 
   if (c.worked_hours >= (c.duration_hours || 0)) {
     c.worked_hours = c.duration_hours || c.worked_hours;
+    if (c.pipeline && Array.isArray(c.stages) && Number(c.stage_index || 0) < c.stages.length - 1) {
+      const advanced = advancePipelineStage(c, state);
+      if (advanced) {
+        showNotification(`🔁 Etapa completada · Ara: ${c.stage_label || c.type}`);
+        if (renderAll) renderAll();
+        saveState();
+        return { completed: false, stageAdvanced: true, id: c.id };
+      }
+    }
     const prevRoom = state.selected.roomIndex;
     state.selected.roomIndex = roomIndex;
     const ok = simulateContract && simulateContract(c.id);

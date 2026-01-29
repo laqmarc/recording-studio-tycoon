@@ -6,6 +6,7 @@
     "streaming_room",
     "vocal_booth",
     "podcast_studio",
-    "foley_room"
+    "foley_room",
+    "edit_room"
   ]
 }

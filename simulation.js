@@ -92,6 +92,13 @@ export function simulateRecording(roomIndex, contract) {
       if_q * 0.10 +
       engineer * 0.30;
     talent_bonus += (editorSkill - 50) * 0.2 + (engineerSkill - 50) * 0.1;
+  } else if (type === "edit") {
+    quality =
+      daw_q * 0.40 +
+      if_q * 0.15 +
+      room_acoustic * 0.15 +
+      engineer * 0.30;
+    talent_bonus += (editorSkill - 50) * 0.2 + (engineerSkill - 50) * 0.1;
   } else if (type === "streaming") {
     quality =
       if_q * 0.40 +

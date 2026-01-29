@@ -1,0 +1,51 @@
+  {"rooms": [
+    {
+      "id": "room_edit_1",
+      "name": "Sala d'Edicio",
+      "type": "edit_room",
+      "unlock_level": 4,
+      "size_m2": 16,
+      "max_people": 2,
+      "noise_floor_db": -55,
+      "isolation": 40,
+      "base_acoustic": 35,
+      "slots": {
+        "monitor": 2,
+        "interface": 1,
+        "headphones": 2,
+        "headphone_amp": 1,
+        "desk": 1,
+        "acoustic_treatment": 4,
+        "software_daw": 1,
+        "software_fx": 1,
+        "cable": 4
+      },
+      "price_per_week": 220.0
+    },
+    {
+      "id": "room_edit_2",
+      "name": "Sala d'Edicio Pro",
+      "type": "edit_room",
+      "unlock_level": 6,
+      "size_m2": 22,
+      "max_people": 3,
+      "noise_floor_db": -60,
+      "isolation": 45,
+      "base_acoustic": 40,
+      "slots": {
+        "monitor": 2,
+        "interface": 2,
+        "headphones": 3,
+        "headphone_amp": 1,
+        "desk": 1,
+        "acoustic_treatment": 6,
+        "software_daw": 1,
+        "software_fx": 2,
+        "software_mix_master": 1,
+        "patchbay": 1,
+        "cable": 6
+      },
+      "price_per_week": 320.0
+    }
+  ]
+  }

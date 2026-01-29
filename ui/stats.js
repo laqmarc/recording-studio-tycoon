@@ -1,6 +1,6 @@
 import { state } from '../state.js';
 import { euro, calcRoomMaintenanceDaily, xpToNext, takeLoan, repayLoan, openCreditLine, returnLease } from '../helpers.js';
-import { clearChildren, formatGenreLabel, formatRoomLabel } from './shared.js';
+import { clearChildren, formatContractTypeLabel, formatGenreLabel, formatRoomLabel } from './shared.js';
 import { CAMPAIGN_CHAPTERS } from '../campaign.js';
 
 function makeStat(label, value, hint) {
@@ -347,7 +347,7 @@ export function renderStatsPage() {
   } else {
     const maxType = Math.max(1, ...typeEntries.map(e => Number(e[1]) || 0));
     for (const [type, value] of typeEntries) {
-      typeList.appendChild(makeBarRow(type, Number(value || 0), maxType));
+      typeList.appendChild(makeBarRow(formatContractTypeLabel(type), Number(value || 0), maxType));
     }
   }
   historyTypes.content.appendChild(typeList);
@@ -585,7 +585,7 @@ export function renderStatsPage() {
   const installed = createPanel('🎚️ Equip instal·lat per categoria');
   installed.content.appendChild(buildBars(Object.entries(installedByCat).map(([label, value]) => ({ label, value }))));
 
-  const contractsPanel = createPanel('✅ Pipeline de feines');
+  const contractsPanel = createPanel('✅ Proces de feines');
   const contractStats = [
     { label: 'Actives', value: activeContracts },
     { label: 'Completades', value: completedContracts }
@@ -593,7 +593,7 @@ export function renderStatsPage() {
   contractsPanel.content.appendChild(buildBars(contractStats));
 
   const contractTypesPanel = createPanel('🧩 Feines per tipus');
-  contractTypesPanel.content.appendChild(buildBars(Object.entries(contractTypes).map(([label, value]) => ({ label, value }))));
+  contractTypesPanel.content.appendChild(buildBars(Object.entries(contractTypes).map(([label, value]) => ({ label: formatContractTypeLabel(label), value }))));
 
   const backlogPanel = createPanel('⏳ Hores pendents per feina');
   backlogPanel.content.appendChild(buildBars(backlog.map(row => ({ label: row.label, value: row.value })), null, 'h'));

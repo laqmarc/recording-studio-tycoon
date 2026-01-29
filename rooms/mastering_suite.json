@@ -2,7 +2,7 @@
   "rooms": [
     {
       "id": "room_mastering_1",
-      "name": "Mastering Suite",
+      "name": "Suite de Mastering",
       "type": "mastering_suite",
       "unlock_level": 7,
       "size_m2": 12,

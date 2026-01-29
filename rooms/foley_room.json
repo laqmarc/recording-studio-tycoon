@@ -1,7 +1,7 @@
   { "rooms": [
     {
       "id": "room_foley_1",
-      "name": "Foley Room",
+      "name": "Sala Foley",
       "type": "foley_room",
       "unlock_level": 5,
       "size_m2": 20,
@@ -26,7 +26,7 @@
     },
     {
       "id": "room_foley_2",
-      "name": "Foley Room (Gran)",
+      "name": "Sala Foley (Gran)",
       "type": "foley_room",
       "unlock_level": 7,
       "size_m2": 32,

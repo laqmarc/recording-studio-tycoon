@@ -117,7 +117,7 @@ function buildBundles(roomIndex) {
       ]}
     ],
     mastering_suite: [
-      { name: 'Mastering Suite', items: [
+      { name: 'Suite de Mastering', items: [
         { cat: 'monitor', stat: 'monitor_accuracy' },
         { cat: 'acoustic_treatment', stat: 'room_acoustic_add' },
         { cat: 'software_mix_master', stat: 'daw_quality' },
@@ -145,6 +145,16 @@ function buildBundles(roomIndex) {
         { cat: 'headphones', stat: 'hp_accuracy' },
         { cat: 'instruments', stat: 'instrument_quality' },
         { cat: 'effects' }
+      ]}
+    ],
+    edit_room: [
+      { name: "Kit d'Edicio", items: [
+        { cat: 'monitor', stat: 'monitor_accuracy' },
+        { cat: 'interface', stat: 'conversion_quality' },
+        { cat: 'headphones', stat: 'hp_accuracy' },
+        { cat: 'software_daw', stat: 'daw_quality' },
+        { cat: 'software_fx', stat: 'daw_quality' },
+        { cat: 'acoustic_treatment', stat: 'room_acoustic_add' }
       ]}
     ],
     streaming_room: [

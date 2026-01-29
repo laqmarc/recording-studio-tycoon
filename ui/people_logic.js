@@ -45,21 +45,30 @@ export function getPeopleByIdMap() {
 export function buildRoleDefs(contract) {
   const req = contract.requirements || {};
   const genre = contract.genre || 'any';
+  const talentMode = contract.talent_mode || 'studio_musicians';
   const defs = [];
-  if (contract.type === 'recording' || contract.type === 'streaming' || contract.type === 'production') {
-    const types = Array.isArray(req.mic_types) && req.mic_types.length ? req.mic_types.slice(0, 2) : [guessInstrumentForGenre(genre)];
-    for (const t of types) defs.push({ role: 'musician', instrument: t, label: `Musica (${t})` });
+  const allowMusicians = talentMode !== 'client_band' && talentMode !== 'client_podcast';
+  if (allowMusicians && (contract.type === 'recording' || contract.type === 'streaming' || contract.type === 'production')) {
+    const types = Array.isArray(req.mic_types) && req.mic_types.length ? req.mic_types.slice() : [guessInstrumentForGenre(genre)];
+    const grouped = groupInstruments(types);
+    for (const g of grouped) defs.push({ role: 'musician', instrument: g.representative, label: `Music (${g.label})` });
   }
-  if (contract.type === 'production') defs.push({ role: 'producer', label: 'Producer' });
+  if (contract.type === 'production') defs.push({ role: 'producer', label: 'Productor' });
   if (contract.type === 'mix') {
-    defs.push({ role: 'engineer', label: 'Engineer' });
+    defs.push({ role: 'engineer', label: 'Enginyer' });
+  }
+  if (contract.type === 'edit') {
+    defs.push({ role: 'editor', label: 'Editor' });
   }
   if (contract.type === 'master') defs.push({ role: 'mastering', label: 'Mastering' });
   if (contract.type === 'mix_master') {
-    defs.push({ role: 'engineer', label: 'Engineer' });
+    defs.push({ role: 'engineer', label: 'Enginyer' });
     defs.push({ role: 'mastering', label: 'Mastering' });
   }
-  if (contract.type === 'streaming' || genre === 'live') defs.push({ role: 'technician', label: 'Technician' });
+  if (contract.type === 'streaming' || genre === 'live') defs.push({ role: 'technician', label: 'Tecnic' });
+  if (!allowMusicians && (contract.type === 'recording' || contract.type === 'streaming')) {
+    defs.unshift({ role: 'engineer', label: 'Enginyer' });
+  }
   return defs;
 }
 
@@ -119,9 +128,29 @@ function guessInstrumentForGenre(genre) {
     pop: 'vocals',
     rock: 'guitarra',
     live: 'vocals',
-    film_score: 'instruments'
+    film_score: 'instruments',
+    commercial: 'vocals'
   };
   return map[genre] || 'vocals';
+}
+
+function groupInstruments(types) {
+  const grouped = new Map();
+  for (const t of types) {
+    const normalized = normalizeInstrument(t);
+    if (!grouped.has(normalized.key)) grouped.set(normalized.key, normalized);
+  }
+  return Array.from(grouped.values());
+}
+
+function normalizeInstrument(type) {
+  const drumSet = new Set(['bombo', 'caixa', 'hh', 'oh', 'tomb', 'tom', 'ride', 'crash']);
+  if (drumSet.has(type)) {
+    return { key: 'drums', representative: 'bombo', label: 'Bateria' };
+  }
+  const label = type.replace(/_/g, ' ');
+  const title = label.replace(/\b\w/g, (char) => char.toUpperCase());
+  return { key: type, representative: type, label: title };
 }
 
 export function assignContractPeople(contract) {

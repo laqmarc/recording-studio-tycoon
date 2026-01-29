@@ -42,6 +42,19 @@ export function saveState() {
         base_pay: c.base_pay,
         target_quality: c.target_quality,
         deadline_days: c.deadline_days,
+        duration_hours: c.duration_hours,
+        type: c.type,
+        genre: c.genre,
+        requirements: c.requirements || null,
+        pipeline: Boolean(c.pipeline),
+        stages: Array.isArray(c.stages) ? c.stages : [],
+        stage_index: c.stage_index || 0,
+        stage_label: c.stage_label || null,
+        pipeline_total_hours: c.pipeline_total_hours || null,
+        stage_room_type: c.stage_room_type || null,
+        talent_mode: c.talent_mode || null,
+        client_names: Array.isArray(c.client_names) ? c.client_names : [],
+        talent_note: c.talent_note || null,
         negotiated: c.negotiated || null,
         base_terms: c._base_terms || null,
         assigned_people: Array.isArray(c.assigned_people) ? c.assigned_people : [],
@@ -172,6 +185,19 @@ export function loadStateFromStorage() {
           if (cm.base_pay != null) c.base_pay = cm.base_pay;
           if (cm.target_quality != null) c.target_quality = cm.target_quality;
           if (cm.deadline_days != null) c.deadline_days = cm.deadline_days;
+          if (cm.duration_hours != null) c.duration_hours = cm.duration_hours;
+          if (cm.type) c.type = cm.type;
+          if (cm.genre) c.genre = cm.genre;
+          if (cm.requirements) c.requirements = JSON.parse(JSON.stringify(cm.requirements));
+          if (cm.pipeline != null) c.pipeline = Boolean(cm.pipeline);
+          if (Array.isArray(cm.stages)) c.stages = JSON.parse(JSON.stringify(cm.stages));
+          if (cm.stage_index != null) c.stage_index = cm.stage_index;
+          if (cm.stage_label) c.stage_label = cm.stage_label;
+          if (cm.pipeline_total_hours != null) c.pipeline_total_hours = cm.pipeline_total_hours;
+          if (cm.stage_room_type) c.stage_room_type = cm.stage_room_type;
+          if (cm.talent_mode) c.talent_mode = cm.talent_mode;
+          if (Array.isArray(cm.client_names)) c.client_names = cm.client_names.slice();
+          if (cm.talent_note) c.talent_note = cm.talent_note;
           c.negotiated = cm.negotiated || null;
           if (cm.base_terms) c._base_terms = cm.base_terms;
           if (Array.isArray(cm.assigned_people)) c.assigned_people = cm.assigned_people;

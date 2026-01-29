@@ -4,7 +4,7 @@ import { getContractETA } from '../actions.js';
 import { assignContractPeople, buildRoleDefs, getPeopleByIdMap, getPeopleOptions } from './people_logic.js';
 import { getRequirementsElement } from './requirements.js';
 import { scheduleContractToNextFree } from './schedule.js';
-import { clearChildren, createArt, createBadge, formatEta, formatGenreLabel, getRiskLevel, getRoomArt } from './shared.js';
+import { clearChildren, createArt, createBadge, formatContractTypeLabel, formatEta, formatGenreLabel, formatRoomLabel, getRiskLevel, getRoomArt } from './shared.js';
 
 export function renderRooms(options = {}) {
   const { renderAll } = options;
@@ -131,12 +131,13 @@ export function renderRooms(options = {}) {
         const remaining = Math.max(0, total - worked);
         const pct = total ? Math.round((worked / total) * 100) : 0;
         const eta = getContractETA(c);
-        const etaText = remaining === 0 ? 'Ready' : formatEta(eta);
+        const etaText = remaining === 0 ? 'A punt' : formatEta(eta);
         const isDone = Boolean(c.completed);
         const isScheduled = Array.isArray(state.schedule) && state.schedule.some(s => s.contractId === c.id);
 
         const card = document.createElement('div');
         card.className = 'card contract-card';
+        if (c.pipeline) card.classList.add('pipeline-contract');
         card.setAttribute('draggable', 'true');
         card.addEventListener('dragstart', (e) => {
           if (e.dataTransfer) {
@@ -156,21 +157,27 @@ export function renderRooms(options = {}) {
 
         const row = document.createElement('div'); row.className = 'row';
         const bt = document.createElement('b'); bt.textContent = c.name;
-        const typ = document.createElement('span'); typ.className = 'pill'; typ.textContent = c.type;
+        const typ = document.createElement('span');
+        typ.className = c.pipeline ? 'pill pill-pipeline' : 'pill';
+        typ.textContent = formatContractTypeLabel(c.type);
         row.appendChild(bt); row.appendChild(typ);
         if (c.special) {
-          const spec = document.createElement('span'); spec.className = 'pill'; spec.textContent = 'special';
+          const spec = document.createElement('span'); spec.className = 'pill'; spec.textContent = 'especial';
           row.appendChild(spec);
         }
 
         const meta = document.createElement('div'); meta.className = 'muted'; meta.style.marginTop = '6px';
         const hours = Number(c.duration_hours || 0);
         const rate = hours ? Number(c.base_pay || 0) / hours : 0;
+        const stageLabel = (c.stage_label && Array.isArray(c.stages) && c.stages.length)
+          ? ` · Etapa ${c.stage_label} (${Number(c.stage_index || 0) + 1}/${c.stages.length})`
+          : (c.stage_label ? ` · Etapa ${c.stage_label}` : '');
         appendMetaParts(meta, [
           `${c.duration_hours}h · `,
           createPriceSpan(c.base_pay),
           ' · ',
-          createRateSpan(rate)
+          createRateSpan(rate),
+          stageLabel
         ]);
         if (isDone) {
           const pillDone = document.createElement('span'); pillDone.className = 'pill'; pillDone.textContent = 'Complet';
@@ -243,9 +250,14 @@ export function renderRooms(options = {}) {
             talentWrap.appendChild(chip);
           }
         } else {
-          const empty = document.createElement('div'); empty.className = 'tiny muted'; empty.textContent = 'Sense talent assignat';
+          const empty = document.createElement('div');
+          empty.className = 'tiny muted';
+          empty.textContent = Array.isArray(c.client_names) && c.client_names.length
+            ? 'Talent: clients'
+            : 'Sense talent assignat';
           talentWrap.appendChild(empty);
         }
+
 
         card.classList.add('contract-compact');
         card.appendChild(row);
@@ -333,7 +345,37 @@ export function renderRooms(options = {}) {
         });
 
         detailsWrap.appendChild(badges);
+        if (c.pipeline && Array.isArray(c.stages) && c.stages.length) {
+          const pipe = document.createElement('div'); pipe.className = 'tiny muted';
+          const labels = c.stages.map((s, idx) => {
+            const mark = idx === Number(c.stage_index || 0) ? '●' : '○';
+            return `${mark} ${s.label || s.type}`;
+          });
+          pipe.textContent = `Proces: ${labels.join(' → ')}`;
+          detailsWrap.appendChild(pipe);
+          const nextStage = c.stages[Number(c.stage_index || 0) + 1];
+          if (nextStage && nextStage.room_type) {
+            const nextInfo = document.createElement('div'); nextInfo.className = 'tiny muted';
+            nextInfo.textContent = `Seguent etapa: ${nextStage.label || nextStage.type} · ${formatRoomLabel(nextStage.room_type)}`;
+            detailsWrap.appendChild(nextInfo);
+          }
+        }
         detailsWrap.appendChild(talentWrap);
+        if (Array.isArray(c.client_names) && c.client_names.length) {
+          const clientWrap = document.createElement('div'); clientWrap.className = 'talent-row';
+          const title = document.createElement('div'); title.className = 'tiny muted'; title.textContent = 'Clients:';
+          clientWrap.appendChild(title);
+          for (const name of c.client_names) {
+            const chip = document.createElement('span'); chip.className = 'badge'; chip.textContent = name;
+            clientWrap.appendChild(chip);
+          }
+          detailsWrap.appendChild(clientWrap);
+        }
+        if (c.talent_note) {
+          const talentNote = document.createElement('div'); talentNote.className = 'tiny muted';
+          talentNote.textContent = c.talent_note;
+          detailsWrap.appendChild(talentNote);
+        }
         if (roleDefs.length) {
           manualWrap.appendChild(selects);
           detailsWrap.appendChild(manualWrap);

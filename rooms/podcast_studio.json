@@ -1,7 +1,7 @@
    {
      "rooms": [{
          "id": "room_podcast_1",
-         "name": "Podcast Studio",
+      "name": "Estudi de Podcast",
          "type": "podcast_studio",
          "unlock_level": 3,
          "size_m2": 12,
@@ -13,12 +13,12 @@
            "mic": 4,
            "preamp": 2,
            "interface": 1,
-           "headphones": 3,
-           "headphone_amp": 1,
+           "headphones": 4,
+           "headphone_amp": 2,
            "desk": 1,
            "acoustic_treatment": 6,
            "cable": 8,
-           "mic_stand": 3,
+           "mic_stand": 4,
            "pop_filter": 2,
            "shock_mount": 2,
            "software_daw": 1
@@ -27,7 +27,7 @@
        },
        {
          "id": "room_podcast_2",
-         "name": "Podcast Studio Pro",
+      "name": "Estudi de Podcast Pro",
          "type": "podcast_studio",
          "unlock_level": 5,
          "size_m2": 18,

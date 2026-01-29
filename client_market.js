@@ -2,6 +2,32 @@ import { state } from './state.js';
 import { log, showNotification, euro } from './helpers.js';
 
 const GENRES = ['pop', 'rap', 'hiphop', 'rock', 'podcast', 'live', 'film_score', 'commercial'];
+const PODCAST_FIRST_NAMES = [
+  'Alex', 'Mia', 'Leo', 'Nora', 'Hugo', 'Vega', 'Jordi', 'Paula', 'Marc', 'Emma',
+  'Lucas', 'Laia', 'Bruno', 'Carla', 'Ivan', 'Sofia', 'Eric', 'Lara', 'Dani', 'Alba',
+  'Oriol', 'Iris', 'Nil', 'Julia', 'Joan', 'Anna', 'Pol', 'Sara', 'Raul', 'Marta'
+];
+const PODCAST_LAST_NAMES = [
+  'Serra', 'Costa', 'Vidal', 'Roca', 'Puig', 'Soler', 'Mora', 'Rios', 'Flores', 'Perez',
+  'Lopez', 'Torres', 'Campos', 'Navarro', 'Reyes', 'Mendez', 'Marin', 'Blanco', 'Vega', 'Ortega',
+  'Silva', 'Ramos', 'Iglesias', 'Santos', 'Cruz', 'Nadal', 'Gil', 'Ferrer', 'Castro', 'Soto'
+];
+
+function pickRandom(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function buildUniqueNames(count) {
+  const names = new Set();
+  let safety = 0;
+  const target = Math.max(1, Number(count || 1));
+  while (names.size < target && safety < 200) {
+    const full = `${pickRandom(PODCAST_FIRST_NAMES)} ${pickRandom(PODCAST_LAST_NAMES)}`;
+    names.add(full);
+    safety += 1;
+  }
+  return Array.from(names);
+}
 const TEMPLATE_POOL = [
   {
     type: 'recording',
@@ -59,7 +85,8 @@ const TEMPLATE_POOL = [
     duration: [4, 7],
     deadline: [2, 5],
     min_items: { mic: 4, preamp_multi: 1, interface: 1, headphones: 2, cable: 6, mic_stand: 4 },
-    mic_types: ['guitarra', 'caixa', 'oh']
+    mic_types: ['guitarra', 'caixa', 'oh'],
+    talent_mode: 'client_band'
   },
   {
     type: 'recording',
@@ -71,7 +98,23 @@ const TEMPLATE_POOL = [
     duration: [5, 8],
     deadline: [2, 5],
     min_items: { mic: 6, preamp_multi: 1, interface: 1, headphones: 4, cable: 10, mic_stand: 6, multicore: 1 },
-    mic_types: ['guitarra', 'caixa', 'oh', 'bombo']
+    mic_types: ['guitarra', 'caixa', 'oh', 'bombo'],
+    talent_mode: 'client_band'
+  },
+  {
+    name: 'Studio Musicians Session',
+    type: 'recording',
+    room_type: 'live_room',
+    unlock_level: 6,
+    allowed_genres: ['rock', 'live'],
+    base_pay: [340, 620],
+    target_quality: [66, 84],
+    duration: [5, 9],
+    deadline: [2, 5],
+    min_items: { mic: 6, preamp_multi: 1, interface: 1, headphones: 4, cable: 10, mic_stand: 6, multicore: 1 },
+    mic_types: ['guitarra', 'caixa', 'oh', 'bombo'],
+    talent_mode: 'studio_musicians',
+    talent_note: 'Calen musics d\'estudi'
   },
   {
     type: 'mix',
@@ -260,7 +303,36 @@ const TEMPLATE_POOL = [
     duration: [3, 5],
     deadline: [1, 3],
     min_items: { mic: 2, preamp: 1, interface: 1, headphones: 2, pop_filter: 1, mic_stand: 2 },
-    mic_types: ['vocals']
+    mic_types: ['vocals'],
+    talent_mode: 'client_podcast',
+    client_count: 2,
+    stages: [
+      {
+        id: 'record',
+        label: 'Gravacio',
+        type: 'recording',
+        room_type: 'podcast_studio',
+        duration_pct: 0.5,
+        min_items: { mic: 2, preamp: 1, interface: 1, headphones: 2, pop_filter: 1, mic_stand: 2 },
+        mic_types: ['vocals']
+      },
+      {
+        id: 'edit',
+        label: 'Edicio',
+        type: 'edit',
+        room_type: 'edit_room',
+        duration_pct: 0.3,
+        min_items: { monitor: 2, interface: 1, headphones: 1, software_daw: 1 }
+      },
+      {
+        id: 'mix',
+        label: 'Mescla',
+        type: 'mix',
+        room_type: 'control_room',
+        duration_pct: 0.2,
+        min_items: { monitor: 2, acoustic_treatment: 2, software_daw: 1 }
+      }
+    ]
   },
   {
     name: 'Streamer Collab',
@@ -273,7 +345,97 @@ const TEMPLATE_POOL = [
     duration: [2, 4],
     deadline: [1, 3],
     min_items: { interface: 1, mic: 2, headphones: 2, pop_filter: 1, mic_stand: 2 },
-    mic_types: ['vocals']
+    mic_types: ['vocals'],
+    talent_mode: 'client_podcast',
+    client_count: 2
+  },
+  {
+    name: 'Podcast Series',
+    type: 'recording',
+    room_type: 'podcast_studio',
+    unlock_level: 5,
+    allowed_genres: ['podcast'],
+    base_pay: [320, 540],
+    target_quality: [62, 80],
+    duration: [6, 10],
+    deadline: [2, 5],
+    talent_mode: 'client_podcast',
+    client_count: 2,
+    stages: [
+      {
+        id: 'record',
+        label: 'Gravacio',
+        type: 'recording',
+        room_type: 'podcast_studio',
+        duration_pct: 0.5,
+        min_items: { mic: 2, preamp: 1, interface: 1, headphones: 2, pop_filter: 1, mic_stand: 2 },
+        mic_types: ['vocals']
+      },
+      {
+        id: 'edit',
+        label: 'Edicio',
+        type: 'edit',
+        room_type: 'edit_room',
+        duration_pct: 0.3,
+        min_items: { monitor: 2, interface: 1, headphones: 1, software_daw: 1 }
+      },
+      {
+        id: 'mix',
+        label: 'Mescla',
+        type: 'mix',
+        room_type: 'control_room',
+        duration_pct: 0.2,
+        min_items: { monitor: 2, acoustic_treatment: 2, software_daw: 1 }
+      }
+    ]
+  },
+  {
+    name: 'Vocal EP',
+    type: 'recording',
+    room_type: 'vocal_booth',
+    unlock_level: 6,
+    allowed_genres: ['pop', 'rap', 'hiphop'],
+    base_pay: [420, 760],
+    target_quality: [68, 86],
+    duration: [6, 10],
+    deadline: [3, 6],
+    talent_mode: 'studio_musicians',
+    talent_note: "Cal vocalista d'estudi",
+    stages: [
+      {
+        id: 'record',
+        label: 'Gravacio',
+        type: 'recording',
+        room_type: 'vocal_booth',
+        duration_pct: 0.4,
+        min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, pop_filter: 1, mic_stand: 1 },
+        mic_types: ['vocals']
+      },
+      {
+        id: 'edit',
+        label: 'Edicio',
+        type: 'edit',
+        room_type: 'edit_room',
+        duration_pct: 0.2,
+        min_items: { monitor: 2, interface: 1, headphones: 1, software_daw: 1 }
+      },
+      {
+        id: 'mix',
+        label: 'Mescla',
+        type: 'mix',
+        room_type: 'control_room',
+        duration_pct: 0.25,
+        min_items: { monitor: 2, acoustic_treatment: 2, software_daw: 1 }
+      },
+      {
+        id: 'master',
+        label: 'Mastering',
+        type: 'master',
+        room_type: 'mastering_suite',
+        duration_pct: 0.15,
+        min_items: { monitor: 2, acoustic_treatment: 4, software_mix_master: 1 }
+      }
+    ]
   },
   {
     name: 'Ad Voiceover',
@@ -417,7 +579,8 @@ const TEMPLATE_POOL = [
     target_quality: [60, 78],
     duration: [4, 7],
     deadline: [2, 5],
-    min_items: { mic: 5, preamp_multi: 1, interface: 1, headphones: 3, cable: 8, mic_stand: 5 }
+    min_items: { mic: 5, preamp_multi: 1, interface: 1, headphones: 3, cable: 8, mic_stand: 5 },
+    talent_mode: 'client_band'
   },
   {
     type: 'recording',
@@ -428,7 +591,8 @@ const TEMPLATE_POOL = [
     target_quality: [62, 80],
     duration: [4, 7],
     deadline: [2, 5],
-    min_items: { mic: 6, preamp_multi: 1, interface: 1, headphones: 4, cable: 10, mic_stand: 6, mic_accessory: 2 }
+    min_items: { mic: 6, preamp_multi: 1, interface: 1, headphones: 4, cable: 10, mic_stand: 6, mic_accessory: 2 },
+    talent_mode: 'client_band'
   },
   {
     type: 'recording',
@@ -439,7 +603,8 @@ const TEMPLATE_POOL = [
     target_quality: [64, 82],
     duration: [5, 8],
     deadline: [2, 5],
-    min_items: { mic: 8, preamp_multi: 1, interface: 1, headphones: 4, cable: 12, mic_stand: 8, multicore: 1 }
+    min_items: { mic: 8, preamp_multi: 1, interface: 1, headphones: 4, cable: 12, mic_stand: 8, multicore: 1 },
+    talent_mode: 'client_band'
   },
   {
     type: 'recording',
@@ -450,7 +615,8 @@ const TEMPLATE_POOL = [
     target_quality: [66, 84],
     duration: [5, 9],
     deadline: [2, 5],
-    min_items: { mic: 10, preamp_multi: 2, interface: 1, headphones: 5, cable: 14, mic_stand: 10, mic_accessory: 4 }
+    min_items: { mic: 10, preamp_multi: 2, interface: 1, headphones: 5, cable: 14, mic_stand: 10, mic_accessory: 4 },
+    talent_mode: 'client_band'
   },
   {
     type: 'recording',
@@ -461,7 +627,8 @@ const TEMPLATE_POOL = [
     target_quality: [66, 86],
     duration: [6, 9],
     deadline: [2, 5],
-    min_items: { mic: 12, preamp_multi: 2, interface: 1, headphones: 6, cable: 16, mic_stand: 12, multicore: 1 }
+    min_items: { mic: 12, preamp_multi: 2, interface: 1, headphones: 6, cable: 16, mic_stand: 12, multicore: 1 },
+    talent_mode: 'client_band'
   },
   {
     type: 'recording',
@@ -1123,6 +1290,218 @@ const TEMPLATE_POOL = [
     duration: [3, 5],
     deadline: [1, 3],
     min_items: { mic: 2, interface: 2, headphones: 2, mic_stand: 2, acoustic_treatment: 6 }
+  },
+  {
+    type: 'edit',
+    room_type: 'edit_room',
+    unlock_level: 4,
+    allowed_genres: ['any'],
+    base_pay: [140, 260],
+    target_quality: [60, 78],
+    duration: [2, 4],
+    deadline: [2, 4],
+    min_items: { monitor: 2, interface: 1, headphones: 1, software_daw: 1 }
+  },
+  {
+    type: 'edit',
+    room_type: 'edit_room',
+    unlock_level: 6,
+    allowed_genres: ['any'],
+    base_pay: [200, 340],
+    target_quality: [64, 82],
+    duration: [3, 5],
+    deadline: [2, 4],
+    min_items: { monitor: 2, interface: 1, headphones: 2, software_daw: 1, software_fx: 1 }
+  },
+  {
+    name: 'Full Production',
+    type: 'recording',
+    room_type: 'live_room',
+    unlock_level: 7,
+    allowed_genres: ['rock', 'live'],
+    base_pay: [800, 1400],
+    target_quality: [70, 88],
+    duration: [10, 16],
+    deadline: [4, 8],
+    talent_mode: 'client_band',
+    talent_note: 'Banda client · només cal engineer',
+    stages: [
+      {
+        id: 'record',
+        label: 'Gravacio',
+        type: 'recording',
+        room_type: 'live_room',
+        duration_pct: 0.4,
+        duration_pct_by_genre: { live: 0.45, rock: 0.4 },
+        min_items: { mic: 6, preamp_multi: 1, interface: 1, headphones: 4, cable: 10, mic_stand: 6 },
+        mic_types: ['guitarra', 'caixa', 'oh', 'bombo']
+      },
+      {
+        id: 'edit',
+        label: 'Edicio',
+        type: 'edit',
+        room_type: 'edit_room',
+        duration_pct: 0.25,
+        duration_pct_by_genre: { live: 0.18, rock: 0.25 },
+        min_items: { monitor: 2, interface: 1, headphones: 1, software_daw: 1 }
+      },
+      {
+        id: 'mix',
+        label: 'Mescla',
+        type: 'mix',
+        room_type: 'control_room',
+        duration_pct: 0.25,
+        duration_pct_by_genre: { live: 0.22, rock: 0.25 },
+        min_items: { monitor: 2, acoustic_treatment: 2, software_daw: 1 }
+      },
+      {
+        id: 'master',
+        label: 'Mastering',
+        type: 'master',
+        room_type: 'mastering_suite',
+        duration_pct: 0.1,
+        duration_pct_by_genre: { live: 0.15, rock: 0.1 },
+        min_items: { monitor: 2, acoustic_treatment: 4, software_mix_master: 1 }
+      }
+    ]
+  },
+  {
+    name: 'Indie Single',
+    type: 'recording',
+    room_type: 'vocal_booth',
+    unlock_level: 5,
+    allowed_genres: ['pop', 'rap', 'hiphop'],
+    base_pay: [380, 640],
+    target_quality: [66, 84],
+    duration: [5, 9],
+    deadline: [3, 6],
+    talent_mode: 'studio_musicians',
+    talent_note: "Cal vocalista d'estudi",
+    stages: [
+      {
+        id: 'record',
+        label: 'Gravacio',
+        type: 'recording',
+        room_type: 'vocal_booth',
+        duration_pct: 0.45,
+        duration_pct_by_genre: { pop: 0.4, rap: 0.5, hiphop: 0.5 },
+        min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, pop_filter: 1, mic_stand: 1 },
+        mic_types: ['vocals']
+      },
+      {
+        id: 'edit',
+        label: 'Edicio',
+        type: 'edit',
+        room_type: 'edit_room',
+        duration_pct: 0.2,
+        duration_pct_by_genre: { pop: 0.25, rap: 0.18, hiphop: 0.18 },
+        min_items: { monitor: 2, interface: 1, headphones: 1, software_daw: 1 }
+      },
+      {
+        id: 'mix',
+        label: 'Mescla',
+        type: 'mix',
+        room_type: 'control_room',
+        duration_pct: 0.25,
+        min_items: { monitor: 2, acoustic_treatment: 2, software_daw: 1 }
+      },
+      {
+        id: 'master',
+        label: 'Mastering',
+        type: 'master',
+        room_type: 'mastering_suite',
+        duration_pct: 0.1,
+        min_items: { monitor: 2, acoustic_treatment: 4, software_mix_master: 1 }
+      }
+    ]
+  },
+  {
+    name: 'Live Session',
+    type: 'recording',
+    room_type: 'live_room',
+    unlock_level: 6,
+    allowed_genres: ['live', 'rock'],
+    base_pay: [420, 760],
+    target_quality: [66, 84],
+    duration: [6, 10],
+    deadline: [3, 6],
+    talent_mode: 'client_band',
+    talent_note: 'Banda client · només cal engineer',
+    stages: [
+      {
+        id: 'record',
+        label: 'Gravacio',
+        type: 'recording',
+        room_type: 'live_room',
+        duration_pct: 0.6,
+        duration_pct_by_genre: { live: 0.65, rock: 0.6 },
+        min_items: { mic: 6, preamp_multi: 1, interface: 1, headphones: 4, cable: 10, mic_stand: 6 },
+        mic_types: ['guitarra', 'caixa', 'oh', 'bombo']
+      },
+      {
+        id: 'mix',
+        label: 'Mescla',
+        type: 'mix',
+        room_type: 'control_room',
+        duration_pct: 0.3,
+        min_items: { monitor: 2, acoustic_treatment: 2, software_daw: 1 }
+      },
+      {
+        id: 'master',
+        label: 'Mastering',
+        type: 'master',
+        room_type: 'mastering_suite',
+        duration_pct: 0.1,
+        min_items: { monitor: 2, acoustic_treatment: 4, software_mix_master: 1 }
+      }
+    ]
+  },
+  {
+    name: 'Film Cue',
+    type: 'recording',
+    room_type: 'foley_room',
+    unlock_level: 7,
+    allowed_genres: ['film_score'],
+    base_pay: [520, 920],
+    target_quality: [70, 88],
+    duration: [6, 12],
+    deadline: [3, 6],
+    talent_mode: 'studio_musicians',
+    stages: [
+      {
+        id: 'record',
+        label: 'Gravacio',
+        type: 'recording',
+        room_type: 'foley_room',
+        duration_pct: 0.45,
+        min_items: { mic: 4, preamp: 1, interface: 1, headphones: 2, instruments: 2, effects: 1, mic_stand: 4, cable: 6 },
+        mic_types: ['oh', 'guitarra', 'vocals']
+      },
+      {
+        id: 'edit',
+        label: 'Edicio',
+        type: 'edit',
+        room_type: 'edit_room',
+        duration_pct: 0.25,
+        min_items: { monitor: 2, interface: 1, headphones: 1, software_daw: 1 }
+      },
+      {
+        id: 'mix',
+        label: 'Mescla',
+        type: 'mix',
+        room_type: 'control_room',
+        duration_pct: 0.2,
+        min_items: { monitor: 2, acoustic_treatment: 2, software_daw: 1 }
+      },
+      {
+        id: 'master',
+        label: 'Mastering',
+        type: 'master',
+        room_type: 'mastering_suite',
+        duration_pct: 0.1,
+        min_items: { monitor: 2, acoustic_treatment: 4, software_mix_master: 1 }
+      }
+    ]
   }
 ];
 
@@ -1254,9 +1633,14 @@ function getEligibleTemplates(repOverall) {
   const unlockedTypes = getUnlockedRoomTypes();
   return TEMPLATE_POOL.filter(t => {
     if (t.unlock_level && playerLevel < t.unlock_level) return false;
-    if (t.room_type && !unlockedTypes.has(t.room_type)) return false;
-    if (repOverall < 5) return t.type === 'recording' || t.type === 'mix';
-    if (repOverall < 10) return t.type === 'recording' || t.type === 'mix' || t.type === 'master';
+    if (Array.isArray(t.stages) && t.stages.length) {
+      for (const stage of t.stages) {
+        if (stage.room_type && !unlockedTypes.has(stage.room_type)) return false;
+        if (stage.room_type && !hasActiveRoomType(stage.room_type)) return false;
+      }
+    } else if (t.room_type && !unlockedTypes.has(t.room_type)) return false;
+    if (repOverall < 5) return t.type === 'recording' || t.type === 'mix' || t.type === 'edit';
+    if (repOverall < 10) return t.type === 'recording' || t.type === 'mix' || t.type === 'edit' || t.type === 'master';
     if (repOverall < 20) return t.type !== 'production';
     return true;
   });
@@ -1270,6 +1654,16 @@ function getUnlockedRoomTypes() {
     if (Number(r.unlock_level || 1) <= level) types.add(r.type);
   }
   return types;
+}
+
+function hasActiveRoomType(roomType) {
+  const rooms = state.db && Array.isArray(state.db.rooms) ? state.db.rooms : [];
+  const installs = Array.isArray(state.roomsInstalled) ? state.roomsInstalled : [];
+  return rooms.some((r, idx) => {
+    if (!r || r.type !== roomType) return false;
+    const bag = installs[idx] || {};
+    return Object.values(bag).some(arr => Array.isArray(arr) && arr.length > 0);
+  });
 }
 
 function pickMicTypes(genre, type, roomType, micCount) {
@@ -1294,6 +1688,84 @@ function distributeMicTypeCounts(micTypes, total) {
     counts[type] = base + (idx < extra ? 1 : 0);
   });
   return counts;
+}
+
+function buildStageRequirements(stage, genre) {
+  const req = {
+    room_type: stage.room_type,
+    min_items: stage.min_items || {}
+  };
+  const micTotal = Number((req.min_items && req.min_items.mic) || 0);
+  let micTypes = Array.isArray(stage.mic_types) && stage.mic_types.length
+    ? stage.mic_types.slice()
+    : pickMicTypes(genre, stage.type, stage.room_type, micTotal);
+  if (!micTypes.length && micTotal > 0) micTypes = ['vocals'];
+  if (micTotal > 0 && micTypes.length > micTotal) micTypes = micTypes.slice(0, micTotal);
+  if (micTypes.length) {
+    req.mic_types = micTypes;
+    if (micTotal > 0) req.mic_type_counts = distributeMicTypeCounts(micTypes, micTotal);
+    const minInputs = Math.max(micTotal, micTypes.length);
+    if (minInputs > 0) req.min_interface_inputs = minInputs;
+  }
+  return req;
+}
+
+function applyTalentMetadata(template, offer, genre) {
+  const talentMode = template.talent_mode || (genre === 'podcast' ? 'client_podcast' : 'studio_musicians');
+  offer.talent_mode = talentMode;
+  if (template.talent_note) offer.talent_note = template.talent_note;
+  if (talentMode === 'client_podcast') {
+    const count = template.client_count || randInt(2, 3);
+    offer.client_names = buildUniqueNames(count);
+  }
+  if (talentMode === 'client_band') {
+    const count = template.client_count || randInt(3, 5);
+    offer.client_names = buildUniqueNames(count);
+    offer.talent_note = offer.talent_note || 'Banda client · només cal engineer';
+  }
+}
+
+function buildStages(template, genre, totalHours) {
+  if (!Array.isArray(template.stages) || !template.stages.length) return null;
+  const stages = [];
+  let remaining = Math.max(1, Number(totalHours || 1));
+  template.stages.forEach((stage, idx) => {
+    let pct = Number(stage.duration_pct || 0);
+    if (stage.duration_pct_by_genre && typeof stage.duration_pct_by_genre === 'object') {
+      if (stage.duration_pct_by_genre[genre] != null) pct = Number(stage.duration_pct_by_genre[genre]);
+      else if (stage.duration_pct_by_genre.any != null) pct = Number(stage.duration_pct_by_genre.any);
+    }
+    const isLast = idx === template.stages.length - 1;
+    const hours = isLast
+      ? Math.max(1, remaining)
+      : Math.max(1, Math.round(totalHours * pct));
+    remaining = Math.max(0, remaining - hours);
+    const requirements = buildStageRequirements(stage, genre);
+    stages.push({
+      id: stage.id || stage.type,
+      label: stage.label || formatTypeLabel(stage.type),
+      type: stage.type,
+      room_type: stage.room_type,
+      duration_hours: hours,
+      requirements
+    });
+  });
+  return stages;
+}
+
+function formatTypeLabel(type) {
+  const map = {
+    recording: 'Gravacio',
+    streaming: 'Streaming',
+    mix: 'Mescla',
+    master: 'Mastering',
+    mix_master: 'Mescla + Mastering',
+    production: 'Produccio',
+    edit: 'Edicio'
+  };
+  if (map[type]) return map[type];
+  const label = String(type || '').replace(/_/g, ' ');
+  return label.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 function buildMilestones(totalHours) {
@@ -1351,28 +1823,21 @@ function buildSpecialOffer(day, index, template) {
   const base_pay = Math.round(pay * repBoost * genreBoost);
   const target_quality = Math.min(92, Math.round(target + repOverall * 0.15));
   const milestones = buildMilestones(duration);
-  const micTotal = Number((template.min_items && template.min_items.mic) || 0);
-  let micTypes = Array.isArray(template.mic_types) && template.mic_types.length
-    ? template.mic_types.slice()
-    : pickMicTypes(genre, template.type, template.room_type, micTotal);
-  if (!micTypes.length && micTotal > 0) micTypes = ['vocals'];
-  if (micTotal > 0 && micTypes.length > micTotal) micTypes = micTypes.slice(0, micTotal);
-
-  return {
-    id: `special_${day}_${index}_${Math.floor(Math.random() * 9999)}`,
-    name: `${template.name} · ${genre}`,
-    type: template.type,
-    genre,
-    duration_hours: duration,
-    duration_days,
-    base_pay,
-    target_quality,
-    deadline_days: deadline,
-    start_day: day,
-    expires_day: day + randInt(3, 5),
-    special: true,
-    milestones,
-    requirements: (() => {
+  const stages = buildStages(template, genre, duration);
+  const stage = stages ? stages[0] : null;
+  const stageHours = stage ? stage.duration_hours : duration;
+  const stageType = stage ? stage.type : template.type;
+  let requirements = null;
+  if (stage) {
+    requirements = stage.requirements;
+  } else {
+    const micTotal = Number((template.min_items && template.min_items.mic) || 0);
+    let micTypes = Array.isArray(template.mic_types) && template.mic_types.length
+      ? template.mic_types.slice()
+      : pickMicTypes(genre, template.type, template.room_type, micTotal);
+    if (!micTypes.length && micTotal > 0) micTypes = ['vocals'];
+    if (micTotal > 0 && micTypes.length > micTotal) micTypes = micTypes.slice(0, micTotal);
+    requirements = (() => {
       const req = {
         room_type: template.room_type,
         min_items: template.min_items
@@ -1384,10 +1849,34 @@ function buildSpecialOffer(day, index, template) {
         if (minInputs > 0) req.min_interface_inputs = minInputs;
       }
       return req;
-    })(),
+    })();
+  }
+
+  const offer = {
+    id: `special_${day}_${index}_${Math.floor(Math.random() * 9999)}`,
+    name: `${template.name} · ${genre}`,
+    type: stageType,
+    genre,
+    duration_hours: stageHours,
+    duration_days,
+    base_pay,
+    target_quality,
+    deadline_days: deadline,
+    start_day: day,
+    expires_day: day + randInt(3, 5),
+    special: true,
+    milestones,
+    requirements,
     reputation_gain: { success: Math.max(2, Math.round(genreRep * 0.35) + 3), fail: 1 },
-    source: 'special'
+    source: 'special',
+    pipeline: Boolean(stages && stages.length),
+    stages: stages || [],
+    stage_index: 0,
+    stage_label: stage ? stage.label : null,
+    pipeline_total_hours: duration
   };
+  applyTalentMetadata(template, offer, genre);
+  return offer;
 }
 
 function buildOffer(day, index, templates) {
@@ -1406,19 +1895,17 @@ function buildOffer(day, index, templates) {
   const base_pay = Math.round(pay * repBoost * genreBoost);
   const target_quality = Math.min(90, Math.round(target + repOverall * 0.2));
 
-  const name = template.name ? `${template.name} · ${genre}` : `${template.type} · ${genre}`;
-  return {
-    id: `offer_${day}_${index}_${Math.floor(Math.random() * 9999)}`,
-    name,
-    type: template.type,
-    genre,
-    duration_hours: duration,
-    duration_days,
-    base_pay,
-    target_quality,
-    deadline_days: deadline,
-    start_day: day,
-    requirements: (() => {
+  const typeLabel = formatTypeLabel(template.type);
+  const name = template.name ? `${template.name} · ${genre}` : `${typeLabel} · ${genre}`;
+  const stages = buildStages(template, genre, duration);
+  const stage = stages ? stages[0] : null;
+  const stageHours = stage ? stage.duration_hours : duration;
+  const stageType = stage ? stage.type : template.type;
+  let requirements = null;
+  if (stage) {
+    requirements = stage.requirements;
+  } else {
+    requirements = (() => {
       const req = {
         room_type: template.room_type,
         min_items: template.min_items
@@ -1436,10 +1923,30 @@ function buildOffer(day, index, templates) {
         if (minInputs > 0) req.min_interface_inputs = minInputs;
       }
       return req;
-    })(),
+    })();
+  }
+  const offer = {
+    id: `offer_${day}_${index}_${Math.floor(Math.random() * 9999)}`,
+    name,
+    type: stageType,
+    genre,
+    duration_hours: stageHours,
+    duration_days,
+    base_pay,
+    target_quality,
+    deadline_days: deadline,
+    start_day: day,
+    requirements,
     reputation_gain: { success: Math.max(1, Math.round(genreRep * 0.3) + 2), fail: 1 },
-    source: 'market'
+    source: 'market',
+    pipeline: Boolean(stages && stages.length),
+    stages: stages || [],
+    stage_index: 0,
+    stage_label: stage ? stage.label : null,
+    pipeline_total_hours: duration
   };
+  applyTalentMetadata(template, offer, genre);
+  return offer;
 }
 
 export function generateDailyOffers(force = false) {
@@ -1499,7 +2006,11 @@ export function acceptSpecialOffer(offerId) {
   contract.completed_at = null;
   contract.assigned_people = [];
   contract.assigned_people_map = [];
+  if (offer.requirements) contract.requirements = JSON.parse(JSON.stringify(offer.requirements));
+  if (Array.isArray(offer.stages)) contract.stages = JSON.parse(JSON.stringify(offer.stages));
   contract.milestones = offer.milestones ? JSON.parse(JSON.stringify(offer.milestones)) : [];
+  if (offer.requirements) contract.requirements = JSON.parse(JSON.stringify(offer.requirements));
+  if (Array.isArray(offer.stages)) contract.stages = JSON.parse(JSON.stringify(offer.stages));
   state.db.contracts.push(contract);
   state.market.specials = specials.filter(o => o.id !== offerId);
   if (typeof log === 'function') log(`🧭 Projecte especial acceptat: ${offer.name} (${euro(offer.base_pay)})`);

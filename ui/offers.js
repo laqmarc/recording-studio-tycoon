@@ -1,6 +1,6 @@
 import { state } from '../state.js';
 import { euro } from '../helpers.js';
-import { clearChildren, formatGenreLabel, formatRoomLabel } from './shared.js';
+import { clearChildren, formatContractTypeLabel, formatGenreLabel, formatRoomLabel } from './shared.js';
 import { getRequirementsElement } from './requirements.js';
 import { ensureRoomOffers } from '../client_market.js';
 
@@ -61,21 +61,38 @@ export function renderOffers() {
     const workHours = Number(state.time && state.time.workHoursPerDay || 8);
     for (const offer of specials) {
       const card = document.createElement('div'); card.className = 'offer-card special-offer';
+      if (offer.pipeline) card.classList.add('pipeline-offer');
       const row = document.createElement('div'); row.className = 'offer-row';
-      const name = document.createElement('b'); name.textContent = offer.name;
-      const pill = document.createElement('span'); pill.className = 'pill'; pill.textContent = 'special';
+      const name = document.createElement('b');
+      const pill = document.createElement('span');
+      pill.className = offer.pipeline ? 'pill pill-pipeline' : 'pill';
+      pill.textContent = 'especial';
+      const typeLabel = formatContractTypeLabel(offer.type);
+      if (offer && offer.genre) {
+        const genreLabel = formatGenreLabel(offer.genre);
+        if (offer.name && offer.name.startsWith(`${offer.type} ·`)) {
+          name.textContent = `${typeLabel} · ${genreLabel}`;
+        } else {
+          name.textContent = offer.name ? offer.name.replace(offer.genre, genreLabel) : `${typeLabel} · ${genreLabel}`;
+        }
+      } else {
+        name.textContent = offer.name ? offer.name : typeLabel;
+      }
       row.appendChild(name); row.appendChild(pill);
       const days = Math.max(1, Math.round(Number(offer.duration_hours || 0) / workHours));
       const meta = document.createElement('div'); meta.className = 'offer-meta';
       const expires = offer.expires_day ? ` · Expira dia ${offer.expires_day}` : '';
       const hours = Number(offer.duration_hours || 0);
       const rate = hours ? Number(offer.base_pay || 0) / hours : 0;
+      const stageLabel = (offer.stage_label && Array.isArray(offer.stages) && offer.stages.length)
+        ? ` · Etapa ${offer.stage_label} (1/${offer.stages.length})`
+        : (offer.stage_label ? ` · Etapa ${offer.stage_label}` : '');
       appendMetaParts(meta, [
         `${days} dies · ${offer.duration_hours}h · `,
         createPriceSpan(offer.base_pay),
         ' · ',
         createRateSpan(rate),
-        ` · Qualitat ${offer.target_quality}${expires}`
+        ` · Qualitat ${offer.target_quality}${expires}${stageLabel}`
       ]);
       const reqEl = getRequirementsElement(offer, state.selected.roomIndex);
       const milestones = document.createElement('div'); milestones.className = 'tiny muted';
@@ -97,26 +114,37 @@ export function renderOffers() {
 
   for (const offer of offers) {
     const card = document.createElement('div'); card.className = 'offer-card';
+    if (offer.pipeline) card.classList.add('pipeline-offer');
     const row = document.createElement('div'); row.className = 'offer-row';
     const name = document.createElement('b');
+    const typeLabel = formatContractTypeLabel(offer.type);
     if (offer && offer.genre) {
       const genreLabel = formatGenreLabel(offer.genre);
-      name.textContent = offer.name ? offer.name.replace(offer.genre, genreLabel) : `${offer.type} · ${genreLabel}`;
+      if (offer.name && offer.name.startsWith(`${offer.type} ·`)) {
+        name.textContent = `${typeLabel} · ${genreLabel}`;
+      } else {
+        name.textContent = offer.name ? offer.name.replace(offer.genre, genreLabel) : `${typeLabel} · ${genreLabel}`;
+      }
     } else {
-      name.textContent = offer.name;
+      name.textContent = offer.name ? offer.name : typeLabel;
     }
-    const pill = document.createElement('span'); pill.className = 'pill'; pill.textContent = offer.type;
+    const pill = document.createElement('span');
+    pill.className = offer.pipeline ? 'pill pill-pipeline' : 'pill';
+    pill.textContent = typeLabel;
     row.appendChild(name); row.appendChild(pill);
     const meta = document.createElement('div'); meta.className = 'offer-meta';
     const roomLabel = offer.requirements && offer.requirements.room_type ? formatRoomLabel(offer.requirements.room_type) : 'any';
     const hours = Number(offer.duration_hours || 0);
     const rate = hours ? Number(offer.base_pay || 0) / hours : 0;
+    const stageLabel = (offer.stage_label && Array.isArray(offer.stages) && offer.stages.length)
+      ? ` · Etapa ${offer.stage_label} (1/${offer.stages.length})`
+      : (offer.stage_label ? ` · Etapa ${offer.stage_label}` : '');
     appendMetaParts(meta, [
       `${offer.duration_hours}h · `,
       createPriceSpan(offer.base_pay),
       ' · ',
       createRateSpan(rate),
-      ` · Qualitat ${offer.target_quality} · Deadline ${offer.deadline_days}d · Sala ${roomLabel}`
+      ` · Qualitat ${offer.target_quality} · Deadline ${offer.deadline_days}d · Sala ${roomLabel}${stageLabel}`
     ]);
     const reqEl = getRequirementsElement(offer, state.selected.roomIndex);
     const actions = document.createElement('div'); actions.className = 'offer-actions';

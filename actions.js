@@ -96,10 +96,48 @@ if (typeof document !== 'undefined') {
       // Set reputation to 100 for all genres
       if (!window.state.reputation) window.state.reputation = { overall: 0, byGenre: {} };
       window.state.reputation.overall = 100;
-      const genres = ['pop', 'rap', 'hiphop', 'rock', 'podcast', 'live', 'film_score'];
+      const genres = ['pop', 'rap', 'hiphop', 'rock', 'podcast', 'live', 'film_score', 'commercial'];
       genres.forEach(genre => {
         window.state.reputation.byGenre[genre] = 100;
       });
+
+      // Enable multisala testing: fill key rooms with installed gear
+      if (typeof window.rebuildIndexes === 'function') window.rebuildIndexes();
+      if (typeof window.ensureRoomsInstalled === 'function') window.ensureRoomsInstalled();
+      const targetTypes = new Set([
+        'vocal_booth',
+        'control_room',
+        'live_room',
+        'mastering_suite',
+        'podcast_studio',
+        'edit_room',
+        'foley_room',
+        'streaming_room'
+      ]);
+      const rooms = (window.state.db && Array.isArray(window.state.db.rooms)) ? window.state.db.rooms : [];
+      const roomIndexes = [];
+      const slotTotals = {};
+      rooms.forEach((room, idx) => {
+        if (!room || !targetTypes.has(room.type)) return;
+        roomIndexes.push(idx);
+        const slots = room.slots || {};
+        for (const [cat, count] of Object.entries(slots)) {
+          slotTotals[cat] = (slotTotals[cat] || 0) + Number(count || 0);
+        }
+      });
+      const itemsByCategory = window.state.itemsByCategory || new Map();
+      if (typeof window.invAdd === 'function') {
+        for (const [cat, count] of Object.entries(slotTotals)) {
+          const items = itemsByCategory.get(cat) || [];
+          if (!items.length) continue;
+          const id = items[0].id;
+          window.invAdd(id, Math.max(1, Math.floor(count)));
+        }
+      }
+      for (const idx of roomIndexes) {
+        installAllInventoryToRoom(idx);
+      }
+
       if (typeof window.log === 'function') window.log('🧪 Cheat activat: cash=1.000.000€, +20.000 XP i reputació màxima');
       if (typeof window.showNotification === 'function') window.showNotification('🧪 Cheat activat');
       if (typeof window.renderAll === 'function') window.renderAll();

@@ -2,7 +2,7 @@
   "rooms": [
     {
       "id": "room_live_1",
-      "name": "Live Room (Mitjà)",
+      "name": "Sala en directe (Mitjana)",
       "type": "live_room",
       "unlock_level": 3,
       "size_m2": 28,
@@ -27,7 +27,7 @@
     },
     {
       "id": "room_live_2",
-      "name": "Live Room (Gran)",
+      "name": "Sala en directe (Gran)",
       "type": "live_room",
       "unlock_level": 6,
       "size_m2": 60,
@@ -52,7 +52,7 @@
     },
     {
       "id": "room_live_3",
-      "name": "Live Room (Molt Gran)",
+      "name": "Sala en directe (Molt Gran)",
       "type": "live_room",
       "unlock_level": 5,
       "size_m2": 120,
