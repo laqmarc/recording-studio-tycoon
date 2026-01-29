@@ -57,16 +57,16 @@ export const CAMPAIGN_CHAPTERS = [
         title: "Reputació local",
         description: "Aconsegueix 20 punts de reputació general",
         type: "reputation",
-        target: 20,
+        target: 200,
         reward: { xp: 250, cash: 750 },
         unlocks: ["special_offers"]
       },
       {
         id: "5_contracts",
         title: "Experiència",
-        description: "Completa 5 contractes amb èxit",
+        description: "Completa 30 contractes amb èxit",
         type: "contract_complete",
-        target: 5,
+        target: 30,
         reward: { xp: 400, cash: 1500 },
         unlocks: ["production_room"]
       }
@@ -80,10 +80,10 @@ export const CAMPAIGN_CHAPTERS = [
     objectives: [
       {
         id: "control_room",
-        title: "Sala de control",
-        description: "Construeix una sala de control professional",
+        title: "Sala de Live Room",
+        description: "Construeix una sala per grabar professional",
         type: "room_built",
-        target: "control_room",
+        target: "live_room",
         reward: { xp: 500, cash: 2000 },
         unlocks: ["major_labels"]
       },
@@ -99,9 +99,9 @@ export const CAMPAIGN_CHAPTERS = [
       {
         id: "genre_master",
         title: "Especialista",
-        description: "Aconsegueix 30 de reputació en qualsevol gènere",
+        description: "Aconsegueix 500 de reputació en qualsevol gènere",
         type: "genre_reputation",
-        target: 30,
+        target: 500,
         reward: { xp: 450, cash: 2500 },
         unlocks: ["genre_bonuses"]
       }
@@ -125,18 +125,18 @@ export const CAMPAIGN_CHAPTERS = [
       {
         id: "reputation_50",
         title: "Renom mundial",
-        description: "Aconsegueix 50 de reputació general",
+        description: "Aconsegueix 1500 de reputació general",
         type: "reputation",
-        target: 50,
+        target: 1500,
         reward: { xp: 1000, cash: 10000 },
         unlocks: ["platinum_albums"]
       },
       {
         id: "10_special_contracts",
         title: "Especialista en casos especials",
-        description: "Completa 10 contractes especials",
+        description: "Completa 200 contractes especials",
         type: "special_contract_complete",
-        target: 10,
+        target: 200,
         reward: { xp: 1200, cash: 15000 },
         unlocks: ["hall_of_fame"]
       }
