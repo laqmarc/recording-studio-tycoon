@@ -170,22 +170,22 @@ export async function getCurrentObjective() {
   if (!chapter) return null;
   
   const objective = chapter.objectives[state.campaign.currentObjective];
-  console.log('📋 getCurrentObjective returning:', objective);
+  // console.log('📋 getCurrentObjective returning:', objective);
   return objective;
 }
 
 export async function checkObjectiveProgress(type, currentValue, targetValue = null) {
   const { state } = await import('./state.js');
   
-  console.log('🎯 checkObjectiveProgress called:', { type, currentValue, targetValue, campaignActive: state.campaign?.active });
+   //   console.log('🎯 checkObjectiveProgress called:', { type, currentValue, targetValue, campaignActive: state.campaign?.active });
   
   if (!state.campaign.active) return false;
   
   const objective = await getCurrentObjective();
-  console.log('📋 Current objective:', objective);
+  // console.log('📋 Current objective:', objective);
   
   if (!objective || objective.type !== type) {
-    console.log('❌ No matching objective found for type:', type);
+      // console.log('❌ No matching objective found for type:', type);
     return false;
   }
   
@@ -195,25 +195,26 @@ export async function checkObjectiveProgress(type, currentValue, targetValue = n
   // Special handling for room_built objectives
   if (type === 'room_built' && targetValue) {
     completed = targetValue === objective.target;
-    console.log('🏠 Room built check:', { 
-      builtRoomType: targetValue, 
-      requiredRoomType: objective.target, 
-      completed 
-    });
+    // console.log('🏠 Room built check:', 
+    //   { 
+    //   builtRoomType: targetValue, 
+    //   requiredRoomType: objective.target, 
+    //   completed 
+    // });
   } else {
     completed = currentValue >= target;
-    console.log('🎯 Standard check:', { 
-      currentValue, 
-      target, 
-      type, 
-      objectiveId: objective.id,
-      completed: completed,
-      completedEnough: `${currentValue} >= ${target} = ${completed}`
-    });
+    // console.log('🎯 Standard check:', { 
+    //   currentValue, 
+    //   target, 
+    //   type, 
+    //   objectiveId: objective.id,
+    //   completed: completed,
+    //   completedEnough: `${currentValue} >= ${target} = ${completed}`
+    // });
   }
   
   if (completed) {
-    console.log('✅ Objective completed!');
+    // console.log('✅ Objective completed!');
     await completeObjective(objective.id);
     // Update UI immediately after completing objective
     try {

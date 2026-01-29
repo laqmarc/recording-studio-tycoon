@@ -1,8 +1,8 @@
 import { state } from './state.js';
 import { showNotification } from './helpers.js';
 
-const btn = document.getElementById('btnAudio');
-const slider = document.getElementById('audioVol');
+// const btn = document.getElementById('btnAudio');
+// const slider = document.getElementById('audioVol');
 
 let ctx = null;
 let gain = null;
@@ -51,10 +51,10 @@ function setVolume(v) {
 }
 
 function updateUI() {
-  if (!btn) return;
-  const enabled = !!(state.ui && state.ui.ambient && state.ui.ambient.enabled);
-  btn.textContent = enabled ? 'Audio: ON' : 'Audio: OFF';
-  if (slider) slider.value = String(Math.round(((state.ui && state.ui.ambient && state.ui.ambient.volume) || 0.2) * 100));
+  // if (!btn) return;
+  // const enabled = !!(state.ui && state.ui.ambient && state.ui.ambient.enabled);
+  // btn.textContent = enabled ? 'Audio: ON' : 'Audio: OFF';
+  // if (slider) slider.value = String(Math.round(((state.ui && state.ui.ambient && state.ui.ambient.volume) || 0.2) * 100));
 }
 
 function toggleAmbient() {
@@ -98,13 +98,13 @@ function stopVuTicks() {
   vuTimer = null;
 }
 
-if (btn) btn.addEventListener('click', toggleAmbient);
-if (slider) slider.addEventListener('input', () => {
-  const v = Number(slider.value) / 100;
-  setVolume(v);
-  updateUI();
-  try { if (typeof window.saveState === 'function') window.saveState(); } catch (e) {}
-});
+// if (btn) btn.addEventListener('click', toggleAmbient);
+// if (slider) slider.addEventListener('input', () => {
+//   const v = Number(slider.value) / 100;
+//   setVolume(v);
+//   updateUI();
+//   try { if (typeof window.saveState === 'function') window.saveState(); } catch (e) {}
+// });
 
 if (typeof window !== 'undefined') {
   window.playClick = playClick;

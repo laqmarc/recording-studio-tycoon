@@ -5,6 +5,19 @@ Prototype jugable per gestionar un estudi: sales, inventari, clients, calendaris
 **Inici rapid**
 - Obre `index.html` en un navegador modern (o serveix el directori amb un servidor static).
 
+**Música de fons**
+El joc inclou un reproductor de música integrat. Per afegir les teves pròpies cançons:
+1. Crea la carpeta `assets/music/` (si no existeix).
+2. Afegeix fitxers MP3 a la carpeta.
+3. Edita `audio-player.js` i modifica la llista `playlist` amb els teus fitxers, per exemple:
+   ```javascript
+   const playlist = [
+     { title: 'Nom de la cançó', src: 'assets/music/el_teu_fitxer.mp3' },
+     // afegeix més...
+   ];
+   ```
+4. Recarrega la pàgina. El reproductor apareix com una icona 🎵 a la cantonada inferior dreta; clica per obrir els controls.
+
 **Com jugar (resum)**
 - `Shop`: compra equips i afegeix-los a inventari.
 - `Sales`: selecciona una sala i instal·la equips amb drag & drop al floorplan.

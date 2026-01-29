@@ -44,18 +44,18 @@ export async function updateCampaignUI() {
 export function initializeCampaignUI() {
   // Wait longer for state to be fully loaded from localStorage
   setTimeout(() => {
-    console.log('initializeCampaignUI called, checking state...');
+      // console.log('initializeCampaignUI called, checking state...');
     showCampaignUI();
   }, 1500);
 }
 
 function showCampaignUI() {
   try {
-    console.log('showCampaignUI called, state.campaign.active:', state.campaign?.active);
+    // console.log('showCampaignUI called, state.campaign.active:', state.campaign?.active);
     
     // Add campaign button to main menu if not in campaign mode
     if (!state.campaign || !state.campaign.active) {
-      console.log('Showing campaign button');
+          // console.log('Showing campaign button');
       const mainContent = document.querySelector('main');
       if (mainContent && !document.querySelector('.campaign-button-panel')) {
         const campaignButton = document.createElement('div');
@@ -72,18 +72,18 @@ function showCampaignUI() {
         mainContent.insertBefore(campaignButton, mainContent.firstChild);
       }
     } else {
-      console.log('Campaign is active, updating UI');
+      // console.log('Campaign is active, updating UI');
       // Show campaign progress if campaign is active
       updateCampaignUI();
     }
   } catch (e) {
-    console.log('Campaign UI error:', e);
+    // console.log('Campaign UI error:', e);
   }
 }
 
 export async function startCampaign() {
   try {
-    console.log('Starting campaign...');
+    //  console.log('Starting campaign...');
     
     // Initialize campaign state directly
     state.campaign = {
@@ -97,13 +97,13 @@ export async function startCampaign() {
       achievements: []
     };
     
-    console.log('Campaign state set:', state.campaign);
+    // console.log('Campaign state set:', state.campaign);
     
     // Save campaign state immediately
     const { saveState } = await import('./persistence.js');
     await saveState();
     
-    console.log('Campaign state saved');
+    // console.log('Campaign state saved');
     
     // Show confirmation before reload
     const notification = document.createElement('div');
@@ -133,7 +133,7 @@ export async function startCampaign() {
     }, 2000);
     
   } catch (e) {
-    console.error('Error starting campaign:', e);
+    // console.error('Error starting campaign:', e);
     alert('Error al iniciar la campanya. Refresca la pàgina i torna-ho a provar.');
   }
 }

@@ -22,10 +22,6 @@
                 <button class="btn" id="btnTheme">Tema: Fosc</button>
                 <button class="btn" id="btnNextDay">Passar dia</button>
                 <button class="btn" id="btnCheat">Cheat: +€ +XP</button>
-                <div class="audio-controls">
-                    <button class="btn" id="btnAudio">Audio: OFF</button>
-                    <input id="audioVol" class="audio-range" type="range" min="0" max="100" value="20" />
-                </div>
             </div>
         </div>
         <div class="header-row header-nav">
@@ -227,7 +223,8 @@
         <section class="page" data-page="stats">
             <div class="page-grid page-stats" id="statsPage"></div>
         </section>
-    </main>
+  </main>
+  <div id="audio-player" style="display:block;"></div>
     <footer class="mobile-footer">
         <div class="kpi mobile-kpis" id="mobileKpis"></div>
     </footer>
@@ -251,7 +248,20 @@
     <script type="module" src="ui_render.mjs"></script>
     <script type="module" src="theme.js"></script>
     <script type="module" src="tutorial.js"></script>
-    <script type="module" src="audio_ambient.js"></script>
+  <script type="module" src="audio_ambient.js"></script>
+  <script type="module">
+    import { initAudioPlayer } from './audio-player.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      const playlist = [
+        { title: 'Moavii - Sunshine (freetouse.com)', src: 'assets/music/Moavii-Sunshine.mp3' },
+        { title: 'Burgundy X - Back Alley (freetouse.com)', src: 'assets/music/Burgundy-X-Back-Alley.mp3' },
+        { title: 'Aylex - Good Days (freetouse.com)', src: 'assets/music/Aylex-Good-Days.mp3' }
+      ];
+    const containerId = 'audio-player';
+    const ap = initAudioPlayer(containerId, playlist);
+    window._audioPlaylist = ap;
+    });
+  </script>
 
 </body>
 
