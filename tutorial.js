@@ -111,8 +111,20 @@ const steps = [
   },
   {
     title: "Controls",
-    text: "Pots canviar tema, activar audio ambient i resetar la persistencia des del header.",
+    text: "Pots canviar tema, activar mode campanya, audio ambient i resetar la persistencia des del header.",
     selector: "header",
+    page: "rooms"
+  },
+  {
+    title: "Mode Campanya",
+    text: "Activa el mode campanya per tenir objectius i progrés. Apareix una barra superior amb missions.",
+    selector: "#btnCampaign",
+    page: "rooms"
+  },
+  {
+    title: "Reproductor de Música",
+    text: "Clica la icona 🎵 per obrir el reproductor. Pots reproduir, pausar, canviar cançó i ajustar volum.",
+    selector: "#audio-player",
     page: "rooms"
   },
   {
