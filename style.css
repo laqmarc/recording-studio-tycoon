@@ -1621,6 +1621,16 @@ button#btnCheat{
   margin-top: 6px;
 }
 
+.price-highlight {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.rate-highlight {
+  color: var(--acc);
+  font-weight: 600;
+}
+
 .offer-actions {
   margin-top: 8px;
   display: flex;

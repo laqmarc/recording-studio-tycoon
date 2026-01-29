@@ -35,6 +35,28 @@ export function renderOffers() {
     return;
   }
 
+  const createPriceSpan = (value) => {
+    const span = document.createElement('span');
+    span.className = 'price-highlight';
+    span.textContent = euro(value);
+    return span;
+  };
+
+  const createRateSpan = (value) => {
+    const span = document.createElement('span');
+    span.className = 'rate-highlight';
+    span.textContent = `${Math.round(value)} €/h`;
+    return span;
+  };
+
+  const appendMetaParts = (meta, parts) => {
+    parts.forEach((part) => {
+      if (part == null) return;
+      if (part.nodeType) meta.appendChild(part);
+      else meta.appendChild(document.createTextNode(part));
+    });
+  };
+
   if (specials.length) {
     const head = document.createElement('div'); head.className = 'offer-section';
     head.textContent = '🌍 Projectes especials';
@@ -49,7 +71,15 @@ export function renderOffers() {
       const days = Math.max(1, Math.round(Number(offer.duration_hours || 0) / workHours));
       const meta = document.createElement('div'); meta.className = 'offer-meta';
       const expires = offer.expires_day ? ` · Expira dia ${offer.expires_day}` : '';
-      meta.textContent = `${days} dies · ${offer.duration_hours}h · ${euro(offer.base_pay)} · Qualitat ${offer.target_quality}${expires}`;
+      const hours = Number(offer.duration_hours || 0);
+      const rate = hours ? Number(offer.base_pay || 0) / hours : 0;
+      appendMetaParts(meta, [
+        `${days} dies · ${offer.duration_hours}h · `,
+        createPriceSpan(offer.base_pay),
+        ' · ',
+        createRateSpan(rate),
+        ` · Qualitat ${offer.target_quality}${expires}`
+      ]);
       const reqEl = getRequirementsElement(offer, state.selected.roomIndex);
       const milestones = document.createElement('div'); milestones.className = 'tiny muted';
       const count = Array.isArray(offer.milestones) ? offer.milestones.length : 0;
@@ -82,7 +112,15 @@ export function renderOffers() {
     row.appendChild(name); row.appendChild(pill);
     const meta = document.createElement('div'); meta.className = 'offer-meta';
     const roomLabel = offer.requirements && offer.requirements.room_type ? formatRoomLabel(offer.requirements.room_type) : 'any';
-    meta.textContent = `${offer.duration_hours}h · ${euro(offer.base_pay)} · Qualitat ${offer.target_quality} · Deadline ${offer.deadline_days}d · Sala ${roomLabel}`;
+    const hours = Number(offer.duration_hours || 0);
+    const rate = hours ? Number(offer.base_pay || 0) / hours : 0;
+    appendMetaParts(meta, [
+      `${offer.duration_hours}h · `,
+      createPriceSpan(offer.base_pay),
+      ' · ',
+      createRateSpan(rate),
+      ` · Qualitat ${offer.target_quality} · Deadline ${offer.deadline_days}d · Sala ${roomLabel}`
+    ]);
     const reqEl = getRequirementsElement(offer, state.selected.roomIndex);
     const actions = document.createElement('div'); actions.className = 'offer-actions';
     const btnAccept = document.createElement('button'); btnAccept.className = 'btn2 btnOk'; btnAccept.textContent = 'Acceptar';

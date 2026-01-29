@@ -99,6 +99,28 @@ export function renderRooms(options = {}) {
     });
     const contractsMeta = document.getElementById('contractsMeta'); if (contractsMeta) contractsMeta.textContent = `${applicable.length} contractes`;
     clearChildren(leftContracts);
+
+    const createPriceSpan = (value) => {
+      const span = document.createElement('span');
+      span.className = 'price-highlight';
+      span.textContent = euro(value);
+      return span;
+    };
+
+    const createRateSpan = (value) => {
+      const span = document.createElement('span');
+      span.className = 'rate-highlight';
+      span.textContent = `${Math.round(value)} €/h`;
+      return span;
+    };
+
+    const appendMetaParts = (meta, parts) => {
+      parts.forEach((part) => {
+        if (part == null) return;
+        if (part.nodeType) meta.appendChild(part);
+        else meta.appendChild(document.createTextNode(part));
+      });
+    };
     if (!applicable.length) {
       const m = document.createElement('div'); m.className = 'muted'; m.textContent = 'No hi ha contractes compatibles per aquesta sala.';
       leftContracts.appendChild(m);
@@ -142,7 +164,14 @@ export function renderRooms(options = {}) {
         }
 
         const meta = document.createElement('div'); meta.className = 'muted'; meta.style.marginTop = '6px';
-        meta.textContent = `${c.duration_hours}h · ${euro(c.base_pay)}`;
+        const hours = Number(c.duration_hours || 0);
+        const rate = hours ? Number(c.base_pay || 0) / hours : 0;
+        appendMetaParts(meta, [
+          `${c.duration_hours}h · `,
+          createPriceSpan(c.base_pay),
+          ' · ',
+          createRateSpan(rate)
+        ]);
         if (isDone) {
           const pillDone = document.createElement('span'); pillDone.className = 'pill'; pillDone.textContent = 'Complet';
           meta.appendChild(document.createTextNode(' ')); meta.appendChild(pillDone);
