@@ -223,8 +223,8 @@ export function hookCampaignEvents() {
 // Campaign notification styles
 const campaignStyles = `
   .campaign-status {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 15px 20px;
+    background: linear-gradient(135deg, #000000 0%, #2a2a2a 100%);
+    padding: 4px 8px;
     margin: 10px 0;
     border-radius: 8px;
     color: white;
@@ -234,7 +234,7 @@ const campaignStyles = `
     display: flex;
     align-items: center;
     gap: 15px;
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .progress-bar {

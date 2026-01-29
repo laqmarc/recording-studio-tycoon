@@ -181,9 +181,11 @@ export function workOnContract(contractId, hours) {
           allSchedule: state.schedule.length
         });
         if (state.campaign && state.campaign.active) {
+          const specialCompleted = state.db.contracts.filter(c => c.completed && c.special).length;
           import('../campaign.js').then(module => {
             console.log('📞 Calling checkObjectiveProgress for contracts...');
             const result = module.checkObjectiveProgress('contract_complete', totalCompleted);
+            module.checkObjectiveProgress('special_contract_complete', specialCompleted);
             console.log('📋 Check result:', result);
           }).catch(e => console.log('Campaign check error:', e));
         }
@@ -271,9 +273,11 @@ export function applyScheduledWork(contractId, hours, roomIndex, day) {
           allSchedule: state.schedule.length
         });
         if (state.campaign && state.campaign.active) {
+          const specialCompleted = state.db.contracts.filter(c => c.completed && c.special).length;
           import('../campaign.js').then(module => {
             console.log('📞 Calling checkObjectiveProgress for contracts...');
             const result = module.checkObjectiveProgress('contract_complete', totalCompleted);
+            module.checkObjectiveProgress('special_contract_complete', specialCompleted);
             console.log('📋 Check result:', result);
           }).catch(e => console.log('Campaign check error:', e));
         }

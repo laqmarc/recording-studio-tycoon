@@ -111,7 +111,7 @@ export function installToRoom(roomIndex, category, itemId) {
       try {
         if (wasEmpty && state.campaign && state.campaign.active) {
           import('./campaign.js').then(module => {
-            module.checkObjectiveProgress('room_built', 1, room.category);
+            module.checkObjectiveProgress('room_built', 1, room.type);
           }).catch(e => console.log('Campaign room check error:', e));
         }
       } catch (e) {}

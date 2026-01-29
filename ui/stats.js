@@ -1,6 +1,7 @@
 import { state } from '../state.js';
 import { euro, calcRoomMaintenanceDaily, xpToNext, takeLoan, repayLoan, openCreditLine, returnLease } from '../helpers.js';
-import { clearChildren, formatGenreLabel } from './shared.js';
+import { clearChildren, formatGenreLabel, formatRoomLabel } from './shared.js';
+import { CAMPAIGN_CHAPTERS } from '../campaign.js';
 
 function makeStat(label, value, hint) {
   const item = document.createElement('div');
@@ -175,6 +176,110 @@ function buildRepBars() {
   return wrap;
 }
 
+function getObjectiveProgress(obj) {
+  const contracts = Array.isArray(state.db.contracts) ? state.db.contracts : [];
+  const sessions = state.analytics && Array.isArray(state.analytics.sessions) ? state.analytics.sessions : [];
+  const revenueByDay = state.analytics && state.analytics.revenueByDay ? state.analytics.revenueByDay : {};
+  const repByGenre = state.reputation && state.reputation.byGenre ? state.reputation.byGenre : {};
+  const roomInstalled = (roomType) => {
+    const rooms = Array.isArray(state.db.rooms) ? state.db.rooms : [];
+    const installs = Array.isArray(state.roomsInstalled) ? state.roomsInstalled : [];
+    return rooms.some((room, idx) => {
+      if (!room || room.type !== roomType) return false;
+      const bag = installs[idx] || {};
+      return Object.values(bag).some(arr => Array.isArray(arr) && arr.length > 0);
+    });
+  };
+
+  switch (obj.type) {
+    case 'contract_complete': {
+      const current = contracts.filter(c => c.completed).length;
+      return { current, target: obj.target, done: current >= obj.target, label: `${current}/${obj.target}` };
+    }
+    case 'special_contract_complete': {
+      const current = contracts.filter(c => c.completed && c.special).length;
+      return { current, target: obj.target, done: current >= obj.target, label: `${current}/${obj.target}` };
+    }
+    case 'revenue_total': {
+      const current = Object.values(revenueByDay).reduce((sum, v) => sum + Number(v || 0), 0);
+      return { current, target: obj.target, done: current >= obj.target, label: `${euro(current)} / ${euro(obj.target)}` };
+    }
+    case 'level': {
+      const current = Number(state.player && state.player.level || 1);
+      return { current, target: obj.target, done: current >= obj.target, label: `${current}/${obj.target}` };
+    }
+    case 'room_built': {
+      const done = roomInstalled(obj.target);
+      return { current: done ? 1 : 0, target: 1, done, label: done ? 'Fet' : `Pend. ${formatRoomLabel(obj.target)}` };
+    }
+    case 'reputation': {
+      const current = Number(state.reputation && state.reputation.overall || 0);
+      return { current, target: obj.target, done: current >= obj.target, label: `${current}/${obj.target}` };
+    }
+    case 'genre_reputation': {
+      const values = Object.values(repByGenre).map(v => Number(v || 0));
+      const current = values.length ? Math.max(...values) : 0;
+      return { current, target: obj.target, done: current >= obj.target, label: `${current}/${obj.target}` };
+    }
+    case 'quality_single': {
+      const maxQuality = sessions.length ? Math.max(...sessions.map(s => Number(s.quality || 0))) : 0;
+      return { current: maxQuality, target: obj.target, done: maxQuality >= obj.target, label: `${maxQuality.toFixed(1)}/${obj.target}` };
+    }
+    default:
+      return { current: 0, target: obj.target, done: false, label: '—' };
+  }
+}
+
+function buildCampaignPanel() {
+  const panel = createPanel('🧭 Campanya');
+  const wrap = document.createElement('div'); wrap.className = 'campaign-list';
+
+  const active = state.campaign && state.campaign.active;
+  const currentChapter = active ? Number(state.campaign.currentChapter || 0) : 0;
+  const currentObjective = active ? Number(state.campaign.currentObjective || 0) : 0;
+  const completed = active && Array.isArray(state.campaign.completedObjectives) ? state.campaign.completedObjectives : [];
+
+  if (!active) {
+    const note = document.createElement('div'); note.className = 'muted';
+    note.textContent = 'Campanya desactivada. Activa-la amb el botó "Campanya".';
+    panel.content.appendChild(note);
+  }
+
+  CAMPAIGN_CHAPTERS.forEach((chapter, chIndex) => {
+    const chapterEl = document.createElement('div'); chapterEl.className = 'campaign-chapter';
+    const title = document.createElement('div'); title.className = 'campaign-chapter-title';
+    title.textContent = `${chIndex + 1}. ${chapter.title}`;
+    const desc = document.createElement('div'); desc.className = 'tiny muted'; desc.textContent = chapter.description;
+    chapterEl.appendChild(title); chapterEl.appendChild(desc);
+
+    chapter.objectives.forEach((obj, objIndex) => {
+      const progress = getObjectiveProgress(obj);
+      const isCurrent = active && chIndex === currentChapter && objIndex === currentObjective;
+      const isDone = progress.done || completed.includes(obj.id);
+
+      const row = document.createElement('div'); row.className = 'campaign-objective';
+      if (isCurrent) row.classList.add('current');
+      if (isDone) row.classList.add('done');
+
+      const left = document.createElement('div'); left.className = 'campaign-left';
+      const label = document.createElement('div'); label.className = 'campaign-title'; label.textContent = obj.title;
+      const sub = document.createElement('div'); sub.className = 'tiny muted'; sub.textContent = obj.description;
+      left.appendChild(label); left.appendChild(sub);
+
+      const right = document.createElement('div'); right.className = 'campaign-progress';
+      right.textContent = progress.label;
+
+      row.appendChild(left); row.appendChild(right);
+      chapterEl.appendChild(row);
+    });
+
+    wrap.appendChild(chapterEl);
+  });
+
+  panel.content.appendChild(wrap);
+  return panel;
+}
+
 export function renderStatsPage() {
   const page = document.getElementById('statsPage');
   if (!page) return;
@@ -227,6 +332,8 @@ export function renderStatsPage() {
 
   const reputation = createPanel('🎯 Reputacio per genere');
   reputation.content.appendChild(buildRepBars());
+
+  const campaignPanel = buildCampaignPanel();
 
   const rooms = createPanel('🏗️ Sales i equips');
   const roomList = document.createElement('div'); roomList.className = 'stat-list';
@@ -541,6 +648,7 @@ export function renderStatsPage() {
   grid.appendChild(controls.panel);
   grid.appendChild(summary.panel);
   grid.appendChild(reputation.panel);
+  grid.appendChild(campaignPanel.panel);
   grid.appendChild(rooms.panel);
   grid.appendChild(finance.panel);
   grid.appendChild(creditPanel.panel);

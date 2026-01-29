@@ -259,12 +259,14 @@ export function simulateContract(contractId) {
     state.reputation.overall += repGain + qaRep;
     state.reputation.byGenre[genreKey] = (state.reputation.byGenre[genreKey] || 0) + repGain + qaRep;
     
-    // Check campaign objectives for reputation
+    // Check campaign objectives for reputation, quality, and revenue
     try {
       if (state.campaign && state.campaign.active) {
         import('./campaign.js').then(module => {
+          module.checkObjectiveProgress('quality_single', Number(res.final_quality || 0));
           module.checkObjectiveProgress('reputation', state.reputation.overall);
-          module.checkObjectiveProgress('genre_reputation', state.reputation.byGenre[genreKey]);
+          const maxGenreRep = Math.max(0, ...Object.values(state.reputation.byGenre || {}).map(v => Number(v) || 0));
+          module.checkObjectiveProgress('genre_reputation', maxGenreRep);
           
           // Check total revenue objectives
           const totalRevenue = Object.values(state.analytics.revenueByDay)

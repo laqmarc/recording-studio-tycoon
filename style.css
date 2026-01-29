@@ -1638,6 +1638,58 @@ button#btnCheat{
   flex-wrap: wrap;
 }
 
+.campaign-list {
+  display: grid;
+  gap: 10px;
+}
+
+.campaign-chapter {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.campaign-chapter-title {
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.campaign-objective {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 6px;
+  border-radius: 8px;
+}
+
+.campaign-objective + .campaign-objective {
+  border-top: 1px dashed var(--line);
+}
+
+.campaign-objective.current {
+  background: rgba(35, 217, 160, 0.08);
+}
+
+.campaign-objective.done .campaign-title {
+  color: var(--ok);
+}
+
+.campaign-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.campaign-progress {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+  min-width: 80px;
+}
+
 .schedule-grid {
   display: grid;
   gap: 6px;
