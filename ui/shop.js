@@ -1,6 +1,7 @@
 import { state, installedIds } from '../state.js';
 import { euro, avgStat, invAdd, log, showNotification } from '../helpers.js';
 import { clearChildren, createArt, formatCategoryLabel, formatStatKey, getItemArt, getPrimaryStat, getTopStats } from './shared.js';
+import { ROOM_BUNDLE_DEFS, SMALL_CONTROL_ROOM_BUNDLES, getGenreBundles } from './shop_bundles.js';
 
 let micTypeListenerAdded = false;
 
@@ -35,27 +36,11 @@ function buildBundles(roomIndex) {
   const isSmallControlRoom = roomType === 'control_room' && Number(room && room.size_m2 || 0) > 0 && Number(room.size_m2) <= 16;
 
   if (isSmallControlRoom) {
-    const bundleItems = [
-      pickItemByName('t.akustik QRD Diffusor'),
-      pickItemByName('t.akustik QRD Diffusor'),
-      pickItemByName('Mackie CR4-X'),
-      pickItemByName('Mackie CR4-X'),
-      pickItemByName('Audacity')
-    ].filter(Boolean);
-    if (bundleItems.length) {
-      bundles.push({ name: 'Control Room Essentials', items: bundleItems, total: 350, fixedTotal: true });
-    }
-    const vocalItems = [
-      pickItemByName('Micròfon Condensador Vocal'),
-      pickItemByName('Behringer MIC200 Tube Ultragain'),
-      pickItemByName('Tascam TH-02'),
-      pickItemByName('the sssnake XLR3 Basic'),
-      pickItemByName('the sssnake XLR3 Basic'),
-      pickItemByName('Millenium MS3003'),
-      pickItemByName('Focusrite Scarlett Solo 4th Gen')
-    ].filter(Boolean);
-    if (vocalItems.length) {
-      bundles.push({ name: 'Vocal Starter Pack', items: vocalItems, total: 300, fixedTotal: true });
+    for (const def of SMALL_CONTROL_ROOM_BUNDLES) {
+      const items = (def.itemsByName || []).map(name => pickItemByName(name)).filter(Boolean);
+      if (items.length) {
+        bundles.push({ name: def.name, items, total: def.total, fixedTotal: def.fixedTotal });
+      }
     }
     // const bundleCheat = [
     //   pickItemByName('RPG Skyline Diffuser'),
@@ -95,119 +80,8 @@ function buildBundles(roomIndex) {
     return bundles;
   }
 
-  const defs = {
-    vocal_booth: [
-      { name: 'Vocal Booth Kit', items: [
-        { cat: 'mic', stat: 'mic_quality' },
-        { cat: 'preamp', stat: 'preamp_quality' },
-        { cat: 'interface', stat: 'conversion_quality' },
-        { cat: 'headphones', stat: 'hp_accuracy' },
-        { cat: 'cable' },
-        { cat: 'mic_stand' }
-      ]}
-    ],
-    live_room: [
-      { name: 'Live Tracking Pack', items: [
-        { cat: 'mic', stat: 'mic_quality' },
-        { cat: 'mic', stat: 'mic_quality' },
-        { cat: 'preamp_multi', stat: 'preamp_quality' },
-        { cat: 'interface', stat: 'conversion_quality' },
-        { cat: 'headphone_amp' },
-        { cat: 'cable' }
-      ]}
-    ],
-    mastering_suite: [
-      { name: 'Suite de Mastering', items: [
-        { cat: 'monitor', stat: 'monitor_accuracy' },
-        { cat: 'acoustic_treatment', stat: 'room_acoustic_add' },
-        { cat: 'software_mix_master', stat: 'daw_quality' },
-        { cat: 'effects' }
-      ]}
-    ],
-    podcast_studio: [
-      { name: 'Podcast Studio Kit', items: [
-        { cat: 'mic', stat: 'mic_quality' },
-        { cat: 'mic', stat: 'mic_quality' },
-        { cat: 'preamp', stat: 'preamp_quality' },
-        { cat: 'interface', stat: 'conversion_quality' },
-        { cat: 'headphones', stat: 'hp_accuracy' },
-        { cat: 'pop_filter' },
-        { cat: 'mic_stand' },
-        { cat: 'software_daw', stat: 'daw_quality' }
-      ]}
-    ],
-    foley_room: [
-      { name: 'Foley Essentials', items: [
-        { cat: 'mic', stat: 'mic_quality' },
-        { cat: 'mic', stat: 'mic_quality' },
-        { cat: 'preamp', stat: 'preamp_quality' },
-        { cat: 'interface', stat: 'conversion_quality' },
-        { cat: 'headphones', stat: 'hp_accuracy' },
-        { cat: 'instruments', stat: 'instrument_quality' },
-        { cat: 'effects' }
-      ]}
-    ],
-    edit_room: [
-      { name: "Kit d'Edicio", items: [
-        { cat: 'monitor', stat: 'monitor_accuracy' },
-        { cat: 'interface', stat: 'conversion_quality' },
-        { cat: 'headphones', stat: 'hp_accuracy' },
-        { cat: 'software_daw', stat: 'daw_quality' },
-        { cat: 'software_fx', stat: 'daw_quality' },
-        { cat: 'acoustic_treatment', stat: 'room_acoustic_add' }
-      ]}
-    ],
-    streaming_room: [
-      { name: 'Streaming Rig', items: [
-        { cat: 'mic', stat: 'mic_quality' },
-        { cat: 'interface', stat: 'conversion_quality' },
-        { cat: 'headphones', stat: 'hp_accuracy' },
-        { cat: 'software', stat: 'daw_quality' }
-      ]}
-    ],
-    control_room: [
-      { name: 'Mix Suite', items: [
-        { cat: 'monitor', stat: 'monitor_accuracy' },
-        { cat: 'acoustic_treatment', stat: 'room_acoustic_add' },
-        { cat: 'software_mix_master', stat: 'daw_quality' }
-      ]},
-      { name: 'Production Pack', items: [
-        { cat: 'interface', stat: 'conversion_quality' },
-        { cat: 'software', stat: 'daw_quality' },
-        { cat: 'midi_controller' },
-        { cat: 'instruments', stat: 'instrument_quality' }
-      ]}
-    ]
-  };
-
-  const genreBundles = [];
-  const genres = state.reputation && state.reputation.byGenre ? Object.keys(state.reputation.byGenre) : [];
-  if (genres.includes('rap') || genres.includes('hiphop')) {
-    genreBundles.push({ name: 'HipHop Chain', items: [
-      { cat: 'mic', stat: 'mic_quality' },
-      { cat: 'preamp', stat: 'preamp_quality' },
-      { cat: 'software', stat: 'daw_quality' },
-      { cat: 'headphones', stat: 'hp_accuracy' }
-    ]});
-  }
-  if (genres.includes('rock')) {
-    genreBundles.push({ name: 'Rock Tracking', items: [
-      { cat: 'mic', stat: 'mic_quality' },
-      { cat: 'preamp_multi', stat: 'preamp_quality' },
-      { cat: 'interface', stat: 'conversion_quality' },
-      { cat: 'headphone_amp' }
-    ]});
-  }
-  if (genres.includes('podcast')) {
-    genreBundles.push({ name: 'Podcast Duo', items: [
-      { cat: 'mic', stat: 'mic_quality' },
-      { cat: 'mic', stat: 'mic_quality' },
-      { cat: 'interface', stat: 'conversion_quality' },
-      { cat: 'headphones', stat: 'hp_accuracy' }
-    ]});
-  }
-
-  const bundleDefs = [...(defs[roomType] || defs.control_room), ...genreBundles];
+  const genreBundles = getGenreBundles(state.reputation && state.reputation.byGenre ? state.reputation.byGenre : {});
+  const bundleDefs = [...(ROOM_BUNDLE_DEFS[roomType] || ROOM_BUNDLE_DEFS.control_room), ...genreBundles];
 
   for (const def of bundleDefs) {
     const picks = [];
