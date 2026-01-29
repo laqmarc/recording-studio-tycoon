@@ -206,25 +206,14 @@ export function workOnContract(contractId, hours) {
       try {
         const totalCompleted = Number(state.analytics && state.analytics.completedContracts || state.db.contracts.filter(c => c.completed).length);
         const scheduleCompleted = state.schedule.filter(c => c.completed).length;
-        console.log('🔍 Contract completion check:', { 
-          totalCompleted, 
-          scheduleCompleted, 
-          campaignActive: state.campaign?.active,
-          allContracts: state.db.contracts.length,
-          allSchedule: state.schedule.length
-        });
         if (state.campaign && state.campaign.active) {
           const specialCompleted = Number(state.analytics && state.analytics.completedSpecialContracts || state.db.contracts.filter(c => c.completed && c.special).length);
           import('../campaign.js').then(module => {
-            console.log('📞 Calling checkObjectiveProgress for contracts...');
             const result = module.checkObjectiveProgress('contract_complete', totalCompleted);
             module.checkObjectiveProgress('special_contract_complete', specialCompleted);
-            console.log('📋 Check result:', result);
-          }).catch(e => console.log('Campaign check error:', e));
+          }).catch(() => {});
         }
-      } catch (e) {
-        console.log('Campaign try-catch error:', e);
-      }
+      } catch (e) {}
       
       saveState();
     }
@@ -307,25 +296,14 @@ export function applyScheduledWork(contractId, hours, roomIndex, day) {
       try {
         const totalCompleted = Number(state.analytics && state.analytics.completedContracts || state.db.contracts.filter(c => c.completed).length);
         const scheduleCompleted = state.schedule.filter(c => c.completed).length;
-        console.log('🔍 Contract completion check (applyScheduledWork):', { 
-          totalCompleted, 
-          scheduleCompleted, 
-          campaignActive: state.campaign?.active,
-          allContracts: state.db.contracts.length,
-          allSchedule: state.schedule.length
-        });
         if (state.campaign && state.campaign.active) {
           const specialCompleted = Number(state.analytics && state.analytics.completedSpecialContracts || state.db.contracts.filter(c => c.completed && c.special).length);
           import('../campaign.js').then(module => {
-            console.log('📞 Calling checkObjectiveProgress for contracts...');
             const result = module.checkObjectiveProgress('contract_complete', totalCompleted);
             module.checkObjectiveProgress('special_contract_complete', specialCompleted);
-            console.log('📋 Check result:', result);
-          }).catch(e => console.log('Campaign check error:', e));
+          }).catch(() => {});
         }
-      } catch (e) {
-        console.log('Campaign try-catch error:', e);
-      }
+      } catch (e) {}
       
       if (renderAll) renderAll();
       saveState();

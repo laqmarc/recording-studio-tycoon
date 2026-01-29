@@ -1639,7 +1639,7 @@ function pickTemplate(templates, genre) {
   return pool[randInt(0, pool.length - 1)];
 }
 
-function getEligibleTemplates(repOverall) {
+export function getEligibleTemplates(repOverall) {
   const playerLevel = Number((state.player && state.player.level) || 1);
   const unlockedTypes = getUnlockedRoomTypes();
   return TEMPLATE_POOL.filter(t => {
@@ -1736,7 +1736,7 @@ function applyTalentMetadata(template, offer, genre) {
   }
 }
 
-function buildStages(template, genre, totalHours) {
+export function buildStages(template, genre, totalHours) {
   if (!Array.isArray(template.stages) || !template.stages.length) return null;
   const stages = [];
   let remaining = Math.max(1, Number(totalHours || 1));

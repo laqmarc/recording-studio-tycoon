@@ -17,6 +17,7 @@ describe('ui/schedule', () => {
     state.player = { level: 1 };
     state.time = { day: 1, hour: 0, workHoursPerDay: 8 };
     state.schedule = [{ contractId: 'c1', roomIndex: 0, day: 1, hours: 4 }];
+    state.ui = { scheduleShowEmptyRooms: true };
   });
 
   test('renders grid and scheduled items for visible rooms', () => {

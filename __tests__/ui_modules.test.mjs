@@ -137,7 +137,7 @@ describe('ui/requirements', () => {
     const el = getRequirementsElement(contract, 0);
     expect(el).toBeTruthy();
     const text = el.textContent;
-    expect(text).toMatch(/Sala: live_room/);
+    expect(text).toMatch(/Sala: Sala en directe/);
     expect(text).toMatch(/Mic vocals/);
     expect(text).toMatch(/Mic guitarra/);
   });

@@ -36,7 +36,7 @@ describe('simulateRecording edge cases', () => {
 
   test('different contract types compute without error', () => {
     const state = baseState();
-    const types = ['recording','mix','streaming','master'];
+    const types = ['recording','mix','streaming','master','edit'];
     for (const t of types) {
       const out = simulateRecording(state, 0, { type: t, base_pay: 150 });
       expect(typeof out.final_quality).toBe('number');

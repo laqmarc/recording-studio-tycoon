@@ -16,6 +16,7 @@ describe('ui/schedule scheduled item move', () => {
       { contractId: 'c1', roomIndex: 0, day: 1, hours: 2 },
       { contractId: 'c1', roomIndex: 0, day: 2, hours: 2 }
     ];
+    state.ui = { scheduleShowEmptyRooms: true };
     window.saveState = () => {};
     window.checkContractRequirements = () => true;
   });

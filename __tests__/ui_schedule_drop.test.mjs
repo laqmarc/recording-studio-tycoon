@@ -14,6 +14,7 @@ describe('ui/schedule drop', () => {
     state.player = { level: 1 };
     state.time = { day: 1, hour: 0, workHoursPerDay: 8 };
     state.schedule = [];
+    state.ui = { scheduleShowEmptyRooms: true };
     window.saveState = () => {};
   });
 
