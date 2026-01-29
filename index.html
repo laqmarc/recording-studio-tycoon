@@ -19,8 +19,7 @@
             </div>
             <div class="left">
                 <button class="btn" id="btnClearSave" title="Esborra totes les dades guardades i reinicia el joc">Reset persistència</button>
-                <button class="btn" id="btnTheme" title="Canvia entre tema fosc i clar">Tema: Fosc</button>
-                <button class="btn" id="btnNextDay" title="Avança un dia i processa les tasques programades" style="background-color: #4CAF50; color: white; font-weight: 400; padding: 10px 15px; border: 2px solid #45a049; transition: background-color 0.3s;">Passar dia</button>
+                <button class="btn" id="btnTheme" title="Canvia entre tema fosc i clar">Tema: Fosc</button>                <button class="btn" id="btnCampaign" title="Activa/desactiva el mode campanya amb objectius i progrés">Campanya: OFF</button>                <button class="btn" id="btnNextDay" title="Avança un dia i processa les tasques programades" style="background-color: #4CAF50; color: white; font-weight: 400; padding: 10px 15px; border: 2px solid #45a049; transition: background-color 0.3s;">Passar dia</button>
                 <button class="btn" id="btnCheat" title="Afegeix €1000 i XP per provar el joc">Cheat: +€ +XP</button>
             </div>
         </div>
@@ -229,6 +228,19 @@
         <div class="kpi mobile-kpis" id="mobileKpis"></div>
     </footer>
     <div id="notifications" class="notifications"></div>
+
+  <!-- Campaign Start Modal -->
+  <div id="campaignModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="content" style="text-align:center; padding:40px;">
+        <h2>🎮 Mode Campanya</h2>
+        <p>Comença la teva carrera des d'un estudi casolà fins convertir-te en una llegenda de la producció musical.</p>
+        <button class="btn-primary" id="btnStartCampaign" style="margin-top:20px; padding:12px 24px; font-size:16px;">
+          🚀 Començar Campanya
+        </button>
+      </div>
+    </div>
+  </div>
     <script type="module" src="state.js"></script>
     <script type="module" src="helpers.js"></script>
     <script type="module" src="persistence.js"></script>

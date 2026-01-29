@@ -53,25 +53,10 @@ function showCampaignUI() {
   try {
     // console.log('showCampaignUI called, state.campaign.active:', state.campaign?.active);
     
-    // Add campaign button to main menu if not in campaign mode
-    if (!state.campaign || !state.campaign.active) {
-          // console.log('Showing campaign button');
-      const mainContent = document.querySelector('main');
-      if (mainContent && !document.querySelector('.campaign-button-panel')) {
-        const campaignButton = document.createElement('div');
-        campaignButton.className = 'panel full campaign-button-panel';
-        campaignButton.innerHTML = `
-          <div class="content" style="text-align:center; padding:40px;">
-            <h2>🎮 Mode Campanya</h2>
-            <p>Comença la teva carrera des d'un estudi casolà fins convertir-te en una llegenda de la producció musical.</p>
-            <button class="btn-primary" onclick="window.startCampaign()" style="margin-top:20px; padding:12px 24px; font-size:16px;">
-              🚀 Començar Campanya
-            </button>
-          </div>
-        `;
-        mainContent.insertBefore(campaignButton, mainContent.firstChild);
-      }
-    } else {
+    // Campaign button is now handled by the header toggle and modal
+    // Removed the inline campaign panel since we have the modal
+    
+    if (state.campaign && state.campaign.active) {
       // console.log('Campaign is active, updating UI');
       // Show campaign progress if campaign is active
       updateCampaignUI();
@@ -321,9 +306,68 @@ if (!document.getElementById('campaign-styles')) {
   document.head.appendChild(styleSheet);
 }
 
+export function initCampaignToggle() {
+  const btn = document.getElementById('btnCampaign');
+  if (!btn) return;
+
+  function updateButton() {
+    btn.textContent = state.campaign.active ? 'Campanya: ON' : 'Campanya: OFF';
+  }
+
+  updateButton();
+
+  btn.addEventListener('click', () => {
+    const wasActive = state.campaign.active;
+    state.campaign.active = !state.campaign.active;
+    updateButton();
+    if (state.campaign.active && !wasActive) {
+      // Show modal if just activated
+      showCampaignStartModal();
+    }
+    updateCampaignUI();
+    // Save state
+    if (typeof window.saveState === 'function') {
+      window.saveState();
+    }
+  });
+}
+
+function showCampaignStartModal() {
+  const modal = document.getElementById('campaignModal');
+  if (modal) {
+    modal.style.display = 'flex';
+  }
+}
+
+function hideCampaignStartModal() {
+  const modal = document.getElementById('campaignModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+// Add event listener for start button
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    const startBtn = document.getElementById('btnStartCampaign');
+    if (startBtn) {
+      startBtn.addEventListener('click', hideCampaignStartModal);
+    }
+  });
+} else {
+  const startBtn = document.getElementById('btnStartCampaign');
+  if (startBtn) {
+    startBtn.addEventListener('click', hideCampaignStartModal);
+  }
+}
+
 // Initialize campaign UI when DOM is ready
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initializeCampaignUI);
+  document.addEventListener("DOMContentLoaded", () => {
+    initializeCampaignUI();
+    initCampaignToggle();
+  });
 } else {
   initializeCampaignUI();
+  initCampaignToggle();
 }
