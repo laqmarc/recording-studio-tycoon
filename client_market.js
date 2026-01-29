@@ -1064,6 +1064,28 @@ const TEMPLATE_POOL = [
 
 const SPECIAL_TEMPLATES = [
   {
+    name: 'First Recording',
+    type: 'recording',
+    room_type: 'control_room',
+    unlock_level: 1,
+    allowed_genres: ['pop', 'rap', 'hiphop', 'podcast'],
+    base_pay: [300, 600],
+    target_quality: [60, 75],
+    duration: [8, 16],
+    min_items: { mic: 1, preamp: 1, interface: 1, headphones: 1, cable: 2, mic_stand: 1 }
+  },
+  {
+    name: 'Quick Mix',
+    type: 'mix',
+    room_type: 'control_room',
+    unlock_level: 2,
+    allowed_genres: ['any'],
+    base_pay: [350, 650],
+    target_quality: [65, 80],
+    duration: [6, 12],
+    min_items: { monitor: 2, acoustic_treatment: 2 }
+  },
+  {
     name: 'Tour Sessions',
     type: 'recording',
     room_type: 'live_room',
@@ -1071,7 +1093,7 @@ const SPECIAL_TEMPLATES = [
     allowed_genres: ['live', 'rock'],
     base_pay: [1200, 2200],
     target_quality: [70, 88],
-    duration_days: [3, 6],
+    duration: [24, 48],
     min_items: { mic: 10, preamp_multi: 1, interface: 1, headphones: 4, cable: 12, mic_stand: 10, multicore: 1 }
   },
   {
@@ -1082,7 +1104,7 @@ const SPECIAL_TEMPLATES = [
     allowed_genres: ['pop', 'rap', 'hiphop'],
     base_pay: [700, 1500],
     target_quality: [68, 84],
-    duration_days: [3, 5],
+    duration: [24, 40],
     min_items: { mic: 4, preamp: 1, interface: 1, headphones: 2, pop_filter: 1, mic_stand: 2 }
   },
   {
@@ -1093,7 +1115,7 @@ const SPECIAL_TEMPLATES = [
     allowed_genres: ['pop', 'hiphop', 'film_score'],
     base_pay: [1400, 2600],
     target_quality: [70, 88],
-    duration_days: [4, 7],
+    duration: [32, 56],
     min_items: { interface: 1, monitor: 2, software_daw: 1, midi_controller: 1 }
   },
   {
@@ -1104,7 +1126,7 @@ const SPECIAL_TEMPLATES = [
     allowed_genres: ['any'],
     base_pay: [1200, 2200],
     target_quality: [72, 92],
-    duration_days: [3, 5],
+    duration: [24, 40],
     min_items: { monitor: 2, acoustic_treatment: 6, software_mix_master: 1 }
   },
   {
@@ -1115,7 +1137,7 @@ const SPECIAL_TEMPLATES = [
     allowed_genres: ['live', 'podcast'],
     base_pay: [600, 1400],
     target_quality: [62, 80],
-    duration_days: [3, 6],
+    duration: [24, 48],
     min_items: { interface: 1, mic: 3, headphones: 2, monitor: 1 }
   }
 ];
@@ -1255,10 +1277,10 @@ function buildSpecialOffer(day, index, template) {
   const genre = pickGenreWithTemplates([template]);
   const pay = randInt(template.base_pay[0], template.base_pay[1]);
   const target = randInt(template.target_quality[0], template.target_quality[1]);
-  const durationDays = randInt(template.duration_days[0], template.duration_days[1]);
+  const duration = randInt(template.duration[0], template.duration[1]);
   const workHours = Number(state.time && state.time.workHoursPerDay || 8);
-  const duration = Math.max(8, durationDays * workHours);
-  const deadline = durationDays + randInt(2, 5);
+  const duration_days = Math.ceil(duration / workHours);
+  const deadline = duration_days + randInt(2, 5);
   const repBoost = 1 + repOverall * 0.01;
   const genreRep = (state.reputation && state.reputation.byGenre) ? Number(state.reputation.byGenre[genre] || 0) : 0;
   const genreBoost = 1 + genreRep * 0.015;
@@ -1278,6 +1300,7 @@ function buildSpecialOffer(day, index, template) {
     type: template.type,
     genre,
     duration_hours: duration,
+    duration_days,
     base_pay,
     target_quality,
     deadline_days: deadline,
@@ -1310,6 +1333,8 @@ function buildOffer(day, index, templates) {
   const pay = randInt(template.base_pay[0], template.base_pay[1]);
   const target = randInt(template.target_quality[0], template.target_quality[1]);
   const duration = randInt(template.duration[0], template.duration[1]);
+  const workHours = Number(state.time && state.time.workHoursPerDay || 8);
+  const duration_days = Math.ceil(duration / workHours);
   const deadline = randInt(template.deadline[0], template.deadline[1]);
   const repBoost = 1 + repOverall * 0.01;
   const genreRep = (state.reputation && state.reputation.byGenre) ? Number(state.reputation.byGenre[genre] || 0) : 0;
@@ -1323,6 +1348,7 @@ function buildOffer(day, index, templates) {
     type: template.type,
     genre,
     duration_hours: duration,
+    duration_days,
     base_pay,
     target_quality,
     deadline_days: deadline,

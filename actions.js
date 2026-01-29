@@ -93,7 +93,14 @@ if (typeof document !== 'undefined') {
       } else if (window.state.player) {
         window.state.player.xp = 20000;
       }
-      if (typeof window.log === 'function') window.log('🧪 Cheat activat: cash=1.000.000€ i +20.000 XP');
+      // Set reputation to 100 for all genres
+      if (!window.state.reputation) window.state.reputation = { overall: 0, byGenre: {} };
+      window.state.reputation.overall = 100;
+      const genres = ['pop', 'rap', 'hiphop', 'rock', 'podcast', 'live', 'film_score'];
+      genres.forEach(genre => {
+        window.state.reputation.byGenre[genre] = 100;
+      });
+      if (typeof window.log === 'function') window.log('🧪 Cheat activat: cash=1.000.000€, +20.000 XP i reputació màxima');
       if (typeof window.showNotification === 'function') window.showNotification('🧪 Cheat activat');
       if (typeof window.renderAll === 'function') window.renderAll();
       if (typeof window.saveState === 'function') window.saveState();
