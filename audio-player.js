@@ -42,11 +42,7 @@ class AudioPlayer {
   }
 }
 
-const playlist = [
-  { title: 'Moavii - Sunshine (freetouse.com)', src: 'assets/music/Moavii-Sunshine.mp3' },
-  { title: 'Burgundy X - Back Alley (freetouse.com)', src: 'assets/music/Burgundy-X-Back-Alley.mp3' },
-  { title: 'Aylex - Good Days (freetouse.com)', src: 'assets/music/Aylex-Good-Days.mp3' }
-];
+const playlist = [];
 
 const audioPlayer = new AudioPlayer(playlist);
 
