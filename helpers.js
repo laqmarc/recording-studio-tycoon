@@ -157,28 +157,8 @@ export function openCreditLine(limit) {
 }
 
 export function addLease(itemId, qty = 1, dailyRate = 0.015) {
-  if (!state) return null;
-  ensureFinanceState();
-  const item = state.itemsById.get(itemId);
-  if (!item) return null;
-  const cost = Math.max(1, Math.round(Number(item.price || 0) * Number(dailyRate || 0)));
-  const upfront = cost * Number(qty || 1);
-  if (!canSpend(upfront)) { log(`❌ Límite de cashflow: cal ${euro(upfront)}`); return null; }
-  state.cash = Number(state.cash || 0) - upfront;
-  const id = `lease_${Date.now()}_${Math.floor(Math.random() * 9999)}`;
-  const lease = {
-    id,
-    itemId,
-    qty: Number(qty || 1),
-    dailyCost: cost,
-    startDay: state.time ? Number(state.time.day || 1) : 1,
-    paid: upfront
-  };
-  state.finance.leases.push(lease);
-  invAdd(itemId, qty);
-  log(`📦 Lease: ${item.name} x${qty} · ${euro(cost)}/dia`);
-  if (typeof showNotification === 'function') showNotification('📦 Lease activat');
-  return lease;
+  // Leasing functionality disabled
+  return null;
 }
 
 export function returnLease(leaseId) {

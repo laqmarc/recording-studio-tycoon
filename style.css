@@ -1298,7 +1298,7 @@ select {
 .shop-card:hover {
   transform: translateY(-4px);
   border-color: var(--acc);
-  box-shadow: 0 18px 34px rgba(5, 10, 20, 0.3);
+  box-shadow: 0 0 0 2px rgba(35, 217, 160, 0.35) inset, 0 16px 30px var(--shadow);
 }
 
 .shop-card::before {
@@ -2556,4 +2556,53 @@ body.tour-lock {
 
 .btn-primary:hover {
   background: var(--ok);
+}
+
+/* Room Stats Panel */
+.room-stats-panel {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.06) 100%), var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px var(--shadow);
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+
+.room-stats-panel:hover {
+  box-shadow: 0 4px 8px var(--shadow);
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+/* Light theme override */
+:root:not([data-theme]) .room-stats-panel,
+:root[data-theme="light"] .room-stats-panel {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-color: #dee2e6;
+  color: #212529;
+}
+
+/* Forest theme override */
+:root[data-theme="forest"] .room-stats-panel {
+  background: linear-gradient(135deg, rgba(34, 139, 34, 0.1) 0%, rgba(0, 100, 0, 0.1) 100%), var(--paper);
+  border-color: rgba(34, 139, 34, 0.3);
+}
+
+.room-stats-panel .stats-current {
+  color: var(--muted);
+  margin-right: 8px;
+}
+
+.room-stats-panel .stats-arrow {
+  margin: 0 4px;
+  color: var(--muted);
+}
+
+.room-stats-panel .stats-upgraded-positive {
+  color: var(--ok);
+  font-weight: bold;
+}
+
+.room-stats-panel .stats-upgraded-neutral {
+  color: var(--muted);
 }

@@ -2,6 +2,7 @@ import { state, installedIds, installToRoom, uninstallItemFromRoom, getRoomEffec
 import { euro, xpToNext, invQty, invRemove, invAdd, log, showNotification } from '../helpers.js';
 import { clearChildren, createArt, formatStatKey, getItemArt, getRoomArt, getTopStats } from './shared.js';
 import { calcRoomInspectionCost, calcRoomRepairCost, inspectRoom, repairRoomItems } from './room_maintenance.js';
+import { simulateRecording } from '../lib/simulation.js';
 
 const dragState = { itemId: null, source: null, category: null, index: null };
 const COMPACT_SLOT_THRESHOLD = 10;
@@ -172,6 +173,10 @@ function installItemToRoom(roomIndex, itemId, targetIndex, renderAll) {
   showNotification(`🧩 Instal·lat: ${item.name}`);
   if (typeof renderAll === 'function') renderAll();
   if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState();
+
+  // Mostrar millores temporals al panell de stats
+  showStatImprovement(roomIndex, itemId);
+
   return { ok: true };
 }
 
@@ -231,7 +236,9 @@ export function renderRoomDetails(options = {}) {
   headLeft.appendChild(hero); headLeft.appendChild(infoBlock);
   canvasHead.appendChild(headLeft);
   const headActions = document.createElement('div'); headActions.className = 'room-canvas-actions';
-  // Removed Flow button as requested
+  // Add room stats panel instead of Flow button
+  const statsPanel = createRoomStatsPanel(state.selected.roomIndex);
+  headActions.appendChild(statsPanel);
   canvasHead.appendChild(headActions);
   canvas.appendChild(canvasHead);
 
@@ -603,4 +610,136 @@ export function renderRoomDetails(options = {}) {
     warn.textContent = `?s???? Fatiga alta: p??rdua estimada de qualitat ~${estPenalty.toFixed(1)} pts`;
     k.appendChild(warn);
   }
+}
+
+function createRoomStatsPanel(roomIndex) {
+  const panel = document.createElement('div');
+  panel.className = 'room-stats-panel';
+  panel.style.cssText = 'border: 1px solid var(--border); padding: 8px; border-radius: 4px; background: var(--panel-bg); max-width: 150px;';
+
+  const title = document.createElement('div');
+  title.textContent = '📊 Estadístiques de Sala';
+  title.style.cssText = 'font-weight: bold; margin-bottom: 8px; font-size: 12px;';
+  panel.appendChild(title);
+
+  // Contracte de prova per calcular qualitat
+  const testContract = {
+    type: 'recording',
+    base_pay: 100,
+    target_quality: 50,
+    assigned_people: []
+  };
+
+  // Crear estat simulat per càlculs
+  const createSimulatedState = () => {
+    const simulatedState = JSON.parse(JSON.stringify(state));
+    simulatedState.itemsById = new Map(state.itemsById);
+    return simulatedState;
+  };
+
+  // Calcular stats actuals
+  const currentState = createSimulatedState();
+  const currentStats = simulateRecording(currentState, roomIndex, testContract);
+
+  // Funció per mostrar només un valor
+  const createStatRow = (label, value, unit = '') => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display: flex; justify-content: space-between; margin: 2px 0; font-size: 11px;';
+
+    const labelSpan = document.createElement('span');
+    labelSpan.textContent = label;
+    labelSpan.style.cssText = 'flex: 1; color: var(--ink);';
+
+    const valueSpan = document.createElement('span');
+    valueSpan.textContent = value.toFixed(1) + unit;
+    valueSpan.className = 'stats-current';
+
+    row.appendChild(labelSpan);
+    row.appendChild(valueSpan);
+
+    return row;
+  };
+
+  panel.appendChild(createStatRow('Qualitat', currentStats.final_quality));
+  panel.appendChild(createStatRow('Acústica', currentStats.room_acoustic));
+  panel.appendChild(createStatRow('Mic', currentStats.mic_q || 0));
+  panel.appendChild(createStatRow('Preamp', currentStats.pre_q || 0));
+  panel.appendChild(createStatRow('Interface', currentStats.if_q || 0));
+
+  return panel;
+}
+
+// Funció per mostrar millores temporals quan s'instal·la un item
+function showStatImprovement(roomIndex, itemId) {
+  const existingPanel = document.querySelector('.room-stats-panel');
+  if (!existingPanel) return;
+
+  // Contracte de prova per calcular qualitat
+  const testContract = {
+    type: 'recording',
+    base_pay: 100,
+    target_quality: 50,
+    assigned_people: []
+  };
+
+  // Crear estat simulat per càlculs
+  const createSimulatedState = () => {
+    const simulatedState = JSON.parse(JSON.stringify(state));
+    simulatedState.itemsById = new Map(state.itemsById);
+    return simulatedState;
+  };
+
+  // Calcular stats abans i després
+  // Crear estat sense l'item nou
+  const beforeState = createSimulatedState();
+  // Treure l'item de l'estat simulat per calcular "abans"
+  const item = state.itemsById.get(itemId);
+  if (item) {
+    const category = item.category || 'misc';
+    if (beforeState.roomsInstalled[roomIndex] && beforeState.roomsInstalled[roomIndex][category]) {
+      const index = beforeState.roomsInstalled[roomIndex][category].indexOf(itemId);
+      if (index > -1) {
+        beforeState.roomsInstalled[roomIndex][category].splice(index, 1);
+      }
+    }
+  }
+  const beforeStats = simulateRecording(beforeState, roomIndex, testContract);
+
+  // Stats actuals (amb l'item nou)
+  const afterState = createSimulatedState();
+  const afterStats = simulateRecording(afterState, roomIndex, testContract);
+
+  // Calcular millores
+  const improvements = {
+    'Qualitat': afterStats.final_quality - beforeStats.final_quality,
+    'Acústica': afterStats.room_acoustic - beforeStats.room_acoustic,
+    'Mic': (afterStats.mic_q || 0) - (beforeStats.mic_q || 0),
+    'Preamp': (afterStats.pre_q || 0) - (beforeStats.pre_q || 0),
+    'Interface': (afterStats.if_q || 0) - (beforeStats.if_q || 0)
+  };
+
+  // Mostrar millores temporals
+  const statRows = existingPanel.querySelectorAll('.stats-current');
+  const labels = ['Qualitat', 'Acústica', 'Mic', 'Preamp', 'Interface'];
+
+  statRows.forEach((span, index) => {
+    const label = labels[index];
+    const improvement = improvements[label];
+
+    if (Math.abs(improvement) > 0.1) { // Només mostrar si hi ha millora significativa
+      const originalText = span.textContent;
+      const improvementText = improvement > 0 ? ` (+${improvement.toFixed(1)})` : ` (${improvement.toFixed(1)})`;
+
+      span.textContent = originalText + improvementText;
+      span.style.color = improvement > 0 ? 'var(--ok)' : 'var(--bad)';
+      span.style.fontWeight = 'bold';
+
+      // Tornar al text original després de 3 segons
+      setTimeout(() => {
+        span.textContent = originalText;
+        span.style.color = '';
+        span.style.fontWeight = '';
+      }, 3000);
+    }
+  });
 }

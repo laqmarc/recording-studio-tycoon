@@ -33,8 +33,6 @@ if (typeof document !== 'undefined') {
   on('btnClearSave', 'click', () => { if (confirm('Esborrar la persistència i reiniciar el progrés?')) clearPersistenceAndReset(); });
 
   on('btnBuy', 'click', () => call('buySelected'));
-  on('btnLease', 'click', () => call('leaseSelected'));
-  on('btnAddToInstall', 'click', () => call('prepareInstallFromShop'));
   on('btnInstall', 'click', () => call('installSelected'));
   on('btnUninstall', 'click', () => call('uninstallLast'));
   on('btnUseConsumable', 'click', () => {

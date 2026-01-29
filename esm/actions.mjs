@@ -157,6 +157,15 @@ export function workOnContract(contractId, hours) {
     const ok = simulateContract && simulateContract(c.id);
     if (ok) {
       c.completed = true; c.completed_at = { day: state.time.day, hour: state.time.hour };
+
+      // QA automàtic si està activat
+      if (state.ui && state.ui.autoQa && !c.qa_done) {
+        c.qa_done = true;
+        c.qa_bonus = Math.max(4, Number(c.qa_bonus || 0));
+        c.qa_rep_bonus = Math.max(1, Number(c.qa_rep_bonus || 0));
+        log(`🤖 QA automàtic aplicat: ${c.name} (+qualitat)`);
+      }
+
       log(`📥 Contracte marcat com a complet (no s'elimina).`);
       showNotification(`🎉 Contracte "${c.name}" completat!`);
       
@@ -327,40 +336,13 @@ export function buySelected() {
 }
 
 export function leaseSelected() {
-  const state = getState();
-  const log = getWin('log') || ((m)=>console.log(m));
-  const renderAll = getWin('renderAll');
-  const saveState = getWin('saveState') || (()=>{});
-  const addLease = getWin('addLease');
-  if (!addLease) return log('Lease no disponible.');
-
-  let id = state.selected.shopItemId;
-  if (!id) {
-    const cat = document.getElementById('selCategory').value;
-    const items = (state.itemsByCategory.get(cat) || []).filter(it => Number(it.unlock_level || 1) <= Number(state.player.level || 1));
-    if (items.length) { id = items[0].id; state.selected.shopItemId = id; }
-    else return log('No hi ha items disponibles en aquesta categoria.');
-  }
-  const qty = clamp(Number(document.getElementById('qtyBuy').value || 1), 1, 99);
-  const lease = addLease(id, qty);
-  if (!lease) return;
-  if (renderAll) renderAll();
-  saveState();
+  // Leasing functionality disabled
+  return;
 }
 
 export function prepareInstallFromShop() {
-  const state = getState();
-  const log = getWin('log') || ((m)=>console.log(m));
-  const invQty = getWin('invQty');
-  const renderRight = getWin('renderRight');
-  const selInvCat = document.getElementById('selInvCategory');
-  const selInvItem = document.getElementById('selInvItem');
-  const it = state.itemsById.get(state.selected.shopItemId);
-  if (!it) return log('Selecciona un item del Shop.');
-  selInvCat.value = it.category;
-  if (renderRight) renderRight();
-  if (invQty && invQty(it.id) > 0) selInvItem.value = it.id;
-  log('→ Preparat per instal·lar (si el tens a inventari).');
+  // Prepare install functionality disabled - use direct installation from item cards
+  return;
 }
 
 export function installSelected() {

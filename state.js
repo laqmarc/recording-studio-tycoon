@@ -7,7 +7,7 @@ export const state = {
   itemsByCategory: new Map(),
   inventory: new Map(), // id -> qty
   selected: { roomIndex: 0, shopItemId: null },
-  ui: { page: "rooms", roomLayout: {}, ambient: { enabled: false, volume: 0.2 }, statsRange: 7 },
+  ui: { page: "rooms", roomLayout: {}, ambient: { enabled: false, volume: 0.2 }, statsRange: 7, autoQa: true },
   staff: { engineer: { level: 1 }, producer: { level: 1 } },
   reputation: { overall: 0, byGenre: {} },
   roomUpgrades: {},

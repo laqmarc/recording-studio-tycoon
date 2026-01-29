@@ -355,7 +355,8 @@ export function renderRooms(options = {}) {
           qaList.appendChild(line);
         });
         qaWrap.appendChild(qaList);
-        if (!c.qa_done) {
+        const autoQaEnabled = state.ui && state.ui.autoQa;
+        if (!c.qa_done && !autoQaEnabled) {
           const btnQa = document.createElement('button'); btnQa.className = 'btn2 btnSmall'; btnQa.type = 'button';
           btnQa.textContent = 'Marcar QA feta (+qualitat)';
           btnQa.addEventListener('click', (e) => {
@@ -370,7 +371,8 @@ export function renderRooms(options = {}) {
           });
           qaWrap.appendChild(btnQa);
         } else {
-          const qaOk = document.createElement('div'); qaOk.className = 'tiny muted'; qaOk.textContent = 'QA OK (+qualitat +rep)';
+          const qaText = autoQaEnabled && !c.qa_done ? 'QA Auto (+qualitat +rep)' : 'QA OK (+qualitat +rep)';
+          const qaOk = document.createElement('div'); qaOk.className = 'tiny muted'; qaOk.textContent = qaText;
           qaWrap.appendChild(qaOk);
         }
         detailsWrap.appendChild(qaWrap);
@@ -395,5 +397,6 @@ export function renderRooms(options = {}) {
         leftContracts.appendChild(card);
       }
     }
+
   }
 }

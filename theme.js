@@ -55,8 +55,50 @@ function initThemeToggle() {
   });
 }
 
+function initAutoQaToggle() {
+  const btn = document.getElementById("btnAutoQa");
+  if (!btn) return;
+
+  // Import state from state.js
+  let state;
+  try {
+    state = window.state || { ui: { autoQa: true } };
+  } catch (e) {
+    state = { ui: { autoQa: true } };
+  }
+
+  function updateButton() {
+    const enabled = state.ui && state.ui.autoQa;
+    btn.textContent = `QA Auto: ${enabled ? 'ON' : 'OFF'}`;
+    btn.style.backgroundColor = enabled ? '#4CAF50' : '';
+    btn.style.color = enabled ? 'white' : '';
+  }
+
+  updateButton();
+
+  btn.addEventListener("click", () => {
+    if (!state.ui) state.ui = { autoQa: true };
+    state.ui.autoQa = !state.ui.autoQa;
+    updateButton();
+
+    // Save state if available
+    if (typeof window !== 'undefined' && typeof window.saveState === 'function') {
+      window.saveState();
+    }
+
+    // Show notification
+    if (typeof showNotification === 'function') {
+      showNotification(state.ui.autoQa ? '✅ QA automàtic activat' : '❌ QA automàtic desactivat');
+    }
+  });
+}
+
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initThemeToggle);
+  document.addEventListener("DOMContentLoaded", () => {
+    initThemeToggle();
+    initAutoQaToggle();
+  });
 } else {
   initThemeToggle();
+  initAutoQaToggle();
 }

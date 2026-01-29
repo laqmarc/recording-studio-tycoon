@@ -111,8 +111,14 @@ const steps = [
   },
   {
     title: "Controls",
-    text: "Pots canviar tema, activar mode campanya, audio ambient i resetar la persistencia des del header.",
+    text: "Pots canviar tema, activar QA automàtic, mode campanya, audio ambient i resetar la persistencia des del header.",
     selector: "header",
+    page: "rooms"
+  },
+  {
+    title: "QA Automàtic",
+    text: "El botó 'QA Auto' aplica qualitat assegurada automàticament als contractes completats. És ideal per jugadors casuals!",
+    selector: "#btnAutoQa",
     page: "rooms"
   },
   {
