@@ -1,8 +1,12 @@
 import { saveState, loadStateFromStorage } from './persistence.js';
 
-const API_BASE = (typeof window !== 'undefined' && window.CLOUD_API_BASE)
-  ? String(window.CLOUD_API_BASE).replace(/\/$/, '')
-  : 'http://localhost:3001';
+function getApiBase() {
+  if (typeof window === 'undefined') return 'http://localhost:3001';
+  if (window.CLOUD_API_BASE != null && String(window.CLOUD_API_BASE).trim()) {
+    return String(window.CLOUD_API_BASE).replace(/\/$/, '');
+  }
+  return window.location.origin;
+}
 
 const cloudState = {
   user: null,
@@ -60,7 +64,7 @@ const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 async function ensureCsrfToken(force = false) {
   if (csrfToken && !force) return csrfToken;
   try {
-    const res = await fetch(`${API_BASE}/auth/csrf`, { credentials: 'include' });
+    const res = await fetch(`${getApiBase()}/auth/csrf`, { credentials: 'include' });
     if (!res.ok) return null;
     const data = await res.json();
     csrfToken = data && data.token ? String(data.token) : null;
@@ -77,7 +81,7 @@ async function api(path, options = {}) {
     const token = await ensureCsrfToken();
     if (token) headers['x-csrf-token'] = token;
   }
-  const response = await fetch(`${API_BASE}${path}`, {
+  const response = await fetch(`${getApiBase()}${path}`, {
     ...options,
     headers,
     credentials: 'include'
@@ -88,7 +92,7 @@ async function api(path, options = {}) {
     if (data && data.error === 'csrf') {
       await ensureCsrfToken(true);
       if (csrfToken) headers['x-csrf-token'] = csrfToken;
-      return fetch(`${API_BASE}${path}`, {
+      return fetch(`${getApiBase()}${path}`, {
         ...options,
         headers,
         credentials: 'include'

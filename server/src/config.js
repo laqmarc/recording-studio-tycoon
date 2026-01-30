@@ -14,7 +14,8 @@ const config = {
   jwtSecret: process.env.JWT_SECRET || 'change_me',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   cookieSecure: String(process.env.COOKIE_SECURE || 'false') === 'true',
-  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173'
+  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  cloudApiBase: process.env.CLOUD_API_BASE || ''
 };
 
 export default config;

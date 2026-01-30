@@ -245,7 +245,17 @@
     <script type="module" src="state.js"></script>
     <script type="module" src="helpers.js"></script>
     <script type="module" src="persistence.js"></script>
-    <script>window.CLOUD_API_BASE = 'http://127.0.0.1:3001';</script>
+    <script>
+      (function () {
+        var host = location.hostname;
+        var isLocal = (host === '127.0.0.1' || host === 'localhost');
+        if (isLocal) {
+          window.CLOUD_API_BASE = 'http://' + host + ':3001';
+        } else {
+          document.write('<script src="/config.js"><\/script>');
+        }
+      })();
+    </script>
     <script type="module" src="cloud.js"></script>
     <script type="module" src="simulation.js"></script>
     <script type="module" src="client_market.js"></script>

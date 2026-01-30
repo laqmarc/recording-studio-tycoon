@@ -17,6 +17,14 @@ app.use(cookieParser());
 app.use(express.json({ limit: '4mb' }));
 app.use(requireCsrf);
 
+app.get('/config.js', (req, res) => {
+  res.type('application/javascript');
+  res.set('Cache-Control', 'no-store');
+  const base = config.cloudApiBase ? String(config.cloudApiBase).replace(/\/$/, '') : '';
+  if (!base) return res.send('');
+  return res.send(`window.CLOUD_API_BASE=${JSON.stringify(base)};`);
+});
+
 app.get('/health', (req, res) => res.json({ ok: true }));
 app.use('/auth', authRoutes);
 app.use('/saves', savesRoutes);
