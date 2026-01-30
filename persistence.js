@@ -37,6 +37,7 @@ export function saveState() {
       roomsInstalled: state.roomsInstalled,
       roomBilling: state.roomBilling,
       roomMaintenance: Array.isArray(state.roomMaintenance) ? state.roomMaintenance : [],
+      contracts: Array.isArray(state.db && state.db.contracts) ? state.db.contracts : [],
       contractsProgress: state.db.contracts.map(c => ({ id: c.id, worked_hours: c.worked_hours || 0, completed: !!c.completed, completed_at: c.completed_at || null })),
       contractsMeta: state.db.contracts.map(c => ({
         id: c.id,
@@ -130,6 +131,14 @@ export function loadStateFromStorage() {
     if (p.market && typeof p.market === 'object') state.market = p.market;
     if (Array.isArray(p.schedule)) state.schedule = p.schedule;
     if (Array.isArray(p.hiredPeople)) state.hiredPeople = p.hiredPeople;
+    if (Array.isArray(p.contracts)) {
+      state.db = state.db || { items: [], rooms: [], contracts: [], people: [] };
+      state.db.contracts = p.contracts.map(c => ({ ...c }));
+      for (const c of state.db.contracts) {
+        if (c.worked_hours == null) c.worked_hours = 0;
+        if (c.completed == null) c.completed = false;
+      }
+    }
     if (p.analytics && typeof p.analytics === 'object') {
       state.analytics = p.analytics;
     } else if (!state.analytics) {

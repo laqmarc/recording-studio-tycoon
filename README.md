@@ -5,6 +5,43 @@ Prototype jugable per gestionar un estudi: sales, inventari, clients, calendaris
 **Inici rapid**
 - Obre `index.html` en un navegador modern (o serveix el directori amb un servidor static).
 
+**Guardar partides (local + nuvol)**
+- **Local**: el joc guarda automaticament a `localStorage`.
+- **Nuvol**: usa el boto **Compte** per crear un slot i desa manualment amb **Guardar ara**.
+
+**Nuvol (MySQL + API)**
+1. Importa `server/schema.sql` a la teva BD MySQL.
+2. Crea `server/.env` (pots copiar `server/.env.example`). Exemple:
+   ```env
+   PORT=3001
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USER=root
+   DB_PASSWORD=
+   DB_NAME=studio_tycoon
+   JWT_SECRET=canvia_aixo
+   COOKIE_SECURE=false
+   CORS_ORIGIN=http://127.0.0.1:5500
+   ```
+3. Arrenca el backend:
+   ```bash
+   cd server
+   npm install
+   npm run dev
+   ```
+4. Serveix el frontend via HTTP (no `file://`). Exemple:
+   ```bash
+   npx http-server . -p 5500
+   ```
+5. Assegura que el host coincideix (important per CSRF/cookies):
+   - Si obres `http://127.0.0.1:5500`, usa `CORS_ORIGIN=http://127.0.0.1:5500`.
+   - Si obres `http://localhost:5500`, usa `CORS_ORIGIN=http://localhost:5500`.
+   - I posa el mateix host a `window.CLOUD_API_BASE` a `index.html`.
+
+**Troubleshooting nuvol**
+- Error 403 al registre/login: l'API i el frontend han de compartir el mateix host (`localhost` o `127.0.0.1`).
+- CORS: no posis `/` al final de `CORS_ORIGIN`.
+
 **Música de fons**
 El joc inclou un reproductor de música integrat. Per afegir les teves pròpies cançons:
 1. Crea la carpeta `assets/music/` (si no existeix).
