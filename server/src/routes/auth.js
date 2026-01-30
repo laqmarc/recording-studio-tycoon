@@ -8,6 +8,23 @@ import { rateLimit } from '../middleware/rate_limit.js';
 
 const router = express.Router();
 
+function handleError(res, err) {
+  console.error(err);
+  const body = { error: 'server_error' };
+  if (config.debugErrors) body.detail = String(err && err.message ? err.message : err);
+  return res.status(500).json(body);
+}
+
+function safe(handler) {
+  return async (req, res, next) => {
+    try {
+      await handler(req, res, next);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  };
+}
+
 function setSessionCookie(res, token) {
   res.cookie('session', token, {
     httpOnly: true,
@@ -30,7 +47,7 @@ const loginLimiter = rateLimit({ windowMs: 5 * 60 * 1000, max: 10 });
 const registerLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10 });
 const generalLimiter = rateLimit({ windowMs: 60 * 1000, max: 30 });
 
-router.get('/me', async (req, res) => {
+router.get('/me', safe(async (req, res) => {
   const token = req.cookies && req.cookies.session;
   if (!token) return res.json({ user: null });
   try {
@@ -39,15 +56,15 @@ router.get('/me', async (req, res) => {
   } catch (e) {
     return res.json({ user: null });
   }
-});
+}));
 
-router.get('/csrf', (req, res) => {
+router.get('/csrf', safe(async (req, res) => {
   const token = uuid();
   setCsrfCookie(res, token);
   return res.json({ token });
-});
+}));
 
-router.post('/register', registerLimiter, async (req, res) => {
+router.post('/register', registerLimiter, safe(async (req, res) => {
   const email = normalizeEmail(req.body && req.body.email);
   const password = String((req.body && req.body.password) || '');
   if (!isValidEmail(email) || password.length < 6) {
@@ -66,9 +83,9 @@ router.post('/register', registerLimiter, async (req, res) => {
   setSessionCookie(res, token);
   setCsrfCookie(res, uuid());
   return res.json({ user: { id, email } });
-});
+}));
 
-router.post('/login', loginLimiter, async (req, res) => {
+router.post('/login', loginLimiter, safe(async (req, res) => {
   const email = normalizeEmail(req.body && req.body.email);
   const password = String((req.body && req.body.password) || '');
   if (!isValidEmail(email) || !password) {
@@ -83,9 +100,9 @@ router.post('/login', loginLimiter, async (req, res) => {
   setSessionCookie(res, token);
   setCsrfCookie(res, uuid());
   return res.json({ user: { id: user.id, email: user.email } });
-});
+}));
 
-router.post('/logout', generalLimiter, async (req, res) => {
+router.post('/logout', generalLimiter, safe(async (req, res) => {
   res.clearCookie('session', {
     httpOnly: true,
     sameSite: 'lax',
@@ -97,6 +114,6 @@ router.post('/logout', generalLimiter, async (req, res) => {
     secure: config.cookieSecure
   });
   return res.json({ ok: true });
-});
+}));
 
 export default router;

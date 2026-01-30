@@ -3,21 +3,39 @@ import pool, { query } from '../db.js';
 import { requireAuth } from '../middleware/auth.js';
 import { v4 as uuid } from 'uuid';
 import { rateLimit } from '../middleware/rate_limit.js';
+import config from '../config.js';
 
 const router = express.Router();
+
+function handleError(res, err) {
+  console.error(err);
+  const body = { error: 'server_error' };
+  if (config.debugErrors) body.detail = String(err && err.message ? err.message : err);
+  return res.status(500).json(body);
+}
+
+function safe(handler) {
+  return async (req, res, next) => {
+    try {
+      await handler(req, res, next);
+    } catch (e) {
+      return handleError(res, e);
+    }
+  };
+}
 
 router.use(requireAuth);
 router.use(rateLimit({ windowMs: 60 * 1000, max: 120 }));
 
-router.get('/', async (req, res) => {
+router.get('/', safe(async (req, res) => {
   const rows = await query(
     'SELECT id, slot_index, title, version, updated_at, created_at FROM saves WHERE user_id = :user_id ORDER BY slot_index ASC',
     { user_id: req.user.sub }
   );
   return res.json({ saves: rows });
-});
+}));
 
-router.post('/', async (req, res) => {
+router.post('/', safe(async (req, res) => {
   const slotIndex = Number(req.body && req.body.slot_index);
   const payload = req.body && req.body.payload;
   const title = (req.body && req.body.title) ? String(req.body.title).slice(0, 120) : null;
@@ -47,9 +65,9 @@ router.post('/', async (req, res) => {
     { id }
   );
   return res.status(201).json({ save: rows[0] });
-});
+}));
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', safe(async (req, res) => {
   const rows = await query(
     'SELECT id, slot_index, title, payload, version, updated_at, created_at FROM saves WHERE id = :id AND user_id = :user_id LIMIT 1',
     { id: req.params.id, user_id: req.user.sub }
@@ -60,18 +78,18 @@ router.get('/:id', async (req, res) => {
     try { save.payload = JSON.parse(save.payload); } catch (e) {}
   }
   return res.json({ save });
-});
+}));
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', safe(async (req, res) => {
   const title = (req.body && req.body.title) ? String(req.body.title).slice(0, 120) : '';
   const rows = await query(
     'UPDATE saves SET title = :title WHERE id = :id AND user_id = :user_id',
     { id: req.params.id, user_id: req.user.sub, title }
   );
   return res.json({ ok: true, title });
-});
+}));
 
-router.post('/:id/duplicate', async (req, res) => {
+router.post('/:id/duplicate', safe(async (req, res) => {
   const slotIndex = Number(req.body && req.body.slot_index);
   const title = (req.body && req.body.title) ? String(req.body.title).slice(0, 120) : null;
   if (!Number.isFinite(slotIndex) || slotIndex < 1) {
@@ -110,9 +128,9 @@ router.post('/:id/duplicate', async (req, res) => {
     { id }
   );
   return res.status(201).json({ save: rows[0] });
-});
+}));
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', safe(async (req, res) => {
   const payload = req.body && req.body.payload;
   const version = Number(req.body && req.body.version);
   const title = (req.body && req.body.title) ? String(req.body.title).slice(0, 120) : null;
@@ -148,16 +166,16 @@ router.put('/:id', async (req, res) => {
   } catch (e) {
     try { await conn.rollback(); } catch (err) {}
     conn.release();
-    return res.status(500).json({ error: 'db_error' });
+    return handleError(res, e);
   }
-});
+}));
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', safe(async (req, res) => {
   await query('DELETE FROM saves WHERE id = :id AND user_id = :user_id', {
     id: req.params.id,
     user_id: req.user.sub
   });
   return res.json({ ok: true });
-});
+}));
 
 export default router;
