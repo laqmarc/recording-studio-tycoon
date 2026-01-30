@@ -50,6 +50,34 @@ export function addXp(amount){
   }
 }
 
+export function ensureAnalytics() {
+  if (typeof state === 'undefined') {
+    return {
+      revenueByDay: {},
+      expenseByDay: {},
+      sessions: [],
+      daily: [],
+      offersByDay: {},
+      offersAcceptedByDay: {},
+      completedByDay: {},
+      qualityByDay: {},
+      deliveryByDay: {}
+    };
+  }
+  state.analytics = state.analytics || {};
+  const analytics = state.analytics;
+  analytics.revenueByDay = analytics.revenueByDay || {};
+  analytics.expenseByDay = analytics.expenseByDay || {};
+  analytics.sessions = Array.isArray(analytics.sessions) ? analytics.sessions : [];
+  analytics.daily = Array.isArray(analytics.daily) ? analytics.daily : [];
+  analytics.offersByDay = analytics.offersByDay || {};
+  analytics.offersAcceptedByDay = analytics.offersAcceptedByDay || {};
+  analytics.completedByDay = analytics.completedByDay || {};
+  analytics.qualityByDay = analytics.qualityByDay || {};
+  analytics.deliveryByDay = analytics.deliveryByDay || {};
+  return analytics;
+}
+
 // Inventory helpers
 export function invQty(id) { return (typeof state !== 'undefined' && state.inventory) ? Number(state.inventory.get(id) || 0) : 0; }
 export function invAdd(id, qty=1){ if (typeof state !== 'undefined' && state.inventory) state.inventory.set(id, invQty(id)+qty); }
@@ -411,16 +439,15 @@ export function advanceTime(hours) {
       } catch (e) {}
       // store daily analytics snapshot
       try {
-        state.analytics = state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
-        state.analytics.daily = Array.isArray(state.analytics.daily) ? state.analytics.daily : [];
-        state.analytics.daily.push({
+        const analytics = ensureAnalytics();
+        analytics.daily.push({
           day: completedDay,
           cash: Number(state.cash || 0),
           fatigueShort: Number(state.player.fatigueShort || 0),
           fatigueChronic: Number(state.player.fatigueChronic || 0),
           reputation: Number(state.reputation && state.reputation.overall || 0)
         });
-        if (state.analytics.daily.length > 120) state.analytics.daily.shift();
+        if (analytics.daily.length > 120) analytics.daily.shift();
       } catch (e) {}
       log(`🌅 Nou dia! Fatiga curta: ${state.player.fatigueShort.toFixed(1)}h · Fatiga crònica: ${state.player.fatigueChronic.toFixed(2)}`);
       try { if (typeof window !== 'undefined' && typeof window.processScheduledDay === 'function') window.processScheduledDay(completedDay); } catch (e) {}
@@ -544,9 +571,8 @@ export function applyDailyRoomCosts() {
   } catch (e) {}
   try {
     const day = Number(state.time && state.time.day || 1);
-    state.analytics = state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
-    state.analytics.expenseByDay = state.analytics.expenseByDay || {};
-    state.analytics.expenseByDay[day] = Number(state.analytics.expenseByDay[day] || 0) + Number(charged || 0);
+    const analytics = ensureAnalytics();
+    analytics.expenseByDay[day] = Number(analytics.expenseByDay[day] || 0) + Number(charged || 0);
   } catch (e) {}
   return charged;
 }
@@ -588,7 +614,7 @@ export function showNotification(message, duration = 3000) {
 
 // Attach to window for backward compatibility with non-module scripts
 if (typeof window !== 'undefined') {
-  window.Helpers = Object.assign(window.Helpers || {}, { log, euro, clamp, avgStat, sumStat, xpToNext, addXp, invQty, invAdd, invRemove, countInstalledItem, getCashflowLimit, canSpend, takeLoan, repayLoan, openCreditLine, addLease, returnLease, checkContractRequirements, advanceTime, showNotification, getItemCondition, setItemCondition, applyItemWear, calcRoomMaintenanceDaily, processScheduledDay });
+  window.Helpers = Object.assign(window.Helpers || {}, { log, euro, clamp, avgStat, sumStat, xpToNext, addXp, ensureAnalytics, invQty, invAdd, invRemove, countInstalledItem, getCashflowLimit, canSpend, takeLoan, repayLoan, openCreditLine, addLease, returnLease, checkContractRequirements, advanceTime, showNotification, getItemCondition, setItemCondition, applyItemWear, calcRoomMaintenanceDaily, processScheduledDay });
   // Overwrite any temporary shim wrappers so the real implementations are used
   window.log = log;
   window.euro = euro;

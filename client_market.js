@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { log, showNotification, euro } from './helpers.js';
+import { log, showNotification, euro, ensureAnalytics } from './helpers.js';
 
 const GENRES = ['pop', 'rap', 'hiphop', 'rock', 'podcast', 'live', 'film_score', 'commercial'];
 const PODCAST_FIRST_NAMES = [
@@ -12,6 +12,15 @@ const PODCAST_LAST_NAMES = [
   'Lopez', 'Torres', 'Campos', 'Navarro', 'Reyes', 'Mendez', 'Marin', 'Blanco', 'Vega', 'Ortega',
   'Silva', 'Ramos', 'Iglesias', 'Santos', 'Cruz', 'Nadal', 'Gil', 'Ferrer', 'Castro', 'Soto'
 ];
+
+function incrementAnalyticsDay(key, day, amount = 1) {
+  try {
+    if (typeof state === 'undefined') return;
+    const analytics = ensureAnalytics();
+    analytics[key] = analytics[key] || {};
+    analytics[key][day] = Number(analytics[key][day] || 0) + Number(amount || 0);
+  } catch (e) {}
+}
 
 function pickRandom(list) {
   return list[Math.floor(Math.random() * list.length)];
@@ -1975,6 +1984,7 @@ export function generateDailyOffers(force = false) {
   for (let i = 0; i < count; i++) offers.push(buildOffer(day, i + 1, templates));
   state.market.offers = offers;
   state.market.lastDayGenerated = day;
+  incrementAnalyticsDay('offersByDay', day, offers.length);
   try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
   if (typeof showNotification === 'function') showNotification(`📬 ${offers.length} ofertes noves`);
   try { if (typeof generateSpecialOffers === 'function') generateSpecialOffers(); } catch (e) {}
@@ -2002,6 +2012,7 @@ export function generateSpecialOffers(force = false) {
   }
   state.market.specials = specials;
   state.market.lastSpecialDay = day;
+  incrementAnalyticsDay('offersByDay', day, specials.length);
   try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
   return specials;
 }
@@ -2023,6 +2034,7 @@ export function acceptSpecialOffer(offerId) {
   if (offer.requirements) contract.requirements = JSON.parse(JSON.stringify(offer.requirements));
   if (Array.isArray(offer.stages)) contract.stages = JSON.parse(JSON.stringify(offer.stages));
   state.db.contracts.push(contract);
+  incrementAnalyticsDay('offersAcceptedByDay', Number(state.time && state.time.day || 1), 1);
   state.market.specials = specials.filter(o => o.id !== offerId);
   if (typeof log === 'function') log(`🧭 Projecte especial acceptat: ${offer.name} (${euro(offer.base_pay)})`);
   try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}
@@ -2106,6 +2118,7 @@ export function acceptOffer(offerId) {
   contract.assigned_people = [];
   contract.assigned_people_map = [];
   state.db.contracts.push(contract);
+  incrementAnalyticsDay('offersAcceptedByDay', Number(state.time && state.time.day || 1), 1);
   state.market.offers = offers.filter(o => o.id !== offerId);
   if (typeof log === 'function') log(`📩 Acceptat: ${offer.name} (${euro(offer.base_pay)})`);
   try { if (typeof window !== 'undefined' && typeof window.saveState === 'function') window.saveState(); } catch (e) {}

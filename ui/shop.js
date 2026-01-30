@@ -42,41 +42,6 @@ function buildBundles(roomIndex) {
         bundles.push({ name: def.name, items, total: def.total, fixedTotal: def.fixedTotal });
       }
     }
-    // const bundleCheat = [
-    //   pickItemByName('RPG Skyline Diffuser'),
-    //   pickItemByName('RPG Skyline Diffuser'),
-    //   pickItemByName('RPG Skyline Diffuser'),
-    //   pickItemByName('Vicoustic Multifuser Wood 36'),
-    //   pickItemByName('GIK Acoustics Soffit Bass Trap'),
-    //   pickItemByName('GIK Acoustics Soffit Bass Trap'),
-    //   pickItemByName('Mogami Gold XLR'),
-    //   pickItemByName('Mogami Gold XLR'),
-    //   pickItemByName('Mogami Gold XLR'),
-    //   pickItemByName('Mogami Gold XLR'),
-    //   pickItemByName('Plate Reverb'),
-    //   pickItemByName('Grace Design m900'),
-    //   pickItemByName('Neumann NDH 20'),
-    //   pickItemByName('Neumann NDH 20'),
-    //   pickItemByName('Neutrik NYS-SPP-L1-2'),
-    //   pickItemByName('MOTU 1248'),
-    //   pickItemByName('Neumann TLM102'),
-    //   pickItemByName('Neumann TLM102'),
-    //   pickItemByName('Triad-Orbit IO-Equipped Micro Adapters Set'),
-    //   pickItemByName('Triad-Orbit IO-Equipped Micro Adapters Set'),
-    //   pickItemByName('K&M 21090 Heavy Duty'),
-    //   pickItemByName('K&M 21090 Heavy Duty'),
-    //   pickItemByName('Neumann KH310'),
-    //   pickItemByName('Neumann KH310'),
-    //   pickItemByName('Avalon VT-737sp'),
-    //   pickItemByName('Avalon VT-737sp'),
-    //   pickItemByName('Zaor Onda Angled Rack 10U'),
-    //   pickItemByName('Pro Tools Ultimate'),
-    //   pickItemByName('Native Instruments Komplete Kontrol S88 Mk3'),
-    //   pickItemByName('Guitarra Elèctrica Fender')
-    // ].filter(Boolean);
-    // if (bundleCheat.length) {
-    //   bundles.push({ name: 'Bundle Cheat', items: bundleCheat, total: 5000, fixedTotal: true });
-    // }
     return bundles;
   }
 

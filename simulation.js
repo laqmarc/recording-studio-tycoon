@@ -1,5 +1,5 @@
 // simulation.js - contract/recording simulation (ES module + legacy window shim)
-import { clamp, avgStat, sumStat, addXp, euro, log, checkContractRequirements } from './helpers.js';
+import { clamp, avgStat, sumStat, addXp, euro, log, checkContractRequirements, ensureAnalytics, calcRoomMaintenanceDaily } from './helpers.js';
 import { state, installedIds, getRoomEffective } from './state.js';
 
 export function simulateRecording(roomIndex, contract) {
@@ -194,7 +194,13 @@ export function simulateContract(contractId) {
 
   const res = simulateRecording(state.selected.roomIndex, contract);
   let payout = res.payout;
-  if (contract.deadline_days && state.time.day > (contract.start_day || 0) + contract.deadline_days) {
+  const day = Number(state.time && state.time.day || 1);
+  const startDay = (contract.start_day != null) ? Number(contract.start_day) : day;
+  const deadlineDays = Number(contract.deadline_days || 0);
+  const dueDay = deadlineDays ? startDay + deadlineDays : null;
+  const lateByDays = (deadlineDays && day > dueDay) ? Math.max(0, day - dueDay) : 0;
+  const onTime = !deadlineDays || lateByDays <= 0;
+  if (deadlineDays && day > dueDay) {
     payout = Math.round(payout * (contract.late_penalty || 0.5));
     log(`⏰ Contracte entregat tard! Penalització aplicada. Payout reduït.`);
   }
@@ -218,12 +224,27 @@ export function simulateContract(contractId) {
   };
 
   let talent_cost = 0;
+  let staffCost = 0;
   const feeLines = [];
   const duration = Number(contract.duration_hours || 0);
+  const workHoursPerDay = Math.max(1, Number(state.time && state.time.workHoursPerDay || 8));
+  const engLevel = (state.staff && state.staff.engineer && state.staff.engineer.level) ? Number(state.staff.engineer.level) : 1;
+  const prodLevel = (state.staff && state.staff.producer && state.staff.producer.level) ? Number(state.staff.producer.level) : 1;
+  const engWeekly = engLevel * 120;
+  const prodWeekly = prodLevel * 100;
+  const engHourly = engWeekly / 7 / workHoursPerDay;
+  const prodHourly = prodWeekly / 7 / workHoursPerDay;
+  const staffHourly = {
+    engineer: engHourly,
+    producer: prodHourly,
+    editor: engHourly * 0.8,
+    mastering: engHourly * 1.1,
+    technician: engHourly * 0.7
+  };
+  const entries = Array.isArray(contract.assigned_people_map) && contract.assigned_people_map.length
+    ? contract.assigned_people_map
+    : (Array.isArray(contract.assigned_people) ? contract.assigned_people.map(id => ({ id })) : []);
   try {
-    const entries = Array.isArray(contract.assigned_people_map) && contract.assigned_people_map.length
-      ? contract.assigned_people_map
-      : (Array.isArray(contract.assigned_people) ? contract.assigned_people.map(id => ({ id })) : []);
     for (const entry of entries) {
       if (!entry || !entry.id) continue;
       const p = resolvePerson(entry.id);
@@ -231,31 +252,59 @@ export function simulateContract(contractId) {
       const fee = Number(p.fee_per_hour || 0);
       const cost = fee * duration;
       talent_cost += cost;
-      const roleLabel = entry.role || p.role || 'talent';
+      const roleLabel = entry.role || p.role || (String(entry.id).startsWith('self_') ? String(entry.id).replace('self_', '') : 'talent');
       const inst = entry.instrument ? ` (${entry.instrument})` : '';
       feeLines.push(`${roleLabel}: ${p.name || entry.id}${inst} · ${euro(fee)}/h · ${euro(cost)}`);
+      if (String(entry.id).startsWith('self_')) {
+        const rate = Number(staffHourly[roleLabel] || staffHourly.engineer || 0);
+        staffCost += rate * duration;
+      }
     }
   } catch (e) {}
   payout = Math.max(0, Math.round(payout - talent_cost));
+  let roomCost = 0;
   try {
-    const day = Number(state.time && state.time.day || 1);
-    state.analytics = state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
-    state.analytics.revenueByDay = state.analytics.revenueByDay || {};
-    state.analytics.revenueByDay[day] = Number(state.analytics.revenueByDay[day] || 0) + Number(payout || 0);
-    state.analytics.sessions = Array.isArray(state.analytics.sessions) ? state.analytics.sessions : [];
-    state.analytics.sessions.unshift({
+    const roomIndex = (state.selected && Number.isFinite(state.selected.roomIndex)) ? state.selected.roomIndex : 0;
+    const maintenanceDaily = Number(calcRoomMaintenanceDaily(roomIndex) || 0);
+    roomCost = (maintenanceDaily / workHoursPerDay) * duration;
+  } catch (e) {}
+  const costBreakdown = {
+    talent: Math.round(talent_cost || 0),
+    staff: Math.round(staffCost || 0),
+    room: Math.round(roomCost || 0)
+  };
+  const costTotal = Math.round(costBreakdown.talent + costBreakdown.staff + costBreakdown.room);
+  try {
+    const analytics = ensureAnalytics();
+    analytics.revenueByDay[day] = Number(analytics.revenueByDay[day] || 0) + Number(payout || 0);
+    analytics.sessions.unshift({
       day,
+      contract_id: contract.id,
       name: contract.name,
       type: contract.type,
       payout,
       quality: Number(res.final_quality || 0),
-      fees: Number(talent_cost || 0)
+      fees: Number(talent_cost || 0),
+      on_time: onTime,
+      late_by_days: lateByDays,
+      cost_total: costTotal,
+      costs: costBreakdown,
+      duration_hours: duration
     });
-    if (state.analytics.sessions.length > 50) state.analytics.sessions.pop();
-    state.analytics.completedContracts = Number(state.analytics.completedContracts || 0) + 1;
+    if (analytics.sessions.length > 50) analytics.sessions.pop();
+    analytics.completedContracts = Number(analytics.completedContracts || 0) + 1;
     if (contract.special) {
-      state.analytics.completedSpecialContracts = Number(state.analytics.completedSpecialContracts || 0) + 1;
+      analytics.completedSpecialContracts = Number(analytics.completedSpecialContracts || 0) + 1;
     }
+    analytics.completedByDay[day] = Number(analytics.completedByDay[day] || 0) + 1;
+    const delivery = analytics.deliveryByDay[day] || { onTime: 0, late: 0 };
+    if (onTime) delivery.onTime += 1;
+    else delivery.late += 1;
+    analytics.deliveryByDay[day] = delivery;
+    const quality = analytics.qualityByDay[day] || { total: 0, count: 0 };
+    quality.total += Number(res.final_quality || 0);
+    quality.count += 1;
+    analytics.qualityByDay[day] = quality;
   } catch (e) {}
   state.cash += payout;
   const xpAward = Math.max(0, Math.round(payout/20 + res.final_quality/10));

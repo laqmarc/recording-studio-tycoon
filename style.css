@@ -660,6 +660,20 @@ select {
   gap: 12px;
 }
 
+.stats-tabs {
+  margin-bottom: 8px;
+  grid-column: 1 / -1;
+}
+
+.stats-tab {
+  display: none;
+  grid-column: 1 / -1;
+}
+
+.stats-tab.active {
+  display: grid;
+}
+
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -742,8 +756,18 @@ select {
   gap: 8px;
 }
 
+
 .chart-line {
-  min-height: 120px;
+  min-height: 140px;
+}
+
+.chart-canvas {
+  width: 100%;
+  height: 140px;
+}
+
+.chart.chart-bars.chart-canvas-wrap {
+  display: block;
 }
 
 .chart-line-svg {

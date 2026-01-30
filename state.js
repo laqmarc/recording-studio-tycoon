@@ -21,7 +21,7 @@ export const state = {
   roomBilling: [],
   // Player state: track short-term and chronic fatigue separately.
   player: { level: 1, xp: 0, fatigue: 0, fatigueShort: 0, fatigueChronic: 0, restBonus: 0 },
-  analytics: { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] },
+  analytics: { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [], offersByDay: {}, offersAcceptedByDay: {}, completedByDay: {}, qualityByDay: {}, deliveryByDay: {} },
   campaign: {
     active: false,
     currentChapter: 0,

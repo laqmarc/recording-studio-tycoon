@@ -1,10 +1,11 @@
 // persistence.js - save/load functions (ES module)
 import { state, rebuildIndexes, ensureRoomsInstalled } from './state.js';
 import { PEOPLE_FALLBACK } from './people_data.js';
-import { log } from './helpers.js';
+import { log, ensureAnalytics } from './helpers.js';
 
 export function saveState() {
   try {
+    const analytics = ensureAnalytics();
     const payload = {
       player: state.player,
       time: state.time,
@@ -60,7 +61,7 @@ export function saveState() {
         assigned_people: Array.isArray(c.assigned_people) ? c.assigned_people : [],
         assigned_people_map: Array.isArray(c.assigned_people_map) ? c.assigned_people_map : []
       })),
-      analytics: state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] },
+      analytics,
       campaign: state.campaign || { active: false, currentChapter: 0, currentObjective: 0, completedObjectives: [], unlockedFeatures: [], storylineProgress: {}, milestones: [], achievements: [] }
     };
     localStorage.setItem('studio_tycoon_state_v1', JSON.stringify(payload));
@@ -132,8 +133,9 @@ export function loadStateFromStorage() {
     if (p.analytics && typeof p.analytics === 'object') {
       state.analytics = p.analytics;
     } else if (!state.analytics) {
-      state.analytics = { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
+      state.analytics = {};
     }
+    ensureAnalytics();
     if (p.campaign && typeof p.campaign === 'object') {
       state.campaign = p.campaign;
     } else if (!state.campaign) {
@@ -229,7 +231,8 @@ export function clearPersistenceAndReset() {
     state.market = { offers: [], lastDayGenerated: 0 };
     state.schedule = [];
     state.hiredPeople = [];
-    state.analytics = { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
+    state.analytics = {};
+    ensureAnalytics();
     state.campaign = { active: false, currentChapter: 0, currentObjective: 0, completedObjectives: [], unlockedFeatures: [], storylineProgress: {}, milestones: [], achievements: [] };
     state.roomsInstalled = [];
     state.roomBilling = [];
@@ -269,7 +272,8 @@ export function loadFromObject(obj) {
   state.roomUpgrades = state.roomUpgrades || {};
   state.itemCondition = state.itemCondition || new Map();
   state.market = state.market || { offers: [], lastDayGenerated: 0 };
-  state.analytics = state.analytics || { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
+  state.analytics = state.analytics || {};
+  ensureAnalytics();
   state.schedule = Array.isArray(state.schedule) ? state.schedule : [];
   state.hiredPeople = Array.isArray(state.hiredPeople) ? state.hiredPeople : [];
   // Ensure finance tracking exists after loading demo data
@@ -309,7 +313,8 @@ export function resetGame() {
   state.market = { offers: [], lastDayGenerated: 0 };
   state.schedule = [];
   state.hiredPeople = [];
-  state.analytics = { revenueByDay: {}, expenseByDay: {}, sessions: [], daily: [] };
+  state.analytics = {};
+  ensureAnalytics();
   log("🔄 Reset: cash=1000, inventari buit, instal·lacions buides.");
   if (typeof window !== 'undefined' && typeof window.renderAll === 'function') window.renderAll();
   localStorage.removeItem('studio_tycoon_state_v1');
